@@ -1,0 +1,78 @@
+---
+- name: Install git
+  apt:
+    name:
+      - git
+
+- name: Clone Broswerix
+  git:
+    repo: https://github.com/webrecorder/browsertrix-cloud.git
+    dest: /root/browsertrix
+    force: yes
+    
+- name: Template config for browsertrix
+  ansible.builtin.template:
+    src: config.env.j2
+    dest: /root/browsertrix/configs/config.env
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Template config for browserix
+  ansible.builtin.template:
+    src: signing.yaml.j2
+    dest: /root/browsertrix/configs/signing.yaml
+    owner: root
+    group: root
+    mode: '0644'
+    
+- name: Move browsetrix from port 80
+  lineinfile:
+    path: /root/browsertrix/docker-compose.yml
+    regex: 80:80
+    line: "      - 81:80"
+
+- name: Move browsetrix from port 80
+  lineinfile:
+    path: /root/browsertrix/docker-compose.yml
+    line: "      - 127.0.0.1:8080:8080"
+    regex: "127.0.0.1:8080:8080"
+    insertafter: "      - 81:80"
+ 
+
+- name: Create browsertrix data folder
+  file:
+    path: /mnt/browsertrix
+    state: directory
+
+- name: Move browsertrix storage to different folder
+  lineinfile:
+    path: /root/browsertrix/docker-compose.yml
+    regex: btrix-minio-data:/data
+    line: "      - /mnt/browsertrix:/data"      
+
+- name: Copy over profile
+  copy:
+    src: profile.tar.gz
+    dest: /root/browsertrix/profile.tar.gz
+    group: root
+    owner: root
+    mode: 0555
+
+- name: Template config for browsertrix
+  ansible.builtin.template:
+    src: uploadFile.sh
+    dest: /root/browsertrix/uploadFile.sh
+    group: root
+    owner: root
+    mode: 0755
+
+- name: docker-compose build
+  command: docker-compose up -d
+  args:
+    chdir: /root/browsertrix
+
+- name: Upload profile
+  command: ./uploadFile.sh test-bucket profile.tar.gz
+  args:
+    chdir: /root/browsertrix

@@ -1,0 +1,10 @@
+---
+- name: Install git
+  apt:
+    name:
+      - git
+      
+- include_tasks: slackbot.yml
+  loop: "{{ slack_bot | dict2items  }}"
+  loop_control:
+    loop_var: slack_bot

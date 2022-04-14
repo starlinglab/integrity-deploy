@@ -1,0 +1,13 @@
+[Unit]
+Description=Starling Integrity browsertrix preprocessor
+After=network.target
+
+[Service]
+User=root
+Restart=always
+Type=simple
+WorkingDirectory=/root/integrity-preprocessor/browsertrix
+ExecStart=python3 main.py
+
+[Install]
+WantedBy=multi-user.target

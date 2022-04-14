@@ -1,0 +1,36 @@
+---
+- name: Install git
+  apt:
+    name:
+      - git
+
+- name: Create dropbox data folder
+  file:
+    recurse: true
+    path: /mnt/store/dropbox
+    owner: 1002
+    group: 1002
+    state: directory
+
+- name: Download Docker-DropBox
+  git:
+    repo: https://github.com/starlinglab/dropbox-docker
+    dest: /root/dropbox
+    force: yes
+
+- name: Template config for DropBox
+  ansible.builtin.template:
+    src: docker-compose.yaml.j2
+    dest: /root/dropbox/docker-compose.yaml
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: docker-compose build
+  command: docker-compose up -d
+  args:
+    chdir: /root/dropbox
+
+# docker-compose logs | grep "Please visit" | tail -n 1"
+# docker-compose exec dropbox bash -c "cd /home/dropbox-user/Dropbox && /opt/dropbox/dropbox exclude add <item>"
+

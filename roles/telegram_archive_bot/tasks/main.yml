@@ -1,0 +1,6 @@
+---
+- include_tasks: telegrambot.yml
+  loop: "{{ telegram_bot | dict2items  }}"
+  loop_control:
+    loop_var: telegram_bot
+  when: telegram_bot is defined

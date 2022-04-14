@@ -1,0 +1,52 @@
+---
+- name: Download slack_archive_bot
+  git:
+    repo: https://github:{{ github_token }}@github.com/starlinglab/slack_archive_bot.git
+    dest: /root/slack_archive_bot_{{ slack_bot.key }}
+    force: yes
+
+- name: Create store directory
+  file:
+    path: /mnt/store
+    state: directory
+
+- name: Create slack bot directory
+  file:
+    path: /mnt/store/slack_archive_bot_{{ slack_bot.key }}
+    state: directory
+
+
+- name: Configure slack_archive_bot
+  template:
+    src: config.env.j2
+    dest: '/root/slack_archive_bot_{{ slack_bot.key }}/config.env'
+
+- name: Map slack port
+  lineinfile:
+    path: /root/slack_archive_bot_{{ slack_bot.key }}/docker-compose.yaml
+    regex: "      - 3333:3333"
+    line:  "      - {{ slack_bot.value.slack_port }}:3333"
+
+- name: Set restart on
+  lineinfile:
+    path: /root/slack_archive_bot_{{ slack_bot.key }}/docker-compose.yaml
+    regex: "    restart:"
+    insertafter: "  slack_archive_bot:"
+    line: "    restart: unless-stopped"
+
+- name: Map slack store
+  lineinfile:
+    path: /root/slack_archive_bot_{{ slack_bot.key }}/docker-compose.yaml
+    regex: "      - ./store:/store"
+    line:  "      - /mnt/store/slack_archive_bot_{{ slack_bot.key }}:/store"
+
+
+- name: docker-compose build
+  command: docker-compose build
+  args:
+      chdir: /root/slack_archive_bot_{{ slack_bot.key }}
+
+- name: docker-compose build
+  command: docker-compose up -d
+  args:
+      chdir: /root/slack_archive_bot_{{ slack_bot.key }}

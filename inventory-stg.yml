@@ -1,0 +1,224 @@
+# Secret files in group_vars/all/inventory_secret.yml
+all:
+  vars:
+
+    # Sensible defaults   
+    ansible_user: sysadmin 
+    ansible_python_interpreter: /usr/bin/python3
+
+    firewall_ipv6: false
+
+    # Prevent debian from using predictable network - reboot required
+    common_predictable_network: false
+
+    # Personal git hub token for starling bot to download private github repos
+    github_token: "{{ secret_github_token }}" # Starling 
+
+    # Lets Encrypt email address
+    letsencrypt_email: infra@starlinglab.org
+
+    # Path to shared nfs integrity_store
+    nfs_shared_path: integrity_store
+
+    # Server that monitoring configs will be updated on
+    monitor_server: monitor.prod.starlinglab.org
+
+    # E-mail credentials
+    outbound_email_login: starlinglaborg@gmail.com
+    outbound_email_password: "{{ secret_outbound_email_password }}"
+    outbound_email_hostname: smtp.gmail.com
+    outbound_email_port: 587
+    outbound_email_address: "{{ outbound_email_login }}"
+
+    # Set root and sysadmin passwords on all servers
+    root_password: "{{ secret_root_password }}"
+    sysadmin_password: "{{ secret_sysadmin_password }}"
+
+    # Keys to add to all servers
+    ssh_user_keys:
+      - name: yurko
+        key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCtv4I2W8TlVsWKKHwASF78cGrn06BJi9dGQQQksW0Ke9ED/KJG2pvG4GXnh57/AOuJtUaS3gXBEj/knE3t/qtvO2cUg1EufnkItzNLdY1B0Hwm98I8O7JdhE+3c/SUIU4Miioj/IlKl8fRxDqx03FTVBdd6Q7kKF79LcobTqo7Pd6i7vnp46U6bBm01tDdRB+g+lok9x+B8umRqqjAGcboucwZ5NrzmLjz/p1wg+5Gva2zcyzBp1aQk7JPhsbElTLfhUP7hJbJ6rFWnebgK8z/vbyofeZljXb6LttttMGoWKg6QAdn61mRwEGff1FUPVLiEVnQ5IY+f97NlQ36c81b yurko@tomesh"
+      - name: ben
+        key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMLiPavTvnbFRc6JvkGVinFoAk93k88KTg1u3zZQxMyW benedict@Benedicts-MacBook-Air.local"
+      - name: cole
+        key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDa7CV1MuEEWiO21CcrakO5h/2W8SgXGqN9xUj7tmT/9i4+IYoCFw4eARe9ZMUUuAa/jBThKK9oAylMEc5u6faWUVUNY5z46KeNEH482z+kcprSEYEY0w9lWyA5c93BIRcvH3KYZkfwCe4U5i6cxD3RAHJNTuHKdeUfT4hCWEyJMKNPsW5ggILJe/9Iq7XVy1ukXmV+ta0u9AKH/fWW4OA6RADzD7eFNZtooZoU1VAcRgpaLhzVFp+0kyhBIciiajZ4r217TMA+DEQ9QGVIxrQJJGm6v0UYLOPuv3NAnGrjHFE7+gGXKVQljx2N/eoyKmF7lWaqDBg3uvic3FCSBeunC5rggeFTtfZ37/J9Lk+rwWwk3HgfzLc7eefYG2lPoX3ftjeD41E4EcobH8A2J1dOgcD7SiOwCZc8dGtWMjC02SaSufWnl8swphd+PNdO/JeWLbGmnVW3AfiaDrVHLXviP2NRfwEKtbH4oB9d/aaryREgi3fLm6MsRm8c+GSWUOc= cole@hypha"
+
+    ipfs_swarm_key: "{{ secret_ipfs_swarm_key }}"
+
+  children:
+
+    browsertrix:
+      hosts:
+        browsertrix.stg.starlinglab.org:
+          monitor_job: "staging"
+          integrity_preprocessor_browsertrix: True
+          browsertrix_internal_password: "{{ secret_browsertrix }}"
+          browsertrix_minio_password: "{{ secret_browsertrix }}"
+          browsertrix_admin_email: infra@starlinglab.org
+          browsertrix_admin_password: "{{ secret_browsertrix_admin_password }}"
+          browsertrix_username: "tools@starlinglab.org"
+          browsertrix_password: "{{ secret_browsertrix_user_password }}"
+          browsertrix_email_login: "{{ outbound_email_login }}"
+          browsertrix_email_password: "{{ outbound_email_password }}"
+          browsertrix_auth_domain: authsign.stg.starlinglab.org
+          authsign_token: "{{ secret_authsign_token }}"
+          letsencrypt_email: infra@starlinglab.org
+          ssh_additional_user_keys:
+            - name: ikreymer
+              key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCTuNVyhX92vfAVIohaMvz9iJ97JoM+8Outk6wEI30mgx5ZkapfkZX8NkTEREnEhFEKuY30jDzP6bW6jLvUhM015tyw2bsa/exmN3IFHfNOnUWMyJzWNpfcA5+TsKu/5NaorXcEIvPuiAledEEHzvIrKWvrxUD8O9PtOiDdtJfpPJ7N/k0QC9FfELfScEf07pRgu/4Fohq+veq+WGw0Kb5LrZO96e/ZKIU5ySlUj+nHKISFDfEcD3bL/P96c9uoaCIVqCaRJdhfFj2zQiVmqQteu7XecGF6nUqTLD9isr4bYraE15E/IFP3nurk2w8fUS6kwQwGKcUPF4aYeOHLIyKC+NspT45rYqUw5YGFInCFkdEDzRNofmmUbBFAgQAfG+sPdrgwcLsg8662R6u+ifkEm/4Gtu3WAArDuJALhgzKbtBtGBF4tH7RwNr55kcVY63z2zzlUBwFN7r51OztKo/XLMfIxLvn405E/9LS6tDxcAHgByLnlPrY9UUITfExD4ZFFAFNCprfINDwjGuBcF8ljWZIT91jyISgzq/rz/gpMUc2Cw6ZdZjjjP43KBy25OZ09nzRt5GL2AqIZjrPSo4yedhYUPCpdn+3WpSVb+XTOK94dSUZYqZyDY5f6MgeIKgzpWUUPYX6Vp/Rw1lN+sImM7dLwRCeEN3pDhuFSCaMXQ== ikreymer@gmail.com
+          nginx_sites:
+            "browsertrix.stg.starlinglab.org":
+              ssl_provider: letsencrypt
+              web_hostname: browsertrix.stg.starlinglab.org
+              locations:
+                "/":
+                  proxy_location: http://127.0.0.1:9871
+                  proxy_websocket: True
+                "/minio/":
+                  proxy_location: http://127.0.0.1:9000/
+                "/sign":
+                  proxy_location: http://127.0.0.1:8080/sign
+                "/verify":
+                  proxy_location: http://127.0.0.1:8080/verify
+            "authsign.stg.starlinglab.org":
+              web_hostname: "authsign.stg.starlinglab.org"
+              locations:
+                "/":
+                  proxy_location: http://127.0.0.1:81
+          firewall_ports:
+            - "ssh":
+              port: 22
+            - "ssl":
+              port: 80
+            - "http":
+              port: 443
+            - "nodeexporter":
+              port: 9100
+              source: "{{ monitor_server }}"
+          nfs_client_mount:
+            "main":
+              source: "10.55.0.1:/mnt/{{ nfs_shared_path }}"
+              target: "/mnt/{{ nfs_shared_path }}"
+          cadvisor_exporter_port: 9110
+          firewall_docker_interface: eth0
+          firewall_docker_ports:
+            - "cAdvisor":
+              port: "{{ cadvisor_exporter_port }}"
+              protocol: tcp
+              source: "{{ monitor_server }}"
+          authsign_token: "{{ secret_authsign_token }}"
+    bot:
+      vars:
+        firewall_ports:
+          - "ssh":
+            port: 22
+          - "ssl":
+            port: 443
+          - "http":
+            port: 80
+          - "nodeexporter":
+            port: 9100
+            source: "{{ monitor_server }}"
+          - "nfs":
+            port: 2049
+            source: "10.55.0.0/24"
+          - "ipfs":
+            port: 4001
+          - "ipfs-cluser":
+            port: 9096
+        cadvisor_exporter_port: 9110
+        firewall_docker_interface: eth0
+        firewall_docker_ports:
+          - "cAdvisor":
+            port: "{{ cadvisor_exporter_port }}"
+            protocol: tcp
+            source: "{{ monitor_server }}"
+      hosts:
+        bot.stg.starlinglab.org:
+          monitor_job: "staging"
+          integrity_preprocessor_chatbot: True
+          slack_bot:
+            "workspace-0":
+              workspace: "test"
+              slack_bot_token: "{{ secret_stg_slack_bot_workspace0_token }}"
+              slack_signing_secret: "{{ secret_stg_slack_bot_workspace0_secret }}"
+              slack_port: 3000
+          telegram_bot:
+            "testbot1":
+              telegram_bot_token: "{{ secret_stg_telegram_bot_testbot1_token }}"
+          nginx_sites:
+            "archive-slack-workspace-0.stg.starlinglab.org":
+              ssl_provider: letsencrypt
+              web_hostname: archive-slack-workspace-0.stg.starlinglab.org
+              locations:
+                "/":
+                  proxy_location: "http://127.0.0.1:{{slack_bot['workspace-0'].slack_port}}"
+          nfs_client_mount:
+            "main":
+              source: "10.55.0.1:/mnt/{{ nfs_shared_path }}"
+              target: "/mnt/{{ nfs_shared_path }}"
+          integrity_recorder_file: bot
+    integrity:
+      hosts:
+        integrity.stg.starlinglab.org:
+          monitor_job: "staging"
+          firewall_ports:
+            - "ssh":
+              port: 22
+            - "ssl":
+              port: 443
+            - "http":
+              port: 80
+            - "nodeexporter":
+              port: 9100
+              source: "{{ monitor_server }}"
+            - "nfs":
+              port: 2049
+              source: "10.55.0.0/24"
+          nginx_sites:
+            "integrity.stg.starlinglab.org":
+              ssl_provider: letsencrypt
+              web_hostname: "integrity.stg.starlinglab.org"
+              locations:
+                "/":
+                  proxy_location: "http://127.0.0.1:8080"
+          ipfs_user: starling
+          ipfs_gateway_port: 8081
+          ipfs_service: true
+          integrity_jwt_secret: "{{ secret_integrity_jwt }}"
+          integrity_clain_tool_path: "/home/starling/claim_tool"
+          integrity_data_path: "/mnt/{{ nfs_shared_path }}/starling"
+          integrity_web3_storage_api_token: "{{ secret_web3_storage_api_token}}"
+          nfs_server_exports:
+            - "/mnt/{{ nfs_shared_path }} 10.55.0.0/24(rw,all_squash,anonuid=1001,anongid=1001)"
+          browsertrix_username: "tools@starlinglab.org"
+          browsertrix_password: "{{ secret_integrity_browsertrix_password }}"
+          numbers_api_key: "{{ secret_numbers_api }}"
+          numbers_api_network: "testnet"
+          authsign_token: "{{ secret_authsign_token }}"     
+          authsign_access_url: "https://browsertrix.stg.starlinglab.org"
+          numbers_api_url: "https://node.numbersprotocol.io/version-test/api/1.1/wf"
+          integrity_recorder_file: integrity
+
+    ipfs:
+      vars:
+        firewall_ports:
+          - "ssh":
+            port: 22
+          - "ipfs":
+            port: 4001
+          - "ipfs-cluster":
+            port: 9096
+          - "nodeexporter":
+            port: 9100
+            source: "{{ monitor_server }}"
+        ipfs_swarm_key: "{{ secret_ipfs_swarm_key }}"
+        monitor_job: "staging"
+        ipfs_user: ipfs
+      hosts:
+        ipfs1.stg.starlinglab.org:
+          ipfs_ip: "{{ lookup('dig', ipfs1.stg.starlinglab.org) }}"
+        ipfs2.stg.starlinglab.org:
+          ipfs_ip: "{{ lookup('dig', ipfs2.stg.starlinglab.org) }}"
+        ipfs3.stg.starlinglab.org:
+          ipfs_ip: "{{ lookup('dig', ipfs3.stg.starlinglab.org) }}"

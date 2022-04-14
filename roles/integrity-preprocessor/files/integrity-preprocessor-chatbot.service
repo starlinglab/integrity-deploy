@@ -1,0 +1,13 @@
+[Unit]
+Description=Starling Integrity chat-bot preprocessor
+After=network.target
+
+[Service]
+User=root
+Restart=always
+Type=simple
+WorkingDirectory=/root/integrity-preprocessor/chat-bot
+ExecStart=python3 main.py
+
+[Install]
+WantedBy=multi-user.target

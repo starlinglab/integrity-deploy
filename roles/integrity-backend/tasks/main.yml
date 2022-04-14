@@ -1,0 +1,122 @@
+---
+- name: Install git
+  apt:
+    name:
+      - git
+      - python3
+      - python3-pip      
+
+- name: Install pipenv python package
+  pip:
+    name:
+      - pipenv
+      - opentimestamps-client
+
+- name: Create starling group
+  group:
+    name: starling    
+
+- name: Create starling user
+  user:
+    name: starling
+    state: present
+    comment: starling User
+    createhome: yes
+    groups: starling
+    shell: /bin/bash
+
+- name: Create starling config folder
+  file:
+    path: /home/starling/.integrity/
+    state: directory
+    owner: starling
+    group: starling
+    mode: 0770
+
+- name: Creates directory
+  file:
+    path: "{{ integrity_data_path }}"
+    state: directory
+    owner: starling
+    group: starling
+    mode: 0775
+    recurse: yes
+
+- name: Download ISCN code
+  git:
+    repo: https://github.com/likecoin/iscn-js.git
+    dest: /home/starling/iscn
+    force: yes
+
+- name: Init env
+  ansible.builtin.shell: npm install
+  args:
+    chdir: /home/starling/iscn/sample/server
+
+
+- name: Configure ISCN service
+  copy:
+    src: iscn.service
+    dest: /etc/systemd/system/iscn.service
+
+- name: Reload systemd daemon
+  systemd:
+    daemon_reload: yes
+   
+- name: Start ISCN service
+  ansible.builtin.systemd:
+    state: restarted
+    enabled: true
+    name: iscn
+
+
+- name: Download sintegrity-backend server
+  git:
+    repo: https://github:{{ github_token }}@github.com/starlinglab/integrity-backend.git
+    dest: /home/starling/integrity-backend
+    force: yes
+    version: dev
+
+- name: Init env
+  ansible.builtin.shell: /usr/bin/su - starling -c 'cd /home/starling/integrity-backend/ && pipenv install'
+  args:
+    chdir: /home/starling/integrity-backend/
+
+- name: env config file
+  template: 
+    src: env.j2
+    dest: '/home/starling/integrity-backend/.env'
+
+
+- name: Copy claim tool
+  copy:
+    src: claim_tool
+    dest: /home/starling/claim_tool
+    group: starling
+    owner: starling
+    mode: 0550
+
+- name: Copy config file
+  copy:
+    src: /home/starling/integrity-backend/config.example.json
+    dest: /home/starling/.integrity/backend-config.json
+    remote_src: yes
+    owner: starling
+    group: starling
+    mode: 0666
+    force: no    
+
+- name: Configure service
+  copy:
+    src: integrity-backend.service
+    dest: /etc/systemd/system/integrity-backend.service
+
+- name: Reload systemd daemon
+  systemd:
+    daemon_reload: yes
+   
+- name: Start integrity backend service
+  ansible.builtin.systemd:
+    state: restarted
+    enabled: true
+    name: integrity-backend

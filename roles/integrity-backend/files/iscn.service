@@ -1,0 +1,13 @@
+[Unit]
+Description=ISCN Server
+After=network.target
+
+[Service]
+User=starling
+Restart=always
+Type=simple
+WorkingDirectory=/home/starling/iscn/sample/server
+ExecStart=node src/index.js
+
+[Install]
+WantedBy=multi-user.target

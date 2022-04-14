@@ -1,0 +1,16 @@
+[Unit]
+Description=InterPlanetary File System (IPFS) Cluster daemon
+Documentation=https://docs.ipfs.io/
+After=network.target
+
+[Service]
+TimeoutStartSec=infinity
+Type=simple
+User={{ ipfs_user }}
+Group={{ ipfs_user }}
+ExecStart=/usr/bin/ipfs-cluster-service daemon
+Restart=on-failure
+KillSignal=SIGINT
+
+[Install]
+WantedBy=default.target

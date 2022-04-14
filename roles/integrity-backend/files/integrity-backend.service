@@ -1,0 +1,13 @@
+[Unit]
+Description=Starling Integrity backend
+After=network.target
+
+[Service]
+User=starling
+Restart=always
+Type=simple
+WorkingDirectory=/home/starling/integrity-backend
+ExecStart=/usr/local/bin/pipenv run server
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,13 @@
+---
+- name: Reset key to known hosts
+  connection: local
+  shell: "ssh-keygen -R {{ inventory_hostname }}"
+
+- name: Reset key to known hosts
+  connection: local
+  shell: "ssh-keygen -R {{ kvm_ip_address }}"
+  when: kvm_ip_address is defined
+
+- name: Write the new ssh instance host key to known hosts
+  connection: local
+  shell: "ssh-keyscan -H {{ inventory_hostname }} >> ~/.ssh/known_hosts"

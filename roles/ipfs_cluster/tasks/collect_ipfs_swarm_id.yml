@@ -1,0 +1,16 @@
+- name: getIPFS ID
+  ansible.builtin.shell: cat /home/{{ hostvars[ipfs_node]['ipfs_user'] }}/.ipfs-cluster/identity.json | jq .id  -r
+  register: command_output
+  delegate_to: "{{ ipfs_node }}"
+
+- name: debug
+  debug:
+    var: command_output
+
+- name: Construct IPFS Peer String
+  set_fact:
+    ipfs_string: "/ip4/{{ hostvars[ipfs_node]['ipfs_ip'] }}/tcp/9096/ipfs/{{ command_output.stdout_lines[0] }}"
+
+- name: add IPFS to node
+  set_fact:
+    ipfs_bootstrap: "{{ ipfs_bootstrap | default([]) + [ ipfs_string ] }}"

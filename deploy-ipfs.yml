@@ -1,0 +1,20 @@
+---
+- hosts: "servers"
+  become: true
+  gather_facts: false
+  roles:
+    - hypha.common.proxmox_provision_vm
+    - hypha.common.gather_facts
+    - pass
+- hosts: "ipfs"
+  become: true
+  roles:
+    - reboot
+    - provision_ssh_keys
+    - hypha.common.common
+    - hypha.common.firewall
+    - hypha.common.harden_ssh
+    - hypha.common.node_exporter
+    - prometheus_addnode
+    - ipfs
+    - ipfs_cluster

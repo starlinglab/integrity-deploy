@@ -1,0 +1,45 @@
+---
+- name: Install NFS Server
+  apt:
+    name:
+      - nfs-kernel-server
+      - nfs-common
+
+- name: NFS Mounts Targets
+  ansible.builtin.file:
+    dest: "{{ item.split(' ')[0] }}"
+    state: directory
+  loop: "{{ nfs_server_exports }}"
+  when: nfs_server_exports is defined
+
+- name: NFS Exports
+  lineinfile:
+    path: /etc/exports
+    regex: "{{ item.split(' ')[0] }}"
+    line: "{{ item }}"
+  loop: "{{ nfs_server_exports }}"
+  when: nfs_server_exports is defined
+
+- name: Update Exports
+  command: exportfs -va
+  when: nfs_server_exports is defined
+
+- name: NFS Mounts Targets
+  ansible.builtin.file:
+    dest: "{{ item.value.target }}"
+    state: directory
+  loop: "{{ nfs_client_mount | dict2items }}"
+  when: nfs_client_mount is defined
+  
+- name: Mount an NFS volume
+  ansible.posix.mount:
+    src: "{{ item.value.source }}"
+    path: "{{ item.value.target }}"
+#    opts: rw,sync,hard,intr
+    state: mounted
+    fstype: nfs
+    boot: yes
+  loop: "{{ nfs_client_mount | dict2items }}"
+  when: nfs_client_mount is defined
+
+

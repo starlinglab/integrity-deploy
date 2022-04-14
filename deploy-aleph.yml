@@ -1,0 +1,27 @@
+---
+- hosts: "kvm"
+  become: true
+  roles:
+#    - hypha.common.proxmox_server
+    - pass
+- hosts: "servers"
+  become: true
+  gather_facts: false
+  roles:
+#    - hypha.common.proxmox_provision_vm
+#    - hypha.common.gather_facts
+    - pass
+- hosts: aleph
+  become: true
+  gather_facts: true
+  roles:    
+    - provision_ssh_keys
+#    - hypha.common.common
+#    - hypha.common.firewall
+#    - hypha.common.node_exporter
+#    - geerlingguy.docker
+#    - aleph
+#    - hypha.common.nginx
+#    - hypha.common.ssl
+#    - prometheus_docker
+#    - prometheus_addnode

@@ -1,0 +1,9 @@
+---
+version: "2"
+services:
+  dropbox:
+    restart: unless-stopped
+    build: "."
+    container_name: dropbox
+    volumes:
+      - /mnt/store/dropbox:/home/dropbox-user

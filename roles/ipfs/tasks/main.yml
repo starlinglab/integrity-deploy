@@ -1,0 +1,109 @@
+---
+- name: Create ipfs group
+  group:
+    name: "{{ ipfs_user }}"
+
+- name: Create ipfs user
+  user:
+    name: "{{ ipfs_user }}"
+    state: present
+    comment: IPFS User
+    createhome: yes
+    groups: "{{ ipfs_user }}"
+    shell: /bin/bash
+
+- name: Create IPFS directory
+  file:
+    path: /opt/ipfs
+    state: directory
+    owner: "{{ ipfs_user }}"
+    group: "{{ ipfs_user }}"
+
+- name: Set IPFS download URL
+  set_fact:
+    ipfs_url: https://github.com/ipfs/go-ipfs/releases/download/v{{ ipfs_version }}/go-ipfs_v{{ ipfs_version }}_linux-amd64.tar.gz
+
+- name: Download and unpack
+  unarchive:
+    src: "{{ ipfs_url }}"
+    dest: /opt/ipfs
+    remote_src: yes
+    extra_opts: [--strip-components=1]
+    owner: "{{ ipfs_user }}"
+    group: "{{ ipfs_user }}"
+
+- name: Create a symbolic link to /usr/bin
+  ansible.builtin.file:
+    src: /opt/ipfs/ipfs
+    dest: /usr/bin/ipfs
+    owner: "{{ ipfs_user }}"
+    group: "{{ ipfs_user }}"
+    state: link
+
+- name: Check if IPFS already initalized
+  stat: 
+    path: /home/{{ ipfs_user }}/.ipfs
+  register: ipfs_has_init
+
+- name: Init Repo
+  ansible.builtin.shell: /usr/bin/su - {{ ipfs_user }} -c '/opt/ipfs/ipfs init'
+  args:
+    chdir: /opt/ipfs
+  when: ipfs_has_init.stat.exists == false
+
+- name: Set WebGateway Port
+  lineinfile:
+    path:  "/home/{{ ipfs_user }}/.ipfs/config"
+    regex: "    \"Gateway\": \"/ip4/127.0.0.1/tcp/8080\""
+    line:  "    \"Gateway\": \"/ip4/127.0.0.1/tcp/{{ ipfs_gateway_port }}\","
+  when: ipfs_gateway_port is defined
+
+- name: Install Private Swarm Key
+  template:
+    src: swarm.key.j2
+    dest: '/home/{{ ipfs_user }}/.ipfs/swarm.key'
+    owner: "{{ ipfs_user }}"
+    group: "{{ ipfs_user }}"
+    mode: 0660
+  when: ipfs_swarm_key is defined
+
+- name: Remove Public Bootstraps  
+  ansible.builtin.shell: "/usr/bin/su - {{ ipfs_user }} -c '/opt/ipfs/ipfs bootstrap rm --all'"  
+  args:
+    chdir: /opt/ipfs
+  when: ipfs_swarm_key is defined
+
+- include_tasks: collect_ipfs_id.yml
+  loop: "{{ groups['ipfs'] }}"
+  loop_control:
+    loop_var: ipfs_node
+  when: ipfs_swarm_key is defined
+
+- name: Add Swarm Bootstraps
+  ansible.builtin.shell: /usr/bin/su - {{ ipfs_user }} -c '/opt/ipfs/ipfs bootstrap add {{ item }}'
+  args:
+    chdir: /opt/ipfs
+  when: ipfs_swarm_key is defined
+  with_items: "{{ ipfs_bootstrap }}"
+
+- name: test
+  debug:
+    var: ipfs_bootstrap
+
+- name: Install Service File
+  template:
+    src: ipfs.service.j2
+    dest: '/etc/systemd/system/ipfs.service'
+  when: ipfs_service == true
+
+- name: Reload systemd daemon
+  systemd:
+    daemon_reload: yes
+  when: ipfs_service == true
+
+- name: Start IPFS
+  ansible.builtin.systemd:
+    state: restarted
+    enabled: true
+    name: ipfs
+  when: ipfs_service == true

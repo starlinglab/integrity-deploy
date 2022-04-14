@@ -1,0 +1,4 @@
+---
+- name: SKIP
+  debug:
+    text: Skipping

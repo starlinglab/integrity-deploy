@@ -1,0 +1,42 @@
+{
+{% if browsertrix_internal_password is defined %}
+    "browsertrix":{
+       "type": "browsertrix",
+       "path":"/root/browsertrix",
+       "dockercompose":true,
+       "git":true
+    },
+{% endif %}
+
+{% if slack_bot is defined %}
+{% for bot in slack_bot %}
+    "slack_archive_bot_{{ bot }}":{
+       "type": "slack_bot",
+       "path":"/root/slack_archive_bot_{{ bot }}",
+       "dockercompose":true,
+       "git":true
+    },
+{% endfor %}
+{% endif %}
+
+{% if telegram_bot is defined %}
+{% for bot in telegram_bot %}
+    "telegram_archive_bot_{{ bot }}":{
+       "type": "telegram_bot",
+       "path":"/root/telegram_archive_bot_{{ bot }}/telegram_archive_bot",
+       "dockercompose":true,
+       "git":true
+    },
+{% endfor %}
+{% endif %}
+
+
+{% if integrity_preprocessor_browsertrix is defined or integrity_preprocessor_chatbot is defined %}
+    "integrity-preprocessor":{
+       "type": "integrity",
+       "path":"/root/integrity-preprocessor/",
+       "dockercompose":false,
+       "git":true
+    }
+{% endif %}
+} 

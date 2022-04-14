@@ -1,0 +1,62 @@
+---
+
+- hosts: integrity
+  become: true
+  gather_facts: true
+  roles:
+#    - sshkey_update
+#    - provision_ssh_keys
+#    - hypha.common.harden_ssh
+#    - hypha.common.common
+#    - geerlingguy.docker # Docker before Firewall
+    - hypha.common.firewall
+    - hypha.common.node_exporter
+    - hypha.common.prometheus_exporter_addnode
+    - hypha.common.nginx
+    - hypha.common.ssl
+    - hypha.common.nodejs
+    - nfs
+    - dropbox
+    - integrity-backend
+    - ipfs
+    - ipfs_cluster
+    - pass
+
+- hosts: browsertrix
+  become: true
+  gather_facts: true
+  roles:    
+    - provision_ssh_keys
+    - hypha.common.harden_ssh
+    - hypha.common.common
+    - hypha.common.node_exporter
+    - hypha.common.prometheus_exporter_addnode
+    - hypha.common.nginx
+    - hypha.common.ssl
+    - geerlingguy.docker
+    - browsertrix
+    - integrity-preprocessor
+    - hypha.common.prometheus_exporter_docker
+    - nfs
+    - pass
+  
+- hosts: bot
+  become: true
+  gather_facts: true
+  roles:
+    - sshkey_update
+    - provision_ssh_keys
+    - hypha.common.harden_ssh
+    - hypha.common.common
+    - geerlingguy.docker # Docker before Firewall
+    - hypha.common.firewall
+    - hypha.common.node_exporter
+    - hypha.common.prometheus_exporter_addnode
+    - hypha.common.nginx
+    - hypha.common.ssl
+    - slack_archive_bot
+    - telegram_archive_bot
+    - integrity-preprocessor
+    - hypha.common.prometheus_exporter_docker
+    - nfs
+    - pass
