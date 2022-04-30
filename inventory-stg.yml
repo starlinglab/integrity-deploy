@@ -161,7 +161,6 @@ all:
             "main":
               source: "10.55.0.1:/mnt/{{ nfs_shared_path }}"
               target: "/mnt/{{ nfs_shared_path }}"
-          integrity_recorder_file: bot
     integrity:
       hosts:
         integrity.stg.starlinglab.org:
@@ -202,7 +201,6 @@ all:
           authsign_token: "{{ secret_authsign_token }}"     
           authsign_access_url: "https://browsertrix.stg.starlinglab.org"
           numbers_api_url: "https://node.numbersprotocol.io/version-test/api/1.1/wf"
-          integrity_recorder_file: integrity
           integrity_backend_config: "integrity.config.stg.json"
 
     ipfs:
