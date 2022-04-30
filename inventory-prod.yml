@@ -22,6 +22,7 @@ all:
     # Server that monitoring configs will be updated on
     monitor_server: "monitor.prod.starlinglab.org"
     firewall_ipv6: false
+
     # E-mail credentials
     outbound_email_login: starlinglaborg@gmail.com
     outbound_email_password: "{{ secret_outbound_email_password }}"
@@ -58,8 +59,9 @@ all:
           browsertrix_user_email: "tools@starlinglab.org"
           browsertrix_user_password: "{{ secret_browsertrix_user_password }}"
           browsertrix_email_login: "{{ outbound_email_login }}"
-          browsertrix_email_password: "{{ outbound_email_password }}"          
+          browsertrix_email_password: "{{ outbound_email_password }}"
           browsertrix_auth_domain: authsign.halasystems.com
+          browsertrix_profile_file: "prod_profile.tar.gz"
           authsign_token: "{{ secret_authsign_token }}"
           letsencrypt_email: infra@starlinglab.org
           ssh_additional_user_keys:
@@ -198,6 +200,7 @@ all:
           authsign_access_url: "https://browsertrix.prod.starlinglab.org"
           numbers_api_url: "https://node.numbersprotocol.io/version-test/api/1.1/wf"
           integrity_recorder_file: integrity
+          integrity_backend_config: "integrity.config.prod.json"
 
     ipfs:
       hosts:

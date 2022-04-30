@@ -2,11 +2,10 @@
 all:
   vars:
 
+    deploymode: stg
     # Sensible defaults   
     ansible_user: sysadmin 
     ansible_python_interpreter: /usr/bin/python3
-
-    firewall_ipv6: false
 
     # Prevent debian from using predictable network - reboot required
     common_predictable_network: false
@@ -22,6 +21,7 @@ all:
 
     # Server that monitoring configs will be updated on
     monitor_server: monitor.prod.starlinglab.org
+    firewall_ipv6: false
 
     # E-mail credentials
     outbound_email_login: starlinglaborg@gmail.com
@@ -56,11 +56,12 @@ all:
           browsertrix_minio_password: "{{ secret_browsertrix }}"
           browsertrix_admin_email: infra@starlinglab.org
           browsertrix_admin_password: "{{ secret_browsertrix_admin_password }}"
-          browsertrix_username: "tools@starlinglab.org"
-          browsertrix_password: "{{ secret_browsertrix_user_password }}"
+          browsertrix_user_email: "tools@starlinglab.org"
+          browsertrix_user_password: "{{ secret_browsertrix_user_password }}"
           browsertrix_email_login: "{{ outbound_email_login }}"
           browsertrix_email_password: "{{ outbound_email_password }}"
           browsertrix_auth_domain: authsign.stg.starlinglab.org
+          browsertrix_profile_file: "stg_profile.tar.gz
           authsign_token: "{{ secret_authsign_token }}"
           letsencrypt_email: infra@starlinglab.org
           ssh_additional_user_keys:
@@ -106,7 +107,6 @@ all:
               port: "{{ cadvisor_exporter_port }}"
               protocol: tcp
               source: "{{ monitor_server }}"
-          authsign_token: "{{ secret_authsign_token }}"
     bot:
       vars:
         firewall_ports:
@@ -137,7 +137,10 @@ all:
         bot.stg.starlinglab.org:
           monitor_job: "staging"
           integrity_preprocessor_chatbot: True
-          slack_bot:
+          signal_bot:
+            "main":
+              signal_phone_number: "16474788566"
+              signal_account_file: "stg_signal_account.zip"          slack_bot:
             "workspace-0":
               workspace: "test"
               slack_bot_token: "{{ secret_stg_slack_bot_workspace0_token }}"
@@ -199,6 +202,7 @@ all:
           authsign_access_url: "https://browsertrix.stg.starlinglab.org"
           numbers_api_url: "https://node.numbersprotocol.io/version-test/api/1.1/wf"
           integrity_recorder_file: integrity
+          integrity_backend_config: "integrity.config.stg.json"
 
     ipfs:
       vars:

@@ -59,11 +59,12 @@
 
 - name: Copy over profile
   copy:
-    src: profile.tar.gz
+    src: "{{browsertrix_profile_file}}"
     dest: /root/browsertrix-contrib/profile.tar.gz
     group: root
     owner: root
     mode: 0555
+  when: browsertrix_profile_file is defined
 
 - name: Template uploadFile for browsertrix for profile
   ansible.builtin.template:
