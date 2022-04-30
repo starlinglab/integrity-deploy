@@ -19,6 +19,30 @@
     force: yes
     version: dev
 
+
+- name: Create starling config folder
+  file:
+    path: /root/.integrity/
+    state: directory
+    owner: root
+    group: root
+    mode: 0770
+
+- name: Copy Config
+  template:
+    src: "recorder_data.json.j2"
+    dest: /root/.integrity/preprocessor-id-config.json
+
+
+- name: Copy .env
+  template:
+    src: "env.recorder-id.j2"
+    dest: /root/integrity-preprocessor/integrity_recorder_id/.env
+
+- name: Generate Config
+  shell: "python3 /root/integrity-preprocessor/integrity_recorder_id/update_recorder_id.py"
+  
+
 - name: Install chatbot service
   copy:
     src: integrity-preprocessor-chatbot.service

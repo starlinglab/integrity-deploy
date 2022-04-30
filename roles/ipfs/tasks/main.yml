@@ -55,7 +55,7 @@
   lineinfile:
     path:  "/home/{{ ipfs_user }}/.ipfs/config"
     regex: "    \"Gateway\": \"/ip4/127.0.0.1/tcp/8080\""
-    line:  "    \"Gateway\": \"/ip4/127.0.0.1/tcp/{{ ipfs_gateway_port }}\","
+    line:  "    \"Gateway\": \"/ip4/127.0.0.1/tcp/{{ ipfs_gateway_port }}\""
   when: ipfs_gateway_port is defined
 
 - name: Install Private Swarm Key
