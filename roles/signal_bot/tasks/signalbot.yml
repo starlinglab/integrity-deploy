@@ -1,0 +1,90 @@
+---
+- name: Download signal_bot
+  git:
+    repo: https://github:{{ github_token }}@github.com/starlinglab/signal_bot.git
+    dest: /root/signal_bot_{{ signal_bot.key }}
+    force: yes
+
+- name: Download signal_bot
+  git:
+    repo: https://gitlab.com/signald/signald.git
+    dest: /root/signal_bot_{{ signal_bot.key }}/signald
+    force: yes
+
+- name: Copy dockerfile
+  copy:
+    src: /root/signal_bot_{{ signal_bot.key }}/signald/Containerfile
+    dest: /root/signal_bot_{{ signal_bot.key }}/signald/Dockerfile
+    remote_src : true
+
+- name: Create store directory
+  file:
+    path: /mnt/store
+    state: directory
+
+- name: Create signal bot directory
+  file:
+    path: /mnt/store/signal_bot_{{ signal_bot.key }}
+    state: directory
+
+- name: Create signal bot directory
+  file:
+    path: /mnt/store/signal_bot_{{ signal_bot.key }}/account
+    mode: 0777
+    state: directory
+
+- name: Install signal account
+  unarchive:
+    src: "{{ signal_bot.value.signal_account_file }}"
+    dest: "/mnt/store/signal_bot_{{ signal_bot.key }}/account"
+    owner: 1337
+    group: 1337
+    keep_newer: true 
+  when: signal_bot.value.signal_account_file is defined
+
+- name: Create signal bot directory
+  file:
+    path: /mnt/store/signal_bot_{{ signal_bot.key }}/account/data
+    mode: 0777
+    state: directory
+    owner: 1337
+    group: 1337
+
+
+- name: Create signal bot directory
+  file:
+    path: /mnt/store/signal_bot_{{ signal_bot.key }}/data
+    state: directory
+
+- name: Configure signal
+  template:
+    src: config.env.j2
+    dest: '/root/signal_bot_{{ signal_bot.key }}/config.env'
+
+- name: Map signal store
+  lineinfile:
+    path: /root/signal_bot_{{ signal_bot.key }}/docker-compose.yml
+    regex: '      - /var/run/signald:/signald'
+    line:  '      - /mnt/store/signal_bot_{{ signal_bot.key }}/account:/signald'
+
+- name: Map signal store
+  lineinfile:
+    path: /root/signal_bot_{{ signal_bot.key }}/docker-compose.yml
+    regex: "      - /mnt/store/signal_archive_bot:/store"
+    line:  "      - /mnt/store/signal_bot_{{ signal_bot.key }}/data:/store"
+
+- name: Map signal store
+  lineinfile:
+    path: /root/signal_bot_{{ signal_bot.key }}/docker-compose.yml
+    regex: "      - /var/run/signald:/var/run/signald"
+    line:  "      - /mnt/store/signal_bot_{{ signal_bot.key }}/account:/var/run/signald"
+
+- name: docker-compose build
+  command: docker-compose build
+  args:
+      chdir: /root/signal_bot_{{ signal_bot.key }}
+      
+- name: docker-compose up
+  command: docker-compose up -d
+  args:
+      chdir: /root/signal_bot_{{ signal_bot.key }}

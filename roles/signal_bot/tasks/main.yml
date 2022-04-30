@@ -1,0 +1,6 @@
+---
+- include_tasks: signalbot.yml
+  loop: "{{ signal_bot | dict2items  }}"
+  loop_control:
+    loop_var: signal_bot
+  when: signal_bot is defined

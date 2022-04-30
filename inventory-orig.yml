@@ -400,6 +400,7 @@ all:
           integrity_clain_tool_path: "/home/starling/claim_tool"
           integrity_data_path: "/mnt/{{ nfs_shared_path }}/starling"
           integrity_web3_storage_api_token: "{{ secret_web3_storage_api_token}}"
+          integrity_preprocessor_folder: True
           nfs_server_exports:
             - "/mnt/{{ nfs_shared_path }} 10.55.0.0/24(rw,all_squash,anonuid=1001,anongid=1001)"          
           browsertrix_username: "tools@starlinglab.org"

@@ -4,11 +4,11 @@
   become: true
   gather_facts: true
   roles:
-#    - sshkey_update
-#    - provision_ssh_keys
-#    - hypha.common.harden_ssh
-#    - hypha.common.common
-#    - geerlingguy.docker # Docker before Firewall
+    - sshkey_update
+    - provision_ssh_keys
+    - hypha.common.harden_ssh
+    - hypha.common.common
+    - geerlingguy.docker # Docker before Firewall
     - hypha.common.firewall
     - hypha.common.node_exporter
     - hypha.common.prometheus_exporter_addnode
@@ -18,6 +18,7 @@
     - nfs
     - dropbox
     - integrity-backend
+    - integrity-preprocessor
     - ipfs
     - ipfs_cluster
     - pass
@@ -56,6 +57,7 @@
     - hypha.common.ssl
     - slack_archive_bot
     - telegram_archive_bot
+    - signal_bot
     - integrity-preprocessor
     - hypha.common.prometheus_exporter_docker
     - nfs

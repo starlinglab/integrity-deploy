@@ -51,18 +51,32 @@
     regex: btrix-minio-data:/data
     line: "      - /mnt/browsertrix:/data"      
 
+### Prepeare browstrix contrib folder ##
+- name: Create browsertrix contrib folder
+  file:
+    path: /root/browsertrix-contrib
+    state: directory
+
 - name: Copy over profile
   copy:
     src: profile.tar.gz
-    dest: /root/browsertrix/profile.tar.gz
+    dest: /root/browsertrix-contrib/profile.tar.gz
     group: root
     owner: root
     mode: 0555
 
-- name: Template config for browsertrix
+- name: Template uploadFile for browsertrix for profile
   ansible.builtin.template:
     src: uploadFile.sh
-    dest: /root/browsertrix/uploadFile.sh
+    dest: /root/browsertrix-contrib/uploadFile.sh
+    group: root
+    owner: root
+    mode: 0755
+
+- name: Template createAccount for browsertrix
+  ansible.builtin.template:
+    src: createAccount.py.j2
+    dest: /root/browsertrix-contrib/createAccount.py
     group: root
     owner: root
     mode: 0755
@@ -75,4 +89,17 @@
 - name: Upload profile
   command: ./uploadFile.sh test-bucket profile.tar.gz
   args:
-    chdir: /root/browsertrix
+    chdir: /root/browsertrix-contrib
+
+- name: Create master account
+  command: ./createAccount.py
+  args:
+    chdir: /root/browsertrix-contrib
+  register: account_creation
+
+- name: Set AID Value
+  set_fact:
+    browsertrix_integrity_aid = {{ account_creation.stdout }}
+  when: 
+    - account_creation is defined
+    - account_creation != ""

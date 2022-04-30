@@ -98,6 +98,16 @@
 
 - name: Copy config file
   copy:
+    src: "integrity.config.{{deploymode}}.json"
+    dest: /home/starling/.integrity/backend-config.json
+    owner: starling
+    group: starling
+    mode: 0666
+    force: no    
+
+
+- name: Copy config file
+  copy:
     src: /home/starling/integrity-backend/config.example.json
     dest: /home/starling/.integrity/backend-config.json
     remote_src: yes

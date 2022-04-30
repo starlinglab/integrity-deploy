@@ -55,6 +55,12 @@
     dest: /etc/systemd/system/integrity-preprocessor-browsertrix.service
   when: integrity_preprocessor_browsertrix == True
 
+- name: Install folder service
+  copy:
+    src: integrity-preprocessor-folder.service
+    dest: /etc/systemd/system/integrity-preprocessor-folder.service
+  when: integrity_preprocessor_folder == True
+
 - name: Install browsertrix config
   template:
     src: env.browsertrix.j2
@@ -78,8 +84,6 @@
     enabled: true
     name: integrity-preprocessor-browsertrix
   when: integrity_preprocessor_browsertrix == true
-
-
 
 - name: Create starling config folder
   file:

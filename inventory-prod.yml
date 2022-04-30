@@ -2,11 +2,10 @@
 all:
   vars:
 
+    deploymode: prod
     # Sensible defaults   
     ansible_user: sysadmin 
     ansible_python_interpreter: /usr/bin/python3
-
-    firewall_ipv6: false
 
     # Prevent debian from using predictable network - reboot required
     common_predictable_network: false
@@ -21,8 +20,8 @@ all:
     nfs_shared_path: integrity_store
 
     # Server that monitoring configs will be updated on
-    monitor_server: monitor.prod.starlinglab.org
-
+    monitor_server: "monitor.prod.starlinglab.org"
+    firewall_ipv6: false
     # E-mail credentials
     outbound_email_login: starlinglaborg@gmail.com
     outbound_email_password: "{{ secret_outbound_email_password }}"
@@ -106,7 +105,6 @@ all:
               port: "{{ cadvisor_exporter_port }}"
               protocol: tcp
               source: "{{ monitor_server }}"
-          authsign_token: "{{ secret_authsign_token }}"
     bot:
       vars:
         firewall_ports:
@@ -137,6 +135,10 @@ all:
         bot.prod.starlinglab.org:
           monitor_job: "production"
           integrity_preprocessor_chatbot: True 
+          signal_bot:
+            "main":
+              signal_phone_number: "12899990286"
+              signal_account_file: "prod_signal_account.zip"
           slack_bot:
             "workspace-0":
               workspace: "11111"

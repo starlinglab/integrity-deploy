@@ -1,1 +1,1 @@
-group_vars/all/inventory_secret.yml
+/group_vars/all/inventory_secrets.yml
