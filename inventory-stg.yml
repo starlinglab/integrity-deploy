@@ -61,7 +61,7 @@ all:
           browsertrix_email_login: "{{ outbound_email_login }}"
           browsertrix_email_password: "{{ outbound_email_password }}"
           browsertrix_auth_domain: authsign.stg.starlinglab.org
-          browsertrix_profile_file: "stg_profile.tar.gz
+          browsertrix_profile_file: "stg_profile.tar.gz"
           authsign_token: "{{ secret_authsign_token }}"
           letsencrypt_email: infra@starlinglab.org
           ssh_additional_user_keys:
@@ -140,7 +140,8 @@ all:
           signal_bot:
             "main":
               signal_phone_number: "16474788566"
-              signal_account_file: "stg_signal_account.zip"          slack_bot:
+              signal_account_file: "stg_signal_account.zip"
+          slack_bot:
             "workspace-0":
               workspace: "test"
               slack_bot_token: "{{ secret_stg_slack_bot_workspace0_token }}"
