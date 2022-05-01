@@ -1,16 +1,10 @@
 ---
-- hosts: "servers"
-  become: true
-  gather_facts: false
-  roles:
-    - hypha.common.proxmox_provision_vm
-    - hypha.common.gather_facts
-    - pass
 - hosts: "ipfs"
   become: true
   roles:
     - reboot
-    - provision_ssh_keys
+    - sshkey_update
+    - hypha.common.provision_ssh_keys
     - hypha.common.common
     - hypha.common.firewall
     - hypha.common.harden_ssh
