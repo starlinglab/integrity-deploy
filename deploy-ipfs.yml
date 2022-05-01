@@ -9,6 +9,6 @@
     - hypha.common.firewall
     - hypha.common.harden_ssh
     - hypha.common.node_exporter
-    - prometheus_addnode
+    - hypha.common.prometheus_exporter_addnode
     - ipfs
     - ipfs_cluster
