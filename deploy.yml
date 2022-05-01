@@ -5,7 +5,7 @@
   gather_facts: true
   roles:
     - sshkey_update
-    - provision_ssh_keys
+    - hypha.common.provision_ssh_keys
     - hypha.common.harden_ssh
     - hypha.common.common
     - geerlingguy.docker # Docker before Firewall
@@ -27,7 +27,7 @@
   become: true
   gather_facts: true
   roles:    
-    - provision_ssh_keys
+    - hypha.common.provision_ssh_keys
     - hypha.common.harden_ssh
     - hypha.common.common
     - hypha.common.node_exporter
@@ -46,7 +46,7 @@
   gather_facts: true
   roles:
     - sshkey_update
-    - provision_ssh_keys
+    - hypha.common.provision_ssh_keys
     - hypha.common.harden_ssh
     - hypha.common.common
     - geerlingguy.docker # Docker before Firewall
