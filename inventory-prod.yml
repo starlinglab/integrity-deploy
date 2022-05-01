@@ -48,29 +48,51 @@ all:
   children:
 
     browsertrix:
+      vars:
+        monitor_job: "production"
+        integrity_preprocessor_browsertrix: True
+        browsertrix_internal_password: "{{ secret_browsertrix }}"
+        browsertrix_minio_password: "{{ secret_browsertrix }}"
+        browsertrix_admin_email: infra@starlinglab.org
+        browsertrix_admin_password: "{{ secret_browsertrix_admin_password }}"
+        browsertrix_user_email: "tools@starlinglab.org"
+        browsertrix_user_password: "{{ secret_browsertrix_user_password }}"
+        browsertrix_email_login: "{{ outbound_email_login }}"
+        browsertrix_email_password: "{{ outbound_email_password }}"
+        authsign_token: "{{ secret_authsign_token }}"
+        letsencrypt_email: infra@starlinglab.org
+        ssh_additional_user_keys:
+          - name: ikreymer
+            key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCTuNVyhX92vfAVIohaMvz9iJ97JoM+8Outk6wEI30mgx5ZkapfkZX8NkTEREnEhFEKuY30jDzP6bW6jLvUhM015tyw2bsa/exmN3IFHfNOnUWMyJzWNpfcA5+TsKu/5NaorXcEIvPuiAledEEHzvIrKWvrxUD8O9PtOiDdtJfpPJ7N/k0QC9FfELfScEf07pRgu/4Fohq+veq+WGw0Kb5LrZO96e/ZKIU5ySlUj+nHKISFDfEcD3bL/P96c9uoaCIVqCaRJdhfFj2zQiVmqQteu7XecGF6nUqTLD9isr4bYraE15E/IFP3nurk2w8fUS6kwQwGKcUPF4aYeOHLIyKC+NspT45rYqUw5YGFInCFkdEDzRNofmmUbBFAgQAfG+sPdrgwcLsg8662R6u+ifkEm/4Gtu3WAArDuJALhgzKbtBtGBF4tH7RwNr55kcVY63z2zzlUBwFN7r51OztKo/XLMfIxLvn405E/9LS6tDxcAHgByLnlPrY9UUITfExD4ZFFAFNCprfINDwjGuBcF8ljWZIT91jyISgzq/rz/gpMUc2Cw6ZdZjjjP43KBy25OZ09nzRt5GL2AqIZjrPSo4yedhYUPCpdn+3WpSVb+XTOK94dSUZYqZyDY5f6MgeIKgzpWUUPYX6Vp/Rw1lN+sImM7dLwRCeEN3pDhuFSCaMXQ== ikreymer@gmail.com
+        nfs_client_mount:
+          "main":
+            source: "10.55.1.1:/mnt/{{ nfs_shared_path }}"
+            target: "/mnt/{{ nfs_shared_path }}"
+        firewall_ports:
+          - "ssh":
+            port: 22
+          - "ssl":
+            port: 80
+          - "http":
+            port: 443
+          - "nodeexporter":
+            port: 9100
+            source: "{{ monitor_server }}"
+        cadvisor_exporter_port: 9110
+        firewall_docker_interface: eth0
+        firewall_docker_ports:
+          - "cAdvisor":
+            port: "{{ cadvisor_exporter_port }}"
+            protocol: tcp
+            source: "{{ monitor_server }}"
       hosts:
-        browsertrix.prod.starlinglab.org:
-          monitor_job: "production"
-          integrity_preprocessor_browsertrix: True
-          browsertrix_internal_password: "{{ secret_browsertrix }}"
-          browsertrix_minio_password: "{{ secret_browsertrix }}"
-          browsertrix_admin_email: infra@starlinglab.org
-          browsertrix_admin_password: "{{ secret_browsertrix_admin_password }}"
-          browsertrix_user_email: "tools@starlinglab.org"
-          browsertrix_user_password: "{{ secret_browsertrix_user_password }}"
-          browsertrix_email_login: "{{ outbound_email_login }}"
-          browsertrix_email_password: "{{ outbound_email_password }}"
-          browsertrix_auth_domain: authsign.halasystems.com
-          browsertrix_profile_file: "prod_profile.tar.gz"
-          authsign_token: "{{ secret_authsign_token }}"
-          letsencrypt_email: infra@starlinglab.org
-          ssh_additional_user_keys:
-            - name: ikreymer
-              key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCTuNVyhX92vfAVIohaMvz9iJ97JoM+8Outk6wEI30mgx5ZkapfkZX8NkTEREnEhFEKuY30jDzP6bW6jLvUhM015tyw2bsa/exmN3IFHfNOnUWMyJzWNpfcA5+TsKu/5NaorXcEIvPuiAledEEHzvIrKWvrxUD8O9PtOiDdtJfpPJ7N/k0QC9FfELfScEf07pRgu/4Fohq+veq+WGw0Kb5LrZO96e/ZKIU5ySlUj+nHKISFDfEcD3bL/P96c9uoaCIVqCaRJdhfFj2zQiVmqQteu7XecGF6nUqTLD9isr4bYraE15E/IFP3nurk2w8fUS6kwQwGKcUPF4aYeOHLIyKC+NspT45rYqUw5YGFInCFkdEDzRNofmmUbBFAgQAfG+sPdrgwcLsg8662R6u+ifkEm/4Gtu3WAArDuJALhgzKbtBtGBF4tH7RwNr55kcVY63z2zzlUBwFN7r51OztKo/XLMfIxLvn405E/9LS6tDxcAHgByLnlPrY9UUITfExD4ZFFAFNCprfINDwjGuBcF8ljWZIT91jyISgzq/rz/gpMUc2Cw6ZdZjjjP43KBy25OZ09nzRt5GL2AqIZjrPSo4yedhYUPCpdn+3WpSVb+XTOK94dSUZYqZyDY5f6MgeIKgzpWUUPYX6Vp/Rw1lN+sImM7dLwRCeEN3pDhuFSCaMXQ== ikreymer@gmail.com
+        hala.browsertrix.prod.starlinglab.org:
+            browsertrix_auth_domain: authsign.halasystems.com
+            browsertrix_profile_file: "prod_profile.tar.gz"
+            "hala.browsertrix.prod.starlinglab.org":
           nginx_sites:
-            "browsertrix.prod.starlinglab.org":
               ssl_provider: letsencrypt
-              web_hostname: browsertrix.prod.starlinglab.org
+              web_hostname: hala.browsertrix.prod.starlinglab.org
               locations:
                 "/":
                   proxy_location: http://127.0.0.1:9871
@@ -86,27 +108,28 @@ all:
               locations:
                 "/":
                   proxy_location: http://127.0.0.1:81
-          firewall_ports:
-            - "ssh":
-              port: 22
-            - "ssl":
-              port: 80
-            - "http":
-              port: 443
-            - "nodeexporter":
-              port: 9100
-              source: "{{ monitor_server }}"
-          nfs_client_mount:
-            "main":
-              source: "10.55.1.1:/mnt/{{ nfs_shared_path }}"
-              target: "/mnt/{{ nfs_shared_path }}"
-          cadvisor_exporter_port: 9110
-          firewall_docker_interface: eth0
-          firewall_docker_ports:
-            - "cAdvisor":
-              port: "{{ cadvisor_exporter_port }}"
-              protocol: tcp
-              source: "{{ monitor_server }}"
+        star.browsertrix.prod.starlinglab.org:
+            browsertrix_auth_domain: authsign.starlinglab.org
+            browsertrix_profile_file: "prod_profile.tar.gz"
+          nginx_sites:
+            "star.browsertrix.prod.starlinglab.org":
+              ssl_provider: letsencrypt
+              web_hostname: star.browsertrix.prod.starlinglab.org
+              locations:
+                "/":
+                  proxy_location: http://127.0.0.1:9871
+                  proxy_websocket: True
+                "/minio/":
+                  proxy_location: http://127.0.0.1:9000/
+                "/sign":
+                  proxy_location: http://127.0.0.1:8080/sign
+                "/verify":
+                  proxy_location: http://127.0.0.1:8080/verify
+            "authsign.starlinglab.org":
+              web_hostname: "authsign.starlinglab.org"
+              locations:
+                "/":
+                  proxy_location: http://127.0.0.1:81
     bot:
       vars:
         firewall_ports:
