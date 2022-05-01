@@ -19,7 +19,6 @@
     force: yes
     version: dev
 
-
 - name: Create starling config folder
   file:
     path: /root/.integrity/
@@ -28,38 +27,35 @@
     group: root
     mode: 0770
 
-- name: Copy Config
-  template:
-    src: "recorder_data.json.j2"
-    dest: /root/.integrity/preprocessor-id-config.json
 
+# PreProcessor
+- name: Create Pre-Processor ID Config
+  template:
+    src: "preprocessor-id-config.json.j2"
+    dest: /root/.integrity/preprocessor-id-config.json
 
 - name: Copy .env
   template:
     src: "env.recorder-id.j2"
     dest: /root/integrity-preprocessor/integrity_recorder_id/.env
 
-- name: Generate Config
+- name: Generate Initial PreProcesor config
   shell: "python3 /root/integrity-preprocessor/integrity_recorder_id/update_recorder_id.py"
   
-
+# PreProcessor Chat Bot
 - name: Install chatbot service
   copy:
     src: integrity-preprocessor-chatbot.service
     dest: /etc/systemd/system/integrity-preprocessor-chatbot.service
   when: integrity_preprocessor_chatbot == True
 
+
+# PreProcessor Browsertrix
 - name: Install browsertrix service
   copy:
     src: integrity-preprocessor-browsertrix.service
     dest: /etc/systemd/system/integrity-preprocessor-browsertrix.service
   when: integrity_preprocessor_browsertrix == True
-
-- name: Install folder service
-  copy:
-    src: integrity-preprocessor-folder.service
-    dest: /etc/systemd/system/integrity-preprocessor-folder.service
-  when: integrity_preprocessor_folder == True
 
 - name: Install browsertrix config
   template:
@@ -67,10 +63,38 @@
     dest: /root/integrity-preprocessor/browsertrix/.env
   when: integrity_preprocessor_browsertrix == True
 
+
+ #PreProcessor Folder
+- name: Install folder service
+  copy:
+    src: integrity-preprocessor-folder.service
+    dest: /etc/systemd/system/integrity-preprocessor-folder.service
+  when: integrity_preprocessor_folder == True
+
+- name: Copy folder .env
+  copy:
+    src: "integrity-preprocessor-folder.env"
+    dest: /root/integrity-preprocessor/folder/.env
+
+- name: Copy folder .env
+  copy:
+    src: "{{ integrity_preprocessor_folder_config }}"
+    dest: /root/.integrity/preprocessor-folder.json
+  when: integrity_preprocessor_folder_config is defined
+  force: no
+
+- name: Copy folder .env (placeholder)
+  copy:
+    src: "preprocessor-empty.json"
+    dest: /root/.integrity/preprocessor-folder.json
+  force: no
+
+# General
 - name: Reload systemd daemon
   systemd:
     daemon_reload: yes
 
+# Start PreProcessor Services
 - name: Start chatbot preprocessor
   ansible.builtin.systemd:
     state: restarted
@@ -84,25 +108,3 @@
     enabled: true
     name: integrity-preprocessor-browsertrix
   when: integrity_preprocessor_browsertrix == true
-
-- name: Create starling config folder
-  file:
-    path: /root/.integrity/
-    state: directory
-    owner: root
-    group: root
-    mode: 0770
-
-- name: Copy Config
-  template:
-    src: "recorder_data.json.j2"
-    dest: /root/.integrity/preprocessor-id-config.json
-
-
-- name: Copy .env
-  template:
-    src: "env.recorder-id.j2"
-    dest: /root/integrity-preprocessor/integrity_recorder_id/.env
-
-- name: Generate Config
-  shell: "python3 /root/integrity-preprocessor/integrity_recorder_id/update_recorder_id.py"

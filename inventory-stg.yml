@@ -223,8 +223,10 @@ all:
           numbers_api_network: "testnet"
           authsign_token: "{{ secret_authsign_token }}"     
           authsign_access_url: "https://browsertrix.stg.starlinglab.org"
-          numbers_api_url: "https://node.numbersprotocol.io/version-test/api/1.1/wf"
+          numbers_api_url: "https://node.numbersprotocol.io/version-test/api/1.1/wf"          
           integrity_backend_config: "integrity.config.stg.json"
+          integrity_preprocessor_folder: True
+          #integrity_preprocessor_folder_config: "stg_preprocessor-folder.json"
 
     ipfs:
       vars:

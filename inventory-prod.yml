@@ -222,6 +222,8 @@ all:
           authsign_access_url: "https://browsertrix.prod.starlinglab.org"
           numbers_api_url: "https://node.numbersprotocol.io/version-test/api/1.1/wf"
           integrity_backend_config: "integrity.config.prod.json"
+          integrity_preprocessor_folder: True
+          integrity_preprocessor_folder_config: "prod_preprocessor-folder.json"
 
     ipfs:
       hosts:
