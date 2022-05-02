@@ -58,14 +58,15 @@
   copy:
     src: "{{ integrity_preprocessor_chatbot_config }}"
     dest: /root/.integrity/preprocessor-chatbot.json
+    force: no
   when: integrity_preprocessor_chatbot_config is defined
-  force: no
+
 
 - name: Copy config
   copy:
     src: "preprocessor-empty.json"
     dest: /root/.integrity/preprocessor-chatbot.json
-  force: no
+    force: no
 
 
 # PreProcessor Browsertrix
@@ -85,14 +86,15 @@
   copy:
     src: "{{ integrity_preprocessor_browsertrix_config }}"
     dest: /root/.integrity/preprocessor-browsertrix.json
+    force: no
   when: integrity_preprocessor_browsertrix_config is defined
-  force: no
+  
 
 - name: Copy config (placeholder)
   copy:
     src: "preprocessor-empty.json"
     dest: /root/.integrity/preprocessor-browsertrix.json
-  force: no
+    force: no
 
  #PreProcessor Folder
 - name: Install folder service
@@ -110,14 +112,15 @@
   copy:
     src: "{{ integrity_preprocessor_folder_config }}"
     dest: /root/.integrity/preprocessor-folder.json
+    force: no
   when: integrity_preprocessor_folder_config is defined
-  force: no
+  
 
 - name: Copy folder .env (placeholder)
   copy:
     src: "preprocessor-empty.json"
     dest: /root/.integrity/preprocessor-folder.json
-  force: no
+    force: no
 
 # General
 - name: Reload systemd daemon
