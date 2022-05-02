@@ -53,6 +53,7 @@
   copy:
     src: "integrity-preprocessor-chatbot.env"
     dest: /root/integrity-preprocessor/chatbot/.env
+  when: integrity_preprocessor_chatbot == True
 
 - name: Copy config
   copy:
@@ -67,7 +68,7 @@
     src: "preprocessor-empty.json"
     dest: /root/.integrity/preprocessor-chatbot.json
     force: no
-
+  when: integrity_preprocessor_chatbot == True
 
 # PreProcessor Browsertrix
 - name: Install browsertrix service
@@ -107,6 +108,7 @@
   copy:
     src: "integrity-preprocessor-folder.env"
     dest: /root/integrity-preprocessor/folder/.env
+  when: integrity_preprocessor_folder == True
 
 - name: Copy folder .env
   copy:
@@ -121,6 +123,7 @@
     src: "preprocessor-empty.json"
     dest: /root/.integrity/preprocessor-folder.json
     force: no
+  when: integrity_preprocessor_folder == True
 
 # General
 - name: Reload systemd daemon
