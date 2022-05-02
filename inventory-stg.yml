@@ -220,6 +220,7 @@ all:
           auth_sign:
             "auth-test-1.starlinglab.org":
                port: 81
+               apiport: 8081
           ipfs_user: starling
           ipfs_gateway_port: 8081
           ipfs_service: true

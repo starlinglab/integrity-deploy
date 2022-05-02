@@ -9,6 +9,11 @@
     path: "/root/authsign/{{ auth_sign.key }}"
     state: directory
 
+- name: Create authsign data  folder
+  file:
+    path: "/root/authsign/{{ auth_sign.key }}/data"
+    state: directory
+
 - name: Copy over template
   template:
     src: docker-compose.yml.j2

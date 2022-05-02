@@ -4,11 +4,12 @@ services:
   authsign:
     image: webrecorder/authsign:0.3.1
     volumes:
-      - btrix-sign-data:/data
+      - ./data:/data
       - ./signing.yaml:/app-config/signing.yaml
     environment:
       - CONFIG=/app-config/signing.yaml
     ports:
       - {{ auth_sign.value.port }}:80
+      - 127.0.0.1:{{ auth_sign.value.apiport }}:8080
 volumes:
   btrix-sign-data:
