@@ -88,7 +88,8 @@ all:
       hosts:
         org1.browsertrix.stg.starlinglab.org:          
           browsertrix_auth_domain: org1.authsign.stg.starlinglab.org
-          browsertrix_profile_file: "stg_profile.tar.gz"                    
+          browsertrix_profile_file: "stg_profile.tar.gz"
+          integrity_backend_config: "stg_preprocessor_browsertrix-org1.json"
           nginx_sites:
             "org1.browsertrix.stg.starlinglab.org":
               ssl_provider: letsencrypt
@@ -110,7 +111,8 @@ all:
                   proxy_location: http://127.0.0.1:81
         org2.browsertrix.stg.starlinglab.org:
           browsertrix_auth_domain: org2.browsertrix.stg.starlinglab.org
-          browsertrix_profile_file: "stg_profile.tar.gz"                    
+          browsertrix_profile_file: "stg_profile.tar.gz"
+          integrity_backend_config: "stg_preprocessor_browsertrix-org2.json"
           nginx_sites:
             "org2.browsertrix.stg.starlinglab.org":
               ssl_provider: letsencrypt
@@ -160,6 +162,7 @@ all:
         bot.stg.starlinglab.org:
           monitor_job: "staging"
           integrity_preprocessor_chatbot: True
+          integrity_preprocessor_chatbot_config: stg_preprocessor-chatbot.json"
           signal_bot:
             "main":
               signal_phone_number: "16474788566"

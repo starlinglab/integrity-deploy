@@ -49,6 +49,24 @@
     dest: /etc/systemd/system/integrity-preprocessor-chatbot.service
   when: integrity_preprocessor_chatbot == True
 
+- name: Copy .env
+  copy:
+    src: "integrity-preprocessor-chatbot.env"
+    dest: /root/integrity-preprocessor/chatbot/.env
+
+- name: Copy config
+  copy:
+    src: "{{ integrity_preprocessor_chatbot_config }}"
+    dest: /root/.integrity/preprocessor-chatbot.json
+  when: integrity_preprocessor_chatbot_config is defined
+  force: no
+
+- name: Copy config
+  copy:
+    src: "preprocessor-empty.json"
+    dest: /root/.integrity/preprocessor-chatbot.json
+  force: no
+
 
 # PreProcessor Browsertrix
 - name: Install browsertrix service
@@ -63,6 +81,18 @@
     dest: /root/integrity-preprocessor/browsertrix/.env
   when: integrity_preprocessor_browsertrix == True
 
+- name: Copy config
+  copy:
+    src: "{{ integrity_preprocessor_browsertrix_config }}"
+    dest: /root/.integrity/preprocessor-browsertrix.json
+  when: integrity_preprocessor_browsertrix_config is defined
+  force: no
+
+- name: Copy config (placeholder)
+  copy:
+    src: "preprocessor-empty.json"
+    dest: /root/.integrity/preprocessor-browsertrix.json
+  force: no
 
  #PreProcessor Folder
 - name: Install folder service

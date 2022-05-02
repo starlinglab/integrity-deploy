@@ -87,10 +87,11 @@ all:
             source: "{{ monitor_server }}"
       hosts:
         hala.browsertrix.prod.starlinglab.org:
-            browsertrix_auth_domain: authsign.halasystems.com
-            browsertrix_profile_file: "prod_profile.tar.gz"
-            "hala.browsertrix.prod.starlinglab.org":
+          browsertrix_auth_domain: authsign.halasystems.com
+          browsertrix_profile_file: "prod_profile.tar.gz"
+          integrity_backend_config: "prod_preprocessor_browsertrix-hala.json"
           nginx_sites:
+            "hala.browsertrix.prod.starlinglab.org":
               ssl_provider: letsencrypt
               web_hostname: hala.browsertrix.prod.starlinglab.org
               locations:
@@ -109,8 +110,9 @@ all:
                 "/":
                   proxy_location: http://127.0.0.1:81
         star.browsertrix.prod.starlinglab.org:
-            browsertrix_auth_domain: authsign.starlinglab.org
-            browsertrix_profile_file: "prod_profile.tar.gz"
+          browsertrix_auth_domain: authsign.starlinglab.org
+          browsertrix_profile_file: "prod_profile.tar.gz"
+          integrity_backend_config: "prod_preprocessor_browsertrix-star.json"
           nginx_sites:
             "star.browsertrix.prod.starlinglab.org":
               ssl_provider: letsencrypt
@@ -160,6 +162,7 @@ all:
         bot.prod.starlinglab.org:
           monitor_job: "production"
           integrity_preprocessor_chatbot: True 
+          integrity_preprocessor_chatbot_config: "prod_preprocessor-chatbot.json"
           signal_bot:
             "main":
               signal_phone_number: "12899990286"
