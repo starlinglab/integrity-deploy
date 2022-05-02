@@ -1,0 +1,6 @@
+---
+- include_tasks: auth_sign.yml
+  loop: "{{ auth_sign | dict2items  }}"
+  loop_control:
+    loop_var: auth_sign
+  when: auth_sign is defined

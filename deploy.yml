@@ -17,6 +17,7 @@
     - hypha.common.nodejs
     - nfs
     - dropbox
+    - authsign
     - integrity-backend
     - integrity-preprocessor
     - ipfs
@@ -58,7 +59,6 @@
     - slack_archive_bot
     - telegram_archive_bot
     - signal_bot
-    - authsign
     - integrity-preprocessor
     - hypha.common.prometheus_exporter_docker
     - nfs
