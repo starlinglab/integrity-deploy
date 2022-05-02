@@ -17,7 +17,7 @@
 - name: Copy over config
   template:
     src: signing.yaml.j2
-    dest: "/root/authsign/{{ auth_sign.key }}/docker-compose.yaml"
+    dest: "/root/authsign/{{ auth_sign.key }}/signing.yaml"
 
 - name: docker-compose up
   command: docker-compose up -d
