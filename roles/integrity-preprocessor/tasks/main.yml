@@ -52,7 +52,7 @@
 - name: Copy .env
   copy:
     src: "integrity-preprocessor-chatbot.env"
-    dest: /root/integrity-preprocessor/chatbot/.env
+    dest: /root/integrity-preprocessor/chat-bot/.env
   when: integrity_preprocessor_chatbot == True
 
 - name: Copy config
@@ -96,6 +96,7 @@
     src: "preprocessor-empty.json"
     dest: /root/.integrity/preprocessor-browsertrix.json
     force: no
+  when: integrity_preprocessor_browsertrix == True
 
  #PreProcessor Folder
 - name: Install folder service
