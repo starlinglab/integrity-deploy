@@ -227,7 +227,7 @@ all:
           authsign_token: "{{ secret_authsign_token }}"     
           authsign_access_url: "https://browsertrix.stg.starlinglab.org"
           numbers_api_url: "https://node.numbersprotocol.io/version-test/api/1.1/wf"          
-          integrity_backend_config: "integrity.config.stg.json"
+          integrity_backend_config: "stg_integrity.config.json"
           integrity_preprocessor_folder: True
           #integrity_preprocessor_folder_config: "stg_preprocessor-folder.json"
 
