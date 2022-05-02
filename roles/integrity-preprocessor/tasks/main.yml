@@ -27,7 +27,6 @@
     group: root
     mode: 0770
 
-
 # PreProcessor
 - name: Create Pre-Processor ID Config
   template:
@@ -41,7 +40,7 @@
 
 - name: Generate Initial PreProcesor config
   shell: "python3 /root/integrity-preprocessor/integrity_recorder_id/update_recorder_id.py"
-  
+
 # PreProcessor Chat Bot
 - name: Install chatbot service
   copy:
@@ -61,7 +60,12 @@
     dest: /root/.integrity/preprocessor-chatbot.json
     force: no
   when: integrity_preprocessor_chatbot_config is defined
-
+- name: Copy user database
+  copy:
+    src: "{{ integrity_preprocessor_chatbot_signal_user_config }}"
+    dest: /root/.integrity/preprocessor-chatbot-signal-users.json
+    force: no
+  when: integrity_preprocessor_chatbot_signal_user_config is defined
 
 - name: Copy config
   copy:
@@ -89,7 +93,6 @@
     dest: /root/.integrity/preprocessor-browsertrix.json
     force: no
   when: integrity_preprocessor_browsertrix_config is defined
-  
 
 - name: Copy config (placeholder)
   copy:
@@ -98,7 +101,7 @@
     force: no
   when: integrity_preprocessor_browsertrix == True
 
- #PreProcessor Folder
+  #PreProcessor Folder
 - name: Install folder service
   copy:
     src: integrity-preprocessor-folder.service
@@ -117,7 +120,6 @@
     dest: /root/.integrity/preprocessor-folder.json
     force: no
   when: integrity_preprocessor_folder_config is defined
-  
 
 - name: Copy folder .env (placeholder)
   copy:
