@@ -212,6 +212,13 @@ all:
               locations:
                 "/":
                   proxy_location: "http://127.0.0.1:8080"
+            "auth-test-1.stg.starlinglab.org":
+              locations:
+                "/":
+                  proxy_location: http://127.0.0.1:81
+          auth_sign:
+            "auth-test-1.stg.starlinglab.org":
+               - port: 81
           ipfs_user: starling
           ipfs_gateway_port: 8081
           ipfs_service: true

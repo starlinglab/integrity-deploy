@@ -1,0 +1,12 @@
+signing:
+  domain: {{ auth_sign.key }}
+  email: {{ letsencrypt_email }} 
+  port: 80
+  output: /data  # dir to store the keys and certs (for internal use)
+  staging: False  # generate staging certs
+  timestamping:
+    - certfile: pkg://authsign.trusted/ts-chain.pem
+      url: http://freetsa.org/tsr  # timeserver URL
+{% if authsign.value.token is defined %}
+  auth_token: "{{ authsign.value.token }}"
+{% endif %}

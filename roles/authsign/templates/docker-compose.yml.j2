@@ -1,0 +1,16 @@
+version: '3.5'
+
+services:
+  authsign:
+    image: webrecorder/authsign:0.3.1
+    volumes:
+      - btrix-sign-data:/data
+      - ./configs/signing.yaml:signing.yaml
+    environment:
+      - CONFIG=signing.yaml
+    env_file:
+      - ./configs/config.env
+    ports:
+      - {{ signal_bot.value.port }}:80
+volumes:
+  btrix-sign-data:
