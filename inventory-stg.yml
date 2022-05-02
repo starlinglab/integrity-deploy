@@ -212,6 +212,8 @@ all:
               locations:
                 "/":
                   proxy_location: "http://127.0.0.1:8080"
+                "/auth-test-1/":
+                  proxy_location: http://127.0.0.1:8881/
             "auth-test-1.starlinglab.org":
               web_hostname: auth-test-1.starlinglab.org
               locations:
