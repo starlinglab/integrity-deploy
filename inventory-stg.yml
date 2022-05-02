@@ -162,7 +162,7 @@ all:
         bot.stg.starlinglab.org:
           monitor_job: "staging"
           integrity_preprocessor_chatbot: True
-          integrity_preprocessor_chatbot_config: stg_preprocessor-chatbot.json"
+          integrity_preprocessor_chatbot_config: stg_preprocessor-chatbot.json
           signal_bot:
             "main":
               signal_phone_number: "16474788566"
