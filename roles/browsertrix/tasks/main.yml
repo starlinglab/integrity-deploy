@@ -75,8 +75,8 @@
     mode: 0755
 
 - name: Template createAccount for browsertrix
-  ansible.builtin.template:
-    src: createAccount.py.j2
+  copy:
+    src: createAccount.py
     dest: /root/browsertrix-contrib/createAccount.py
     group: root
     owner: root
@@ -93,7 +93,7 @@
     chdir: /root/browsertrix-contrib
 
 - name: Create master account
-  command: ./createAccount.py
+  command: "./createAccount.py {{ browsertrix_user_email }} {{ browsertrix_user_password }} MasterArchive"
   args:
     chdir: /root/browsertrix-contrib
   register: account_creation
