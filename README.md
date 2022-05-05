@@ -1,13 +1,41 @@
 # Manual Proecess
 
-- [ ] Login to drop box
-- [ ] Exclude and include
-- [ ] Mount dropbox to share
+## Login to dropbox
+- Login to drop box in a browser
+- Create a folder as needed ie `integrity-prod-starling-org` (replace this text in instructions below with whatever you created)
+- Login to ALL other server running this dropbox  as root
+  - `cd /root/dropbox`
+  - `docker exec -it dropbox /bin/bash`
+  - `cd /home/dropbox-user/Dropbox/`
+  - `/opt/dropbox/dropbox exclude add integrity-prod-starling-org`
+  - `exit`
+- On integrity server again
+- `cd /root/dropbox`
+- `docker-compose logs`
+- get a dropbox shell ready 
+    - `docker exec -it dropbox /bin/bash`
+- Copy the url from the line "Please Visit https://www.dropbox.com/cli_link_nonce?nonce=xxxxxxxx"
+- Click `connect`
+- in shell type in
+- paste it into a browser where you are logged into 
+- click Connect
+- on integrity (repeat this command until you see a list of all the directories it may take a few seconds)
+    - `cd /home/dropbox-user/Dropbox/ && /opt/dropbox/dropbox exclude add * `
+    - remove folder to sync
+    - `/opt/dropbox/dropbox exclude remove integrity-prod-starling-org`
+    - `exit` to leave dropbox container
 
-/etc/fstab:
+## Mount dropbox to shared fs
+- create shared folder in dropbox
+    - `mkdir /mnt/store/dropbox/Dropbox/integrity-prod-starling-org/shared`
+    - `chown starling.starling /mnt/store/dropbox/Dropbox/integrity-prod-starling-org/shared`
+- edit /etc/fstab add following line
 ```
-/mnt/integrity_store/starling/shared /mnt/store/dropbox/Dropbox/integrity-stg-starlinglab-org/shared /source /destination none defaults,bind 0 0
+/mnt/integrity_store/starling/shared /mnt/store/dropbox/Dropbox/integrity-prod-starling-org/shared none defaults,bind 0 0
 ```
+- mount new folder
+    - `mount /mnt/store/dropbox/Dropbox/integrity-prod-starling-org/shared`
+
 
 `monitor_job:` Used for monitoring, specify the job name to add to prometheus for this bot. This field is free form. Currently [staging,production,infra]  
 
