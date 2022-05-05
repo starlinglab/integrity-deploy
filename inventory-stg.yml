@@ -109,7 +109,7 @@ all:
                 "/":
                   proxy_location: http://127.0.0.1:81
         org2.browsertrix.stg.starlinglab.org:
-          browsertrix_auth_domain: org2.browsertrix.stg.starlinglab.org
+          browsertrix_auth_domain: org2.authsign.stg.starlinglab.org
           browsertrix_profile_file: "stg_profile.tar.gz"
           integrity_backend_config: "stg_preprocessor_browsertrix-org2.json"
           nginx_sites:
