@@ -8,8 +8,8 @@
   file:
     recurse: true
     path: /mnt/store/dropbox
-    owner: 1002
-    group: 1002
+    owner: 1001
+    group: 1001
     state: directory
 
 - name: Download Docker-DropBox
