@@ -52,6 +52,6 @@
       chdir: /root/telegram_archive_bot_{{ telegram_bot.key }}/telegram_archive_bot
 
 - name: docker-compose up -d
-  command: docker-compose build
+  command: docker-compose up -d
   args:
       chdir: /root/telegram_archive_bot_{{ telegram_bot.key }}/telegram_archive_bot

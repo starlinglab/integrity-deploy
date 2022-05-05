@@ -226,6 +226,7 @@ all:
           ipfs_user: starling
           ipfs_gateway_port: 8081
           ipfs_service: true
+          integrity_cai_signing_key_file: "stg_cai_key.pem"
           integrity_jwt_secret: "{{ secret_integrity_jwt }}"
           integrity_clain_tool_path: "/home/starling/claim_tool"
           integrity_data_path: "/mnt/{{ nfs_shared_path }}/starling"

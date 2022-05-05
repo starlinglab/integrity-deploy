@@ -93,8 +93,17 @@
     src: claim_tool
     dest: /home/starling/claim_tool
     group: starling
+    owner: starling    
+    mode: 0550
+
+- name: Configure Claim tool
+  copy:
+    src: "{{ integrity_cai_signing_key_file }}"
+    dest: /home/starling/.cai/temp_key.pem
+    group: starling
     owner: starling
     mode: 0550
+  when: integrity_cai_signing_key_file is defined
 
 - name: Copy config file
   copy:
@@ -131,3 +140,4 @@
     state: restarted
     enabled: true
     name: integrity-backend
+
