@@ -75,7 +75,7 @@
     repo: https://github:{{ github_token }}@github.com/starlinglab/integrity-backend.git
     dest: /home/starling/integrity-backend
     force: yes
-    version: dev
+    version: c2pa-proofmode
 
 - name: Init env
   ansible.builtin.shell: /usr/bin/su - starling -c 'cd /home/starling/integrity-backend/ && pipenv install'
@@ -96,10 +96,27 @@
     owner: starling    
     mode: 0550
 
-- name: Configure Claim tool
+- name: Create claim tool folder
+  file:
+    path: /home/starling/.cai/
+    state: directory
+    owner: starling
+    group: starling
+    mode: 0550
+
+- name: Configure Claim tool 1/1
   copy:
-    src: "{{ integrity_cai_signing_key_file }}"
+    src: "{{ integrity_cai_signing_key_file }}.pem"
     dest: /home/starling/.cai/temp_key.pem
+    group: starling
+    owner: starling
+    mode: 0550
+  when: integrity_cai_signing_key_file is defined
+
+- name: Configure Claim tool 2/2
+  copy:
+    src: "{{ integrity_cai_signing_key_file }}.pub"
+    dest: /home/starling/.cai/temp_key.pub
     group: starling
     owner: starling
     mode: 0550
