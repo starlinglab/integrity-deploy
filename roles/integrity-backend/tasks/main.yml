@@ -75,7 +75,7 @@
     repo: https://github:{{ github_token }}@github.com/starlinglab/integrity-backend.git
     dest: /home/starling/integrity-backend
     force: yes
-    version: c2pa-proofmode
+    version: dev-with-c2pa-proofmode
 
 - name: Init env
   ansible.builtin.shell: /usr/bin/su - starling -c 'cd /home/starling/integrity-backend/ && pipenv install'
