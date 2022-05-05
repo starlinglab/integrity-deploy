@@ -49,4 +49,4 @@ if (invite !=""):
     r = requests.post(URL, headers=headers, json=d)
     res = r.json()
 
-echo aid
+print (aid)
