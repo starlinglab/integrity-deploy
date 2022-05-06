@@ -46,6 +46,7 @@
   git:
     repo: https://github.com/likecoin/iscn-js.git
     dest: /home/starling/iscn
+    version: feature/server_example
     force: yes
 
 - name: Init env
@@ -55,8 +56,8 @@
 
 
 - name: Configure ISCN service
-  copy:
-    src: iscn.service
+  template:
+    src: iscn.service.j2
     dest: /etc/systemd/system/iscn.service
 
 - name: Reload systemd daemon
