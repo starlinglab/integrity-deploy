@@ -222,7 +222,7 @@ all:
           browsertrix_password: "{{ secret_integrity_browsertrix_password }}"
           numbers_api_key: "{{ secret_numbers_api }}"
           numbers_api_network: "mainnet"
-          iscn_mnemonic: "{{ secret_iscn_mnemonic }}"
+          iscn_mnemonic: "{{ secret_iscn_mnemonic_prod }}"
           authsign_token: "{{ secret_authsign_token }}"     
           authsign_access_url: "https://browsertrix.prod.starlinglab.org"
           numbers_api_url: "https://node.numbersprotocol.io/version-test/api/1.1/wf"
