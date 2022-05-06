@@ -3,7 +3,7 @@ Description=ISCN Server
 After=network.target
 
 [Service]
-Environment="MNEMONIC_SEED_WORD=\"{{ iscn_mnemonic }}\""
+Environment="MNEMONIC_SEED_WORD={{ iscn_mnemonic }}"
 User=starling
 Restart=always
 Type=simple
