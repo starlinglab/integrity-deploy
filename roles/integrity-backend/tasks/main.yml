@@ -46,6 +46,7 @@
   git:
     repo: https://github.com/likecoin/iscn-js.git
     dest: /home/starling/iscn
+    version: master
     force: yes
 
 - name: Init env
