@@ -11,6 +11,8 @@
   pip:
     name:
       - python-dotenv
+      - watchdog
+      - python-magic
 
 - name: Clone preprocessor
   git:

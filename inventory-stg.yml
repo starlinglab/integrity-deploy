@@ -242,7 +242,7 @@ all:
           iscn_mnemonic: "{{ secret_iscn_mnemonic_stg }}"
           integrity_backend_config: "stg_integrity.config.json"
           integrity_preprocessor_folder: True
-          #integrity_preprocessor_folder_config: "stg_preprocessor-folder.json"
+          integrity_preprocessor_folder_config: "stg_preprocessor-folder.json"
 
     ipfs:
       vars:

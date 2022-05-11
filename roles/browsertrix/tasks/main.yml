@@ -87,6 +87,12 @@
   args:
     chdir: /root/browsertrix
 
+- name: docker-compose pull crawler
+  command: docker pull webrecorder/browsertrix-crawler:latest
+  args:
+    chdir: /root/browsertrix
+
+
 - name: Upload profile
   command: ./uploadFile.sh test-bucket profile.tar.gz
   args:

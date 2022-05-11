@@ -43,7 +43,7 @@ res = r.json()
 aid = res["archives"][0]["id"]
 
 if (invite !=""):
-    d={ "email": invite, "role":10 }
+    d={ "email": invite, "role":40 }
     # get AID
     URL = f"http://127.0.0.1:9871/api/archives/{aid}/invite/"
     r = requests.post(URL, headers=headers, json=d)
