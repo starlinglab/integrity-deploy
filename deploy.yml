@@ -36,6 +36,7 @@
     - hypha.common.nginx
     - hypha.common.ssl
     - geerlingguy.docker
+    - hypha.common.firewall
     - browsertrix
     - integrity-preprocessor
     - hypha.common.prometheus_exporter_docker
