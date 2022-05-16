@@ -20,7 +20,6 @@ all:
 
     # Server that monitoring configs will be updated on
     monitor_server: monitor.prod.starlinglab.org
-    firewall_ipv6: false
 
     # E-mail credentials
     outbound_email_login: starlinglaborg@gmail.com
