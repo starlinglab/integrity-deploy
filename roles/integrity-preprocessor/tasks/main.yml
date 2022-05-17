@@ -92,10 +92,20 @@
 
 - name: Copy config
   copy:
-    src: "{{ integrity_preprocessor_browsertrix_config }}"
-    dest: /root/.integrity/preprocessor-browsertrix.json
-    force: no
-  when: integrity_preprocessor_browsertrix_config is defined
+    src: "{{ browsertrix_integrity_collections }}"
+    dest: /root/.integrity/preprocessor-browsertrix-collections.json
+  when: browsertrix_integrity_collections is defined
+
+- name: Install Archive Provisioning
+  copy:
+    src: "provisionBrowsertrixAccounts.py"
+    dest: /root/browsertrix-contrib/provisionBrowsertrixAccounts.py
+  when: browsertrix_integrity_collections is defined
+
+- name: Provision collections
+  shell: "/root/browsertrix-contrib/provisionBrowsertrixAccounts.py"
+  when: browsertrix_integrity_collections is defined
+
 
 - name: Copy config (placeholder)
   copy:

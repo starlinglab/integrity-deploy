@@ -87,7 +87,7 @@ all:
         org1.browsertrix.stg.starlinglab.org:          
           browsertrix_auth_domain: org1.authsign.stg.starlinglab.org
           browsertrix_profile_file: "stg_profile.tar.gz"
-          integrity_backend_config: "stg_preprocessor_browsertrix-org1.json"
+          browsertrix_integrity_collections: "stg_preprocessor_browsertrix-org1.json"
           nginx_sites:
             "org1.browsertrix.stg.starlinglab.org":
               ssl_provider: letsencrypt
@@ -110,7 +110,7 @@ all:
         org2.browsertrix.stg.starlinglab.org:
           browsertrix_auth_domain: org2.authsign.stg.starlinglab.org
           browsertrix_profile_file: "stg_profile.tar.gz"
-          integrity_backend_config: "stg_preprocessor_browsertrix-org2.json"
+          browsertrix_integrity_collections: "stg_preprocessor_browsertrix-org2.json"
           nginx_sites:
             "org2.browsertrix.stg.starlinglab.org":
               ssl_provider: letsencrypt

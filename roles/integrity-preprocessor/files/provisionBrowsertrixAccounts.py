@@ -19,24 +19,13 @@ master_password=os.environ.get("BROWSERTRIX_PASSWORD")
 config_dir =  os.environ.get("CONFIG_FILE")
 
 base_url = "/mnt/integrity_store/starling/internal"
-data = [
-    {
-    "collectionID": "bosnia-investigation-remote",
-    "orgID": "starling-lab"
-    },
-    {
-    "collectionID": "tracked-series-web-archives",
-    "orgID": "associated-press"
-    }
-]
-
+with open("/root/.integrity/preprocessor-browsertrix-collections.json","r") as f:
+    data = json.load(f)
 
 result = {
     "collections": {
     }
 }
-
-
 
 def get_token(username,password):
     URL = "http://127.0.0.1:9871/api/auth/jwt/login"
@@ -85,7 +74,7 @@ def invite_user(email,password,aid):
 def get_users():
     cli = f"mongo --eval \"db.users.find()\" -u {mongo_user} -p {mongo_password} browsertrixcloud"
 
-    cli = "docker exec -it browsertrix-mongo-1 sh -c \"echo 'use browsertrixcloud\\ndb.users.find()' | mongo -u root -p example --quiet\""
+    cli = f"docker exec -it browsertrix-mongo-1 sh -c \"echo 'use browsertrixcloud\\ndb.users.find()' | mongo -u {mongo_user} -p {mongo_password} --quiet\""
     r=subprocess.check_output(cli, shell=True, text=True)
     r = r.replace("ObjectId(","")
     r = r.replace("UUID(","")
