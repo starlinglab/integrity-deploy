@@ -94,7 +94,7 @@
 
 
 - name: Upload profile
-  command: ./uploadFile.sh starling-lab profile.tar.gz
+  command: ./uploadFile.sh test-bucket profile.tar.gz
   args:
     chdir: /root/browsertrix-contrib
 
