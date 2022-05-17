@@ -87,7 +87,7 @@ all:
         hala.browsertrix.prod.starlinglab.org:
           browsertrix_auth_domain: authsign.halasystems.com
           browsertrix_profile_file: "prod_profile.tar.gz"
-          browsertrix_integrity_collections: "prod_preprocessor_browsertrix-hala.json"
+          browsertrix_integrity-collections: "prod_preprocessor_browsertrix-hala.json"
           nginx_sites:
             "hala.browsertrix.prod.starlinglab.org":
               ssl_provider: letsencrypt
@@ -110,7 +110,7 @@ all:
         star.browsertrix.prod.starlinglab.org:
           browsertrix_auth_domain: authsign.starlinglab.org
           browsertrix_profile_file: "prod_profile.tar.gz"
-          browsertrix_integrity_collections: "prod_preprocessor_browsertrix-star.json"
+          browsertrix_integrity-collections: "prod_preprocessor_browsertrix-star.json"
           nginx_sites:
             "star.browsertrix.prod.starlinglab.org":
               ssl_provider: letsencrypt
