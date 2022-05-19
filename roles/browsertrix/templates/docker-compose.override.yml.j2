@@ -7,7 +7,6 @@ services:
         options:
           loki-url: https://{{loki_username}}:{{loki_password}}@{{loki_url}}
           loki-external-labels: job=docker,host={{ inventory_hostname }}
-       
 
   frontend:
     logging:
@@ -22,7 +21,6 @@ services:
         options:
           loki-url: https://{{loki_username}}:{{loki_password}}@{{loki_url}}
           loki-external-labels: job=docker,host={{ inventory_hostname }}      
-       
 
   mongo:
     logging:
@@ -30,7 +28,6 @@ services:
         options:
           loki-url: https://{{loki_username}}:{{loki_password}}@{{loki_url}}
           loki-external-labels: job=docker,host={{ inventory_hostname }}      
-      
 
   minio:
     logging:
@@ -39,14 +36,12 @@ services:
           loki-url: https://{{loki_username}}:{{loki_password}}@{{loki_url}}
           loki-external-labels: job=docker,host={{ inventory_hostname }}      
    
-
   init_minio_bucket:
     logging:
         driver: loki
         options:
           loki-url: https://{{loki_username}}:{{loki_password}}@{{loki_url}}
           loki-external-labels: job=docker,host={{ inventory_hostname }}      
-        
 
   authsign:
     logging:
@@ -54,4 +49,3 @@ services:
         options:
           loki-url: https://{{loki_username}}:{{loki_password}}@{{loki_url}}
           loki-external-labels: job=docker,host={{ inventory_hostname }}      
-       
