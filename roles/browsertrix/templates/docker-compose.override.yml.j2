@@ -6,46 +6,54 @@ services:
         driver: loki
         options:
           loki-url: https://{{loki_username}}:{{loki_password}}@{{loki_url}}
-          loki-external-labels: job=docker,host={{ inventory_hostname }}
+          loki-external-labels: job=docker
+          loki-pipeline-stages: |
+            - labels:
+              host: {{ inventory_hostname }}
+            - labeldrop: 
+              - host
+
 
   frontend:
     logging:
         driver: loki
         options:
           loki-url: https://{{loki_username}}:{{loki_password}}@{{loki_url}}
-          loki-external-labels: job=docker,host={{ inventory_hostname }}      
+          loki-external-labels: job=docker,hostname={{ inventory_hostname }}      
 
   redis:
     logging:
         driver: loki
         options:
           loki-url: https://{{loki_username}}:{{loki_password}}@{{loki_url}}
-          loki-external-labels: job=docker,host={{ inventory_hostname }}      
+          loki-external-labels: job=docker,hostname={{ inventory_hostname }}      
 
   mongo:
     logging:
         driver: loki
         options:
           loki-url: https://{{loki_username}}:{{loki_password}}@{{loki_url}}
-          loki-external-labels: job=docker,host={{ inventory_hostname }}      
+          loki-external-labels: job=docker,hostname={{ inventory_hostname }}      
 
   minio:
     logging:
         driver: loki
         options:
           loki-url: https://{{loki_username}}:{{loki_password}}@{{loki_url}}
-          loki-external-labels: job=docker,host={{ inventory_hostname }}      
+          loki-external-labels: job=docker,hostname={{ inventory_hostname }}      
    
   init_minio_bucket:
     logging:
         driver: loki
         options:
           loki-url: https://{{loki_username}}:{{loki_password}}@{{loki_url}}
-          loki-external-labels: job=docker,host={{ inventory_hostname }}      
+          loki-external-labels: job=docker,hostname={{ inventory_hostname }}      
 
   authsign:
     logging:
         driver: loki
         options:
           loki-url: https://{{loki_username}}:{{loki_password}}@{{loki_url}}
-          loki-external-labels: job=docker,host={{ inventory_hostname }}      
+          loki-external-labels: job=docker,hostname={{ inventory_hostname }}  
+    image: webrecorder/authsign:0.4.0
+    
