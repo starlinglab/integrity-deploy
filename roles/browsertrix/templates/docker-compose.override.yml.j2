@@ -6,12 +6,7 @@ services:
         driver: loki
         options:
           loki-url: https://{{loki_username}}:{{loki_password}}@{{loki_url}}
-          loki-external-labels: job=docker
-          loki-pipeline-stages: |
-            - labels:
-              host: {{ inventory_hostname }}
-            - labeldrop: 
-              - host
+          loki-external-labels: job=docker,hostname={{ inventory_hostname }}  
 
 
   frontend:
