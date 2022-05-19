@@ -22,7 +22,7 @@ all:
     monitor_server: "monitor.prod.starlinglab.org"
 
     # Loki Data
-    loki_url: "monitor_server:443/loki/api/v1/push"
+    loki_url: "https://{{monitor_server}}:443/loki/api/v1/push"
     loki_username: loki
     loki_password: "{{secret_loki_password}}"
 
