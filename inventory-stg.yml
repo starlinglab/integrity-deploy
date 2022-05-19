@@ -21,6 +21,11 @@ all:
     # Server that monitoring configs will be updated on
     monitor_server: monitor.prod.starlinglab.org
 
+    # Loki Data
+    loki_url: "https://monitor_server:443/loki/api/v1/push"
+    loki_username: loki
+    loki_password: "{{secret_loki_password}}"
+
     # E-mail credentials
     outbound_email_login: starlinglaborg@gmail.com
     outbound_email_password: "{{ secret_outbound_email_password }}"
@@ -35,12 +40,13 @@ all:
     # Keys to add to all servers
     ssh_user_keys:
       - name: yurko
-        key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCtv4I2W8TlVsWKKHwASF78cGrn06BJi9dGQQQksW0Ke9ED/KJG2pvG4GXnh57/AOuJtUaS3gXBEj/knE3t/qtvO2cUg1EufnkItzNLdY1B0Hwm98I8O7JdhE+3c/SUIU4Miioj/IlKl8fRxDqx03FTVBdd6Q7kKF79LcobTqo7Pd6i7vnp46U6bBm01tDdRB+g+lok9x+B8umRqqjAGcboucwZ5NrzmLjz/p1wg+5Gva2zcyzBp1aQk7JPhsbElTLfhUP7hJbJ6rFWnebgK8z/vbyofeZljXb6LttttMGoWKg6QAdn61mRwEGff1FUPVLiEVnQ5IY+f97NlQ36c81b yurko@tomesh"
+        key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCtv4I2W8TlVsWKKHwASF78cGrn06BJi9dGQQQksW0Ke9ED/KJG2pvG4GXnh57/AOuJtUaS3gXBEj/knE3t/qtvO2cUg1EufnkItzNLdY1B0Hwm98I8O7JdhE+3c/SUIU4Miioj/IlKl8fRxDqx03FTVBdd6Q7kKF79LcobTqo7Pd6i7vnp46U6bBm01tDdRB+g+lok9x+B8umRqqjAGcboucwZ5NrzmLjz/p1wg+5Gva2zcyzBp1aQk7JPhsbElTLfhUP7hJbJ6rFWnebgK8z/vbyofeZljXb6LttttMGoWKg6QAdn61mRwEGff1FUPVLiEVnQ5IY+f97NlQ36c81b yurko@starling"
       - name: ben
-        key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMLiPavTvnbFRc6JvkGVinFoAk93k88KTg1u3zZQxMyW benedict@Benedicts-MacBook-Air.local"
+        key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMLiPavTvnbFRc6JvkGVinFoAk93k88KTg1u3zZQxMyW benedict@starling"
       - name: cole
         key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDa7CV1MuEEWiO21CcrakO5h/2W8SgXGqN9xUj7tmT/9i4+IYoCFw4eARe9ZMUUuAa/jBThKK9oAylMEc5u6faWUVUNY5z46KeNEH482z+kcprSEYEY0w9lWyA5c93BIRcvH3KYZkfwCe4U5i6cxD3RAHJNTuHKdeUfT4hCWEyJMKNPsW5ggILJe/9Iq7XVy1ukXmV+ta0u9AKH/fWW4OA6RADzD7eFNZtooZoU1VAcRgpaLhzVFp+0kyhBIciiajZ4r217TMA+DEQ9QGVIxrQJJGm6v0UYLOPuv3NAnGrjHFE7+gGXKVQljx2N/eoyKmF7lWaqDBg3uvic3FCSBeunC5rggeFTtfZ37/J9Lk+rwWwk3HgfzLc7eefYG2lPoX3ftjeD41E4EcobH8A2J1dOgcD7SiOwCZc8dGtWMjC02SaSufWnl8swphd+PNdO/JeWLbGmnVW3AfiaDrVHLXviP2NRfwEKtbH4oB9d/aaryREgi3fLm6MsRm8c+GSWUOc= cole@hypha"
-
+      - name: basilesimon
+        key: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFiERM3s7o882wuqwgMALsRgmZlvtjq4KFjK7AqAqWQP basile@starling
     ipfs_swarm_key: "{{ secret_ipfs_swarm_key }}"
 
   children:
@@ -84,10 +90,11 @@ all:
             protocol: tcp
             source: "{{ monitor_server }}"
       hosts:
-        org1.browsertrix.stg.starlinglab.org:          
+        org1.browsertrix.stg.starlinglab.org:
           browsertrix_auth_domain: org1.authsign.stg.starlinglab.org
           browsertrix_profile_file: "stg_profile.tar.gz"
           browsertrix_integrity_collections: "stg_preprocessor-browsertrix-org1.json"
+          browsertrix_loki: True
           nginx_sites:
             "org1.browsertrix.stg.starlinglab.org":
               ssl_provider: letsencrypt
@@ -111,6 +118,7 @@ all:
           browsertrix_auth_domain: org2.authsign.stg.starlinglab.org
           browsertrix_profile_file: "stg_profile.tar.gz"
           browsertrix_integrity_collections: "stg_preprocessor-browsertrix-org2.json"
+          browsertrix_loki: True
           nginx_sites:
             "org2.browsertrix.stg.starlinglab.org":
               ssl_provider: letsencrypt

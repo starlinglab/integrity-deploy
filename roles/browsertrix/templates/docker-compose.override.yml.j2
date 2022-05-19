@@ -1,0 +1,86 @@
+version: '3.5'
+
+services:
+  backend:
+    logging:
+        driver: loki
+        options:
+          loki-url: https://{{loki_username}:{{loki_password}}@{{loki_url}}
+          labels:
+            job: docker
+            host: {{ inventory_hostname }}
+          relabel_configs:
+            - source_labels: ["compose_project"]
+              target_label: "unit"          
+
+  frontend:
+    logging:
+        driver: loki
+        options:
+          loki-url: https://{{loki_username}:{{loki_password}}@{{loki_url}}
+          labels:
+            job: docker
+            host: {{ inventory_hostname }}
+          relabel_configs:
+            - source_labels: ["compose_project"]
+              target_label: "unit"          
+
+  redis:
+    logging:
+        driver: loki
+        options:
+          loki-url: https://{{loki_username}:{{loki_password}}@{{loki_url}}
+          labels:
+            job: docker
+            host: {{ inventory_hostname }}
+          relabel_configs:
+            - source_labels: ["compose_project"]
+              target_label: "unit"          
+
+  mongo:
+    logging:
+        driver: loki
+        options:
+          loki-url: https://{{loki_username}:{{loki_password}}@{{loki_url}}
+          labels:
+            job: docker
+            host: {{ inventory_hostname }}
+          relabel_configs:
+            - source_labels: ["compose_project"]
+              target_label: "unit"          
+
+  minio:
+    logging:
+        driver: loki
+        options:
+          loki-url: https://{{loki_username}:{{loki_password}}@{{loki_url}}
+          labels:
+            job: docker
+            host: {{ inventory_hostname }}
+          relabel_configs:
+            - source_labels: ["compose_project"]
+              target_label: "unit"          
+
+  init_minio_bucket:
+    logging:
+        driver: loki
+        options:
+          loki-url: https://{{loki_username}:{{loki_password}}@{{loki_url}}
+          labels:
+            job: docker
+            host: {{ inventory_hostname }}
+          relabel_configs:
+            - source_labels: ["compose_project"]
+              target_label: "unit"          
+
+  authsign:
+    logging:
+        driver: loki
+        options:
+          loki-url: https://{{loki_username}:{{loki_password}}@{{loki_url}}
+          labels:
+            job: docker
+            host: {{ inventory_hostname }}
+          relabel_configs:
+            - source_labels: ["compose_project"]
+              target_label: "unit"          

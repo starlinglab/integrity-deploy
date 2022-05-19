@@ -21,6 +21,11 @@ all:
     # Server that monitoring configs will be updated on
     monitor_server: "monitor.prod.starlinglab.org"
 
+    # Loki Data
+    loki_url: "https://monitor_server:443/loki/api/v1/push"
+    loki_username: loki
+    loki_password: "{{secret_loki_password}}"
+
     # E-mail credentials
     outbound_email_login: starlinglaborg@gmail.com
     outbound_email_password: "{{ secret_outbound_email_password }}"
@@ -88,6 +93,7 @@ all:
           browsertrix_auth_domain: authsign.halasystems.com
           browsertrix_profile_file: "prod_profile.tar.gz"
           browsertrix_integrity_collections: "prod_preprocessor-browsertrix-hala.json"
+          browsertrix_loki: True
           nginx_sites:
             "hala.browsertrix.prod.starlinglab.org":
               ssl_provider: letsencrypt
@@ -111,6 +117,7 @@ all:
           browsertrix_auth_domain: authsign.starlinglab.org
           browsertrix_profile_file: "prod_profile.tar.gz"
           browsertrix_integrity_collections: "prod_preprocessor-browsertrix-star.json"
+          browsertrix_loki: True
           nginx_sites:
             "star.browsertrix.prod.starlinglab.org":
               ssl_provider: letsencrypt
