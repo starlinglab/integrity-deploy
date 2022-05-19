@@ -5,7 +5,7 @@ services:
     logging:
         driver: loki
         options:
-          loki-url: https://{{loki_username}:{{loki_password}}@{{loki_url}}
+          loki-url: https://{{loki_username}}:{{loki_password}}@{{loki_url}}
           labels:
             job: docker
             host: {{ inventory_hostname }}
@@ -17,7 +17,7 @@ services:
     logging:
         driver: loki
         options:
-          loki-url: https://{{loki_username}:{{loki_password}}@{{loki_url}}
+          loki-url: https://{{loki_username}}:{{loki_password}}@{{loki_url}}
           labels:
             job: docker
             host: {{ inventory_hostname }}
@@ -29,7 +29,7 @@ services:
     logging:
         driver: loki
         options:
-          loki-url: https://{{loki_username}:{{loki_password}}@{{loki_url}}
+          loki-url: https://{{loki_username}}:{{loki_password}}@{{loki_url}}
           labels:
             job: docker
             host: {{ inventory_hostname }}
@@ -41,7 +41,7 @@ services:
     logging:
         driver: loki
         options:
-          loki-url: https://{{loki_username}:{{loki_password}}@{{loki_url}}
+          loki-url: https://{{loki_username}}:{{loki_password}}@{{loki_url}}
           labels:
             job: docker
             host: {{ inventory_hostname }}
@@ -53,7 +53,7 @@ services:
     logging:
         driver: loki
         options:
-          loki-url: https://{{loki_username}:{{loki_password}}@{{loki_url}}
+          loki-url: https://{{loki_username}}:{{loki_password}}@{{loki_url}}
           labels:
             job: docker
             host: {{ inventory_hostname }}
@@ -65,7 +65,7 @@ services:
     logging:
         driver: loki
         options:
-          loki-url: https://{{loki_username}:{{loki_password}}@{{loki_url}}
+          loki-url: https://{{loki_username}}:{{loki_password}}@{{loki_url}}
           labels:
             job: docker
             host: {{ inventory_hostname }}
@@ -77,7 +77,7 @@ services:
     logging:
         driver: loki
         options:
-          loki-url: https://{{loki_username}:{{loki_password}}@{{loki_url}}
+          loki-url: https://{{loki_username}}:{{loki_password}}@{{loki_url}}
           labels:
             job: docker
             host: {{ inventory_hostname }}
