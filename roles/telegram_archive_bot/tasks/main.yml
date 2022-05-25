@@ -1,4 +1,11 @@
 ---
+### Enable LOKI Logger Driver and settings
+- name: Install LOKI Driver
+  shell: "docker plugin install grafana/loki-docker-driver:latest --alias loki --grant-all-permissions"
+  when: browsertrix_loki is defined
+  ignore_errors: true
+
+
 - include_tasks: telegrambot.yml
   loop: "{{ telegram_bot | dict2items  }}"
   loop_control:
