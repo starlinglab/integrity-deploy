@@ -71,7 +71,7 @@
 - name: Enable Docker-Compose Overrides for Logging
   ansible.builtin.template:
     src: docker-compose.override.yml.j2
-    dest: /root/browsertrix/docker-compose.override.yml
+    dest: /root/signal_bot_{{ signal_bot.key }}/docker-compose.override.yml
 
 - name: Map signal store
   lineinfile:
