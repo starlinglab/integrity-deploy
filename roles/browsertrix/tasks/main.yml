@@ -51,13 +51,12 @@
     regex: btrix-minio-data:/data
     line: "      - /mnt/browsertrix:/data"      
 
-### Enable LOKI Logger Driver
+### Enable LOKI Logger Driver and settings
 - name: Install LOKI Driver
   shell: "docker plugin install grafana/loki-docker-driver:latest --alias loki --grant-all-permissions"
   when: browsertrix_loki is defined
   ignore_errors: true
 
-### Enable LOKI Logger settings
 - name: Enable Docker-Compose Overrides for Logging
   ansible.builtin.template:
     src: docker-compose.override.yml.j2
