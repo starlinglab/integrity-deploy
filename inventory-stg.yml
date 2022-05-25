@@ -82,6 +82,11 @@ all:
           - "nodeexporter":
             port: 9100
             source: "{{ monitor_server }}"
+            sourceIPv6: "{{ monitor_server }}"
+          - "nfs":
+            port: 2049
+            source: "10.55.0.0/24"
+            sourceIPv6: "2607:5300:203:9c8c:ffff::/64"            
         cadvisor_exporter_port: 9110
         firewall_docker_interface: eth0
         firewall_docker_ports:
@@ -150,9 +155,11 @@ all:
           - "nodeexporter":
             port: 9100
             source: "{{ monitor_server }}"
+            sourceIPv6: "{{ monitor_server }}"
           - "nfs":
             port: 2049
             source: "10.55.0.0/24"
+            sourceIPv6: "2607:5300:203:9c8c:ffff::/64"
           - "ipfs":
             port: 4001
           - "ipfs-cluser":
@@ -208,9 +215,11 @@ all:
             - "nodeexporter":
               port: 9100
               source: "{{ monitor_server }}"
+              sourceIPv6: "{{ monitor_server }}"
             - "nfs":
               port: 2049
               source: "10.55.0.0/24"
+              sourceIPv6: "2607:5300:203:9c8c:ffff::/64"            
           nginx_sites:
             "integrity.stg.starlinglab.org":
               ssl_provider: letsencrypt
