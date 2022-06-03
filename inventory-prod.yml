@@ -40,12 +40,10 @@ all:
     # Keys to add to all servers
     ssh_user_keys:
       - name: yurko
-        key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCtv4I2W8TlVsWKKHwASF78cGrn06BJi9dGQQQksW0Ke9ED/KJG2pvG4GXnh57/AOuJtUaS3gXBEj/knE3t/qtvO2cUg1EufnkItzNLdY1B0Hwm98I8O7JdhE+3c/SUIU4Miioj/IlKl8fRxDqx03FTVBdd6Q7kKF79LcobTqo7Pd6i7vnp46U6bBm01tDdRB+g+lok9x+B8umRqqjAGcboucwZ5NrzmLjz/p1wg+5Gva2zcyzBp1aQk7JPhsbElTLfhUP7hJbJ6rFWnebgK8z/vbyofeZljXb6LttttMGoWKg6QAdn61mRwEGff1FUPVLiEVnQ5IY+f97NlQ36c81b yurko@tomesh"
+        key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCtv4I2W8TlVsWKKHwASF78cGrn06BJi9dGQQQksW0Ke9ED/KJG2pvG4GXnh57/AOuJtUaS3gXBEj/knE3t/qtvO2cUg1EufnkItzNLdY1B0Hwm98I8O7JdhE+3c/SUIU4Miioj/IlKl8fRxDqx03FTVBdd6Q7kKF79LcobTqo7Pd6i7vnp46U6bBm01tDdRB+g+lok9x+B8umRqqjAGcboucwZ5NrzmLjz/p1wg+5Gva2zcyzBp1aQk7JPhsbElTLfhUP7hJbJ6rFWnebgK8z/vbyofeZljXb6LttttMGoWKg6QAdn61mRwEGff1FUPVLiEVnQ5IY+f97NlQ36c81b yurko@starling"
       - name: ben
-        key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMLiPavTvnbFRc6JvkGVinFoAk93k88KTg1u3zZQxMyW benedict@Benedicts-MacBook-Air.local"
-      - name: cole
+        key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMLiPavTvnbFRc6JvkGVinFoAk93k88KTg1u3zZQxMyW benedict@starling
         key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDa7CV1MuEEWiO21CcrakO5h/2W8SgXGqN9xUj7tmT/9i4+IYoCFw4eARe9ZMUUuAa/jBThKK9oAylMEc5u6faWUVUNY5z46KeNEH482z+kcprSEYEY0w9lWyA5c93BIRcvH3KYZkfwCe4U5i6cxD3RAHJNTuHKdeUfT4hCWEyJMKNPsW5ggILJe/9Iq7XVy1ukXmV+ta0u9AKH/fWW4OA6RADzD7eFNZtooZoU1VAcRgpaLhzVFp+0kyhBIciiajZ4r217TMA+DEQ9QGVIxrQJJGm6v0UYLOPuv3NAnGrjHFE7+gGXKVQljx2N/eoyKmF7lWaqDBg3uvic3FCSBeunC5rggeFTtfZ37/J9Lk+rwWwk3HgfzLc7eefYG2lPoX3ftjeD41E4EcobH8A2J1dOgcD7SiOwCZc8dGtWMjC02SaSufWnl8swphd+PNdO/JeWLbGmnVW3AfiaDrVHLXviP2NRfwEKtbH4oB9d/aaryREgi3fLm6MsRm8c+GSWUOc= cole@hypha"
-
     ipfs_swarm_key: "{{ secret_ipfs_swarm_key }}"
 
   children:
@@ -81,6 +79,11 @@ all:
           - "nodeexporter":
             port: 9100
             source: "{{ monitor_server }}"
+            sourceIPv6: "{{ monitor_server }}"
+          - "nfs":
+            port: 2049
+            source: "10.55.1.0/24"
+            sourceIPv6: "2607:5300:203:9c8c:ffff::/64"
         cadvisor_exporter_port: 9110
         firewall_docker_interface: eth0
         firewall_docker_ports:
@@ -149,9 +152,11 @@ all:
           - "nodeexporter":
             port: 9100
             source: "{{ monitor_server }}"
+            sourceIPv6: "{{ monitor_server }}"
           - "nfs":
             port: 2049
             source: "10.55.1.0/24"
+            sourceIPv6: "2607:5300:203:9c8c:ffff::/64"
           - "ipfs":
             port: 4001
           - "ipfs-cluser":
@@ -204,9 +209,11 @@ all:
             - "nodeexporter":
               port: 9100
               source: "{{ monitor_server }}"
+              sourceIPv6: "{{ monitor_server }}"
             - "nfs":
               port: 2049
               source: "10.55.1.0/24"
+              sourceIPv6: "2607:5300:203:9c8c:ffff::/64"
           nginx_sites:
             "integrity.prod.starlinglab.org":
               ssl_provider: letsencrypt
@@ -229,10 +236,9 @@ all:
           numbers_api_key: "{{ secret_numbers_api }}"
           numbers_api_network: "mainnet"
           iscn_mnemonic: "{{ secret_iscn_mnemonic_prod }}"
-          authsign_token: "{{ secret_authsign_token }}"     
-          authsign_access_url: "https://browsertrix.prod.starlinglab.org"
           numbers_api_url: "https://node.numbersprotocol.io/version-test/api/1.1/wf"
-          integrity_backend_config: "prod_integrity.config.json"
+          authsign_token: "{{ secret_authsign_token }}"     
+          authsign_access_url: "https://browsertrix.prod.starlinglab.org"          integrity_backend_config: "prod_integrity.config.json"
           integrity_preprocessor_folder: True
           integrity_preprocessor_folder_config: "prod_preprocessor-folder.json"
 

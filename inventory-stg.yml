@@ -19,7 +19,7 @@ all:
     nfs_shared_path: integrity_store
 
     # Server that monitoring configs will be updated on
-    monitor_server: monitor.prod.starlinglab.org
+    monitor_server: "monitor.prod.starlinglab.org"
 
     # Loki Data
     loki_url: "{{monitor_server}}:443/loki/api/v1/push"
@@ -86,7 +86,7 @@ all:
           - "nfs":
             port: 2049
             source: "10.55.0.0/24"
-            sourceIPv6: "2607:5300:203:9c8c:ffff::/64"            
+            sourceIPv6: "2607:5300:203:9c8c:ffff::/64"
         cadvisor_exporter_port: 9110
         firewall_docker_interface: eth0
         firewall_docker_ports:
@@ -176,7 +176,7 @@ all:
           monitor_job: "staging"
           integrity_preprocessor_chatbot: True
           integrity_preprocessor_chatbot_config: stg_preprocessor-chatbot.json
-          integrity_preprocessor_chatbot_signal_user_config: stg_preprocessor-chatbot-signal-users.json          
+          integrity_preprocessor_chatbot_signal_user_config: stg_preprocessor-chatbot-signal-users.json
           signal_bot:
             "main":
               signal_phone_number: "16474788566"
@@ -219,7 +219,7 @@ all:
             - "nfs":
               port: 2049
               source: "10.55.0.0/24"
-              sourceIPv6: "2607:5300:203:9c8c:ffff::/64"            
+              sourceIPv6: "2607:5300:203:9c8c:ffff::/64"
           nginx_sites:
             "integrity.stg.starlinglab.org":
               ssl_provider: letsencrypt
@@ -252,11 +252,10 @@ all:
           browsertrix_password: "{{ secret_integrity_browsertrix_password }}"
           numbers_api_key: "{{ secret_numbers_api }}"
           numbers_api_network: "testnet"
-          authsign_token: "{{ secret_authsign_token }}"     
-          authsign_access_url: "https://browsertrix.stg.starlinglab.org"
-          numbers_api_url: "https://node.numbersprotocol.io/version-test/api/1.1/wf"          
           iscn_mnemonic: "{{ secret_iscn_mnemonic_stg }}"
-          integrity_backend_config: "stg_integrity.config.json"
+          numbers_api_url: "https://node.numbersprotocol.io/version-test/api/1.1/wf"
+          authsign_token: "{{ secret_authsign_token }}"
+          authsign_access_url: "https://browsertrix.stg.starlinglab.org"          integrity_backend_config: "stg_integrity.config.json"
           integrity_preprocessor_folder: True
           integrity_preprocessor_folder_config: "stg_preprocessor-folder.json"
 
@@ -272,6 +271,7 @@ all:
           - "nodeexporter":
             port: 9100
             source: "{{ monitor_server }}"
+            sourceIPv6: "{{ monitor_server }}"
         ipfs_swarm_key: "{{ secret_ipfs_swarm_key }}"
         monitor_job: "staging"
         ipfs_user: ipfs
