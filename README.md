@@ -1,9 +1,33 @@
+# Integrity-deploy
+
+This ansible repo deploy the  Starling Integrity services on virtual machines created by the integrity-deploy-vm repo.
+
+## Environment setup
+
+Place secret file in `group_var/all/inventory_secrest.yml`
+Place otehr required files in `files`
+
+For re-deploymet you may need to remove old SSH Keys fomr your known hosts
+
+For Example: `ssh-keygen -f "/home/sysadmin/.ssh/known_hosts" -R "org2.browsertrix.stg.starlinglab.org"`
+
+## Deployment
+
+For production: `ansible-playbook -i inventory-prod.yml deploy.yml`
+For staging: `ansible-playbook -i inventory-stg.yml deploy.yml`
+Single servers can be deployed by adding the  `--limit <servername>` flag
+
+For Example
+`ansible-playbook -i inventory-stg.yml deploy.yml --limit org2.browsertrix.stg.starlinglab.org`
+
 # Manual Proecess
 
+Some services require manual steps to initiate due to the way 3rd party applications interact with it. Below is a list of steps required to be preformed
+
 ## Login to dropbox
-- Login to drop box in a browser
+- Login to drop box account in a browser
 - Create a folder as needed ie `integrity-prod-starling-org` (replace this text in instructions below with whatever you created)
-- Login to ALL other server running this dropbox  as root
+- Login to ALL other server running this dropbox as root
   - `cd /root/dropbox`
   - `docker exec -it dropbox /bin/bash`
   - `cd /home/dropbox-user/Dropbox/`
@@ -12,28 +36,28 @@
 - On integrity server again
 - `cd /root/dropbox`
 - `docker-compose logs`
-- get a dropbox shell ready 
+- Get a dropbox shell ready 
     - `docker exec -it dropbox /bin/bash`
 - Copy the url from the line "Please Visit https://www.dropbox.com/cli_link_nonce?nonce=xxxxxxxx"
-- Click `connect`
-- in shell type in
-- paste it into a browser where you are logged into 
-- click Connect
-- on integrity (repeat this command until you see a list of all the directories it may take a few seconds)
-    - `cd /home/dropbox-user/Dropbox/ && /opt/dropbox/dropbox exclude add * `
-    - remove folder to sync
-    - `/opt/dropbox/dropbox exclude remove integrity-prod-starling-org`
-    - `exit` to leave dropbox container
+- Paste the url it into a browser where you are logged into dropbox
+- Click `Connect`
+- On integrity server, in docker shell use this comment
+    - repeat this command until you see a list of all the directories, it may take a few seconds and/or tries
+        - `cd /home/dropbox-user/Dropbox/ && /opt/dropbox/dropbox exclude add * `
+    - Remove folder to sync
+        - `/opt/dropbox/dropbox exclude remove integrity-prod-starling-org`
+    - Leave dropbox container
+        - `exit`
 
-## Mount dropbox to shared fs
-- create shared folder in dropbox
+## Mount Dropbox to shared fs
+- Create shared folder in dropbox
     - `mkdir /mnt/store/dropbox/Dropbox/integrity-prod-starling-org/shared`
     - `chown starling.starling /mnt/store/dropbox/Dropbox/integrity-prod-starling-org/shared`
 - edit /etc/fstab add following line
 ```
 /mnt/integrity_store/starling/shared /mnt/store/dropbox/Dropbox/integrity-prod-starling-org/shared none defaults,bind 0 0
 ```
-- mount new folder
+- Mount new folder
     - `mount /mnt/store/dropbox/Dropbox/integrity-prod-starling-org/shared`
 
 

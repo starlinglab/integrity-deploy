@@ -14,6 +14,7 @@
       - python-dotenv
       - watchdog
       - python-magic
+      - netifaces
 
 - name: Clone preprocessor
   git:
@@ -42,7 +43,7 @@
     dest: /root/integrity-preprocessor/lib/integrity_recorder_id/.env
 
 - name: Generate Initial PreProcesor config
-  shell: "python3 /root/integrity-preprocessor/lib/integrity_recorder_id/update_recorder_id.py"
+  shell: "python3 /root/integrity-preprocessor/update_recorder_id.py"
 
 # PreProcessor Chat Bot
 - name: Install chatbot service
