@@ -39,10 +39,10 @@
 - name: Copy .env
   template:
     src: "env.recorder-id.j2"
-    dest: /root/integrity-preprocessor/integrity_recorder_id/.env
+    dest: /root/integrity-preprocessor/lib/integrity_recorder_id/.env
 
 - name: Generate Initial PreProcesor config
-  shell: "python3 /root/integrity-preprocessor/integrity_recorder_id/update_recorder_id.py"
+  shell: "python3 /root/integrity-preprocessor/lib/integrity_recorder_id/update_recorder_id.py"
 
 # PreProcessor Chat Bot
 - name: Install chatbot service
