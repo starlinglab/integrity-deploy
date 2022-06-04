@@ -11,6 +11,7 @@
     name:
       - pipenv
       - opentimestamps-client
+      - warcio
 
 - name: Create starling group
   group:
@@ -76,7 +77,7 @@
     repo: https://github:{{ github_token }}@github.com/starlinglab/integrity-backend.git
     dest: /home/starling/integrity-backend
     force: yes
-    version: dev-with-c2pa-proofmode
+    version: main
 
 - name: Init env
   ansible.builtin.shell: /usr/bin/su - starling -c 'cd /home/starling/integrity-backend/ && pipenv install'
