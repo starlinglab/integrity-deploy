@@ -20,6 +20,7 @@
     - authsign
     - integrity-backend
     - integrity-preprocessor
+    - promtail
     - ipfs
     - ipfs_cluster
     - pass
@@ -40,6 +41,7 @@
     - browsertrix
     - integrity-preprocessor
     - hypha.common.prometheus_exporter_docker
+    - promtail
     - nfs
     - pass
   
@@ -62,5 +64,6 @@
     - signal_bot
     - integrity-preprocessor
     - hypha.common.prometheus_exporter_docker
+    - promtail
     - nfs
     - pass
