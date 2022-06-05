@@ -11,7 +11,6 @@
     name:
       - pipenv
       - opentimestamps-client
-      - warcio
 
 - name: Create starling group
   group:
@@ -88,7 +87,7 @@
   template: 
     src: env.j2
     dest: '/home/starling/integrity-backend/.env'
-
+  tags: config
 
 - name: Copy claim tool
   copy:
@@ -122,6 +121,7 @@
     group: starling
     owner: starling
     mode: 0550
+  tags: config
   when: integrity_cai_signing_key_file is defined
 
 - name: Copy config file
@@ -131,7 +131,8 @@
     owner: starling
     group: starling
     mode: 0666
-    force: no
+    force: true
+  tags: config
   when: integrity_backend_config is defined
 
 
@@ -143,7 +144,7 @@
     owner: starling
     group: starling
     mode: 0666
-    force: no    
+    force: no
 
 - name: Configure service
   copy:
@@ -159,4 +160,3 @@
     state: restarted
     enabled: true
     name: integrity-backend
-

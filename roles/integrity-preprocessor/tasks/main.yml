@@ -15,6 +15,7 @@
       - watchdog
       - python-magic
       - netifaces
+      - warcio
 
 - name: Clone preprocessor
   git:
@@ -36,11 +37,13 @@
   template:
     src: "preprocessor-id-config.json.j2"
     dest: /root/.integrity/preprocessor-id-config.json
+  tags: config
 
 - name: Copy .env
   template:
     src: "env.recorder-id.j2"
     dest: /root/integrity-preprocessor/lib/integrity_recorder_id/.env
+  tags: config
 
 - name: Generate Initial PreProcesor config
   shell: "python3 /root/integrity-preprocessor/update_recorder_id.py"
@@ -57,19 +60,21 @@
     src: "integrity-preprocessor-chatbot.env"
     dest: /root/integrity-preprocessor/chat-bot/.env
   when: integrity_preprocessor_chatbot == True
+  tags: config
 
 - name: Copy config
   copy:
     src: "{{ integrity_preprocessor_chatbot_config }}"
     dest: /root/.integrity/preprocessor-chatbot.json
-    force: no
   when: integrity_preprocessor_chatbot_config is defined
+  tags: config
+
 - name: Copy user database
   copy:
     src: "{{ integrity_preprocessor_chatbot_signal_user_config }}"
     dest: /root/.integrity/preprocessor-chatbot-signal-users.json
-    force: no
   when: integrity_preprocessor_chatbot_signal_user_config is defined
+  tags: config
 
 - name: Copy config
   copy:
@@ -90,12 +95,14 @@
     src: env.browsertrix.j2
     dest: /root/integrity-preprocessor/browsertrix/.env
   when: integrity_preprocessor_browsertrix == True
+  tags: config
 
 - name: Copy config
   copy:
     src: "{{ browsertrix_integrity_collections }}"
     dest: /root/.integrity/preprocessor-browsertrix-collections.json
   when: browsertrix_integrity_collections is defined
+  tags: config
 
 - name: Install Archive Provisioning
   copy:
@@ -107,7 +114,7 @@
 - name: Provision collections
   shell: "/root/browsertrix-contrib/provisionBrowsertrixAccounts.py"
   when: browsertrix_integrity_collections is defined
-
+  tags: config
 
 - name: Copy config (placeholder)
   copy:
@@ -128,13 +135,15 @@
     src: "integrity-preprocessor-folder.env"
     dest: /root/integrity-preprocessor/folder/.env
   when: integrity_preprocessor_folder == True
+  tags: config
 
 - name: Copy folder .env
   copy:
     src: "{{ integrity_preprocessor_folder_config }}"
     dest: /root/.integrity/preprocessor-folder.json
-    force: no
+    force: yes
   when: integrity_preprocessor_folder_config is defined
+  tags: config
 
 - name: Copy folder .env (placeholder)
   copy:
@@ -147,6 +156,7 @@
 - name: Reload systemd daemon
   systemd:
     daemon_reload: yes
+  tags: config
 
 # Start PreProcessor Services
 - name: Start chatbot preprocessor
@@ -155,6 +165,7 @@
     enabled: true
     name: integrity-preprocessor-chatbot
   when: integrity_preprocessor_chatbot == true
+  tags: config
 
 - name: Start browsertrix preprocessor
   ansible.builtin.systemd:
@@ -162,3 +173,4 @@
     enabled: true
     name: integrity-preprocessor-browsertrix
   when: integrity_preprocessor_browsertrix == true
+  tags: config
