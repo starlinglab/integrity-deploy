@@ -114,11 +114,15 @@ for item_data in data:
         invite_user(u,p,aid)
 
     print(archive_name)
+    author = None
+    if "author" in item_data:
+      author = item_data['author']
     col = item_data["collectionID"]
     org =item_data["orgID"]
     result["collections"][aid] =    {
             "collectionID": col,
-            "target_path": f"{base_url}/{org}/{col}/"
+            "target_path": f"{base_url}/{org}/{col}/",
+            "author": author
         }
 
 f = open(config_dir, 'w')
