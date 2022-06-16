@@ -8,21 +8,16 @@
       - gnupg
     state: present
 
-- name: Install pip3
-  pip:
-    name:
-      - python-dotenv
-      - watchdog
-      - python-magic
-      - netifaces
-      - warcio
-
 - name: Clone preprocessor
   git:
     repo: https://github:{{ github_token }}@github.com/starlinglab/integrity-preprocessor.git
     dest: /root/integrity-preprocessor
     force: yes
     version: dev
+
+- name: Install specified python requirements
+  pip:
+    requirements: /root/integrity-preprocessor/requirements.txt
 
 - name: Create starling config folder
   file:
