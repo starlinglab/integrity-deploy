@@ -14,7 +14,7 @@
 
 - name: Create starling group
   group:
-    name: starling    
+    name: starling
 
 - name: Create starling user
   user:
@@ -24,6 +24,7 @@
     createhome: yes
     groups: starling
     shell: /bin/bash
+    uid: "{{ starling_uid }}"
 
 - name: Create starling config folder
   file:
@@ -32,8 +33,9 @@
     owner: starling
     group: starling
     mode: 0770
+    gid: "{{ starling_gid }}"
 
-- name: Creates directory
+- name: Create integrity data folder
   file:
     path: "{{ integrity_data_path }}"
     state: directory
@@ -42,20 +44,20 @@
     mode: 0775
     recurse: yes
 
-- name: Download ISCN code
+# ISCN Server for Likecoin
+- name: Clone ISCN server repo
   git:
     repo: https://github.com/likecoin/iscn-js.git
     dest: /home/starling/iscn
     version: master
     force: yes
 
-- name: Init env
+- name: Install dependencies ISCN server npm
   ansible.builtin.shell: npm install
   args:
     chdir: /home/starling/iscn/sample/server
 
-
-- name: Configure ISCN service
+- name: Install ISCN server service
   template:
     src: iscn.service.j2
     dest: /etc/systemd/system/iscn.service
@@ -69,27 +71,28 @@
     state: restarted
     enabled: true
     name: iscn
+  tags: config
 
-
-- name: Download sintegrity-backend server
+# Integrity Backend
+- name: Download integrity-backend server
   git:
     repo: https://github:{{ github_token }}@github.com/starlinglab/integrity-backend.git
     dest: /home/starling/integrity-backend
     force: yes
     version: main
 
-- name: Init env
+- name: Prepeare pipenv for integrity-backend
   ansible.builtin.shell: /usr/bin/su - starling -c 'cd /home/starling/integrity-backend/ && pipenv install'
   args:
     chdir: /home/starling/integrity-backend/
 
-- name: env config file
+- name: Install integrity-backend config file
   template: 
     src: env.j2
     dest: '/home/starling/integrity-backend/.env'
   tags: config
 
-- name: Copy claim tool
+- name: Update claim tool
   copy:
     src: claim_tool
     dest: /home/starling/claim_tool
@@ -97,7 +100,7 @@
     owner: starling    
     mode: 0550
 
-- name: Create claim tool folder
+- name: Create claim-tool key folder
   file:
     path: /home/starling/.cai/
     state: directory
@@ -105,16 +108,17 @@
     group: starling
     mode: 0550
 
-- name: Configure Claim tool 1/1
+- name: Copy Configure claim-tool private key
   copy:
     src: "{{ integrity_cai_signing_key_file }}.pem"
     dest: /home/starling/.cai/temp_key.pem
     group: starling
     owner: starling
     mode: 0550
-  when: integrity_cai_signing_key_file is defined
+  tags: config
+  when: integrity_cai_signing_key_file is defined  
 
-- name: Configure Claim tool 2/2
+- name:  Copy Configure claim-tool pub key
   copy:
     src: "{{ integrity_cai_signing_key_file }}.pub"
     dest: /home/starling/.cai/temp_key.pub
@@ -124,7 +128,7 @@
   tags: config
   when: integrity_cai_signing_key_file is defined
 
-- name: Copy config file
+- name: Copy backend-integrity config file
   copy:
     src: "{{integrity_backend_config}}"
     dest: /home/starling/.integrity/backend-config.json
@@ -135,8 +139,7 @@
   tags: config
   when: integrity_backend_config is defined
 
-
-- name: Copy config file
+- name: Copy backend-integrity config splaceholder file
   copy:
     src: /home/starling/integrity-backend/config.example.json
     dest: /home/starling/.integrity/backend-config.json
@@ -146,17 +149,18 @@
     mode: 0666
     force: no
 
-- name: Configure service
+- name: Install backend-integrity service file
   copy:
     src: integrity-backend.service
     dest: /etc/systemd/system/integrity-backend.service
 
-- name: Reload systemd daemon
+- name: Reload backend-integrity service daemon
   systemd:
     daemon_reload: yes
    
-- name: Start integrity backend service
+- name: Start backend-integrity service
   ansible.builtin.systemd:
     state: restarted
     enabled: true
     name: integrity-backend
+  tags: config

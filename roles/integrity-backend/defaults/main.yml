@@ -2,3 +2,5 @@ numbers_api_urls:
   - mainnet: "https://node.numbersprotocol.io/api/1.1/wf"
   - testmet: "https://node.numbersprotocol.io/version-test/api/1.1/wf"
 numbers_api_network: "testnet"
+starling_uid: 1001
+starling_gid: 1001

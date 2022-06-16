@@ -176,6 +176,7 @@ all:
       hosts:
         bot.stg.starlinglab.org:
           monitor_job: "staging"
+          chatbot_loki: true
           integrity_preprocessor_chatbot: True
           integrity_preprocessor_chatbot_config: stg_preprocessor-chatbot.json
           integrity_preprocessor_chatbot_signal_user_config: stg_preprocessor-chatbot-signal-users.json
@@ -261,6 +262,7 @@ all:
           integrity_backend_config: "stg_integrity.config.json"
           integrity_preprocessor_folder: True
           integrity_preprocessor_folder_config: "stg_preprocessor-folder.json"
+          dropbox_loki: true
 
     ipfs:
       vars:

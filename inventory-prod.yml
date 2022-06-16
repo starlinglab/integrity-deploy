@@ -174,6 +174,7 @@ all:
       hosts:
         bot.prod.starlinglab.org:
           monitor_job: "production"
+          chatbot_loki: true
           integrity_preprocessor_chatbot: True 
           integrity_preprocessor_chatbot_config: "prod_preprocessor-chatbot.json"
           integrity_preprocessor_chatbot_signal_user_config: prod_preprocessor-chatbot-signal-users.json
@@ -245,6 +246,7 @@ all:
           integrity_backend_config: "prod_integrity.config.json"
           integrity_preprocessor_folder: True
           integrity_preprocessor_folder_config: "prod_preprocessor-folder.json"
+          dropbox_loki: true
 
     ipfs:
       hosts:

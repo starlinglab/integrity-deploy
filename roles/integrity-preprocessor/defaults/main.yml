@@ -1,3 +1,4 @@
 integrity_preprocessor_chatbot: False
 integrity_preprocessor_browsertrix: False
 integrity_preprocessor_folder: False
+integrity_preprocessor_repo_branch: dev

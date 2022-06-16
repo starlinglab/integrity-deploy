@@ -4,7 +4,7 @@ import requests
 import sys
 
 if len(sys.argv) < 4:
-    print (f"usage: {sys.argv[0]} username@domain.com password name_of_archive [invite_user")
+    print (f"usage: {sys.argv[0]} username@domain.com password name_of_archive [invite_user]")
     sys.exit(-1)
 
 email = sys.argv[1]

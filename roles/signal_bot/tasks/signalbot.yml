@@ -5,7 +5,7 @@
     dest: /root/signal_bot_{{ signal_bot.key }}
     force: yes
 
-- name: Download signal_bot
+- name: Download signald
   git:
     repo: https://gitlab.com/signald/signald.git
     dest: /root/signal_bot_{{ signal_bot.key }}/signald
@@ -27,19 +27,7 @@
     path: /mnt/store/signal_bot_{{ signal_bot.key }}
     state: directory
 
-- name: Create signal bot account directory
-  file:
-    path: /mnt/store/signal_bot_{{ signal_bot.key }}/account
-    mode: 0777
-    state: directory
-
-- name: Create signal bot archive directory
-  file:
-    path: /mnt/store/signal_bot_{{ signal_bot.key }}/archive
-    state: directory
-
-
-- name: Install signal account
+- name: Install signald account
   unarchive:
     src: "{{ signal_bot.value.signal_account_file }}"
     dest: "/mnt/store/signal_bot_{{ signal_bot.key }}/account"
@@ -50,43 +38,40 @@
 
 - name: Create signal bot directory
   file:
-    path: /mnt/store/signal_bot_{{ signal_bot.key }}/account/data
-    mode: 0777
-    state: directory
-    owner: 1337
-    group: 1337
-
-
-- name: Create signal bot directory
-  file:
     path: /mnt/store/signal_bot_{{ signal_bot.key }}/data
     state: directory
 
-- name: Configure signal
+- name: Create signal bot directory
+  file:
+    path: /mnt/store/signal_bot_{{ signal_bot.key }}/archive
+    state: directory
+
+- name: Configure signal_bot
   template:
     src: config.env.j2
     dest: '/root/signal_bot_{{ signal_bot.key }}/config.env'
+  tags: config
 
 ### Enable LOKI Logger Driver and settings
-
 - name: Enable Docker-Compose Overrides for Logging
   ansible.builtin.template:
     src: docker-compose.override.yml.j2
     dest: /root/signal_bot_{{ signal_bot.key }}/docker-compose.override.yml
+  when: chatbot_loki
 
-- name: Map signal store
+- name: Map signald account volume
   lineinfile:
     path: /root/signal_bot_{{ signal_bot.key }}/docker-compose.yml
     regex: '      - /var/run/signald:/signald'
     line:  '      - /mnt/store/signal_bot_{{ signal_bot.key }}/account:/signald'
 
-- name: Map signal store
+- name: Map signald data volume
   lineinfile:
     path: /root/signal_bot_{{ signal_bot.key }}/docker-compose.yml
     regex: "      - /mnt/store/signal_archive_bot:/store"
     line:  "      - /mnt/store/signal_bot_{{ signal_bot.key }}/data:/store"
 
-- name: Map signal store
+- name: Map signals socket store
   lineinfile:
     path: /root/signal_bot_{{ signal_bot.key }}/docker-compose.yml
     regex: "      - /var/run/signald:/var/run/signald"

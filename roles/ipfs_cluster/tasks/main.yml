@@ -4,11 +4,11 @@
     name:
       jq
 
-- name: Create ipfs group
+- name: Create IPFS group
   group:
     name: "{{ ipfs_user }}"
 
-- name: Create ipfs user
+- name: Create IPFS user
   user:
     name: "{{ ipfs_user }}"
     state: present
@@ -24,15 +24,15 @@
     owner: "{{ ipfs_user }}"
     group: "{{ ipfs_user }}"
 
-- name: Set IPFS Cluster download URL
+- name: Set IPFS cluster download URL
   set_fact:
     ipfs_cluster_url: https://dist.ipfs.io/ipfs-cluster-service/v{{ ipfs_cluster_version }}/ipfs-cluster-service_v{{ ipfs_cluster_version }}_linux-amd64.tar.gz
 
-- name: Set IPFS Cluster ctl download URL
+- name: Set ipfs-cluster-ctl download URL
   set_fact:
     ipfs_cluster_ctl_url: https://dist.ipfs.io/ipfs-cluster-ctl/v{{ ipfs_cluster_version }}/ipfs-cluster-ctl_v{{ ipfs_cluster_version }}_linux-amd64.tar.gz
 
-- name: Download and unpack
+- name: Download and unpack IPFS cluster
   unarchive:
     src: "{{ ipfs_cluster_url }}"
     dest: /opt/ipfs
@@ -41,7 +41,7 @@
     owner: "{{ ipfs_user }}"    
     group: "{{ ipfs_user }}"
 
-- name: Download and unpack
+- name: Download and unpack ipfs-cluster-ctl
   unarchive:
     src: "{{ ipfs_cluster_ctl_url }}"
     dest: /opt/ipfs
@@ -49,7 +49,6 @@
     extra_opts: [--strip-components=1]
     owner: "{{ ipfs_user }}"    
     group: "{{ ipfs_user }}"
-
 
 - name: Create a symbolic link to /usr/bin
   ansible.builtin.file:
@@ -72,13 +71,13 @@
     path: /home/{{ ipfs_user }}/.ipfs-cluster/identity.json
   register: ipfs_cluster_has_init
 
-- name: Init Cluster Node
+- name: Initalize cluster node
   ansible.builtin.shell: /usr/bin/su - {{ ipfs_user }} -c '/opt/ipfs/ipfs-cluster-service init'
   args:
     chdir: /opt/ipfs
   when: ipfs_cluster_has_init.stat.exists == false
 
-- name: Init Cluster config
+- name: Initalize cluster config
   template:
     src: ipfs-service.json.j2
     dest: /home/{{ ipfs_user }}/.ipfs-cluster/service.json
@@ -91,7 +90,7 @@
     loop_var: ipfs_node
   when: ipfs_swarm_key is defined
 
-- name: Add Swarm Bootstraps cluster
+- name: Add swarm bootstraps cluster
   lineinfile:
     path: /home/{{ ipfs_user }}/.ipfs-cluster/peerstore
     regex: "{{ item }}"
@@ -99,7 +98,7 @@
   with_items: "{{ ipfs_bootstrap }}"
   when: ipfs_swarm_key is defined
 
-- name: Install Service File
+- name: Install service file
   template:
     src: ipfs-cluster.service.j2
     dest: '/etc/systemd/system/ipfs-cluster.service'
@@ -109,7 +108,7 @@
   systemd:
     daemon_reload: yes
 
-- name: Start IPFS Cluster
+- name: Start IPFS cluster
   ansible.builtin.systemd:
     state: restarted
     enabled: true
