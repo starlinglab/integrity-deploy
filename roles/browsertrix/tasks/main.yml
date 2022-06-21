@@ -43,7 +43,7 @@
   copy:
     src: /root/browsertrix/configs/docker-compose.signing.yml
     dest: /root/browsertrix/docker-compose.signing.yml
-    remote: true
+    remote_src: true
 
 
 - name: Enable Docker-Compose Overrides for Logging
@@ -66,16 +66,30 @@
     mode: 0555
   when: browsertrix_profile_file is defined
 
+- name: Stop Browsertrix
+  command: docker stack rm btrix
+
+- name: Wait for port 9871 to become open on the host, don't start checking for 10 seconds
+  wait_for:
+    port: 9871
+    delay: 10
+    state: stopped
+
 - name: Start Browsertrix
   command: |
     docker stack deploy \
     -c /root/browsertrix/docker-compose.yml \
     -c /root/browsertrix/configs/docker-compose.swarm.yml \
     -c /root/browsertrix/configs/docker-compose.signing.yml \
-    -c /root/browsertrix/docker-compose.overrides.yml btrix
+    -c /root/browsertrix/docker-compose.override.yml btrix
   args:
     chdir: /root/browsertrix
   tags: config
+
+- name: Wait for port 9871 to become open on the host, don't start checking for 5 seconds
+  wait_for:
+    port: 9871
+    delay: 5
 
 - name: Download latest Browsertrix crawler
   command: docker pull webrecorder/browsertrix-crawler:latest
@@ -100,7 +114,7 @@
     mode: 0755
 
 - name: Upload profile for Minio
-  command: ./uploadFile.sh test-bucket profile.tar.gz
+  command: ./uploadFile.sh btrix-data profile.tar.gz
   args:
     chdir: /root/browsertrix-contrib
 

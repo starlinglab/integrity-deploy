@@ -2,52 +2,54 @@ version: '3.8'
 
 services:
   backend:
-  restart: unless-stopped
-  {% if browsertrix_loki is defined %}
+    restart: unless-stopped
+{% if browsertrix_loki is defined %}
     logging:
-        driver: loki
-        options:
-          loki-url: https://{{loki_username}}:{{loki_password}}@{{loki_url}}
-          loki-external-labels: job=docker,hostname={{ inventory_hostname }}  
-  {% endif %}
+      driver: loki
+      options:
+        loki-url: https://{{loki_username}}:{{loki_password}}@{{loki_url}}
+        loki-external-labels: job=docker,hostname={{ inventory_hostname }}  
+{% endif %}
 
 
   frontend:
-  restart: unless-stopped
-  {% if browsertrix_loki is defined %}
+    restart: unless-stopped
+{% if browsertrix_loki is defined %}
     logging:
-        driver: loki
-        options:
-          loki-url: https://{{loki_username}}:{{loki_password}}@{{loki_url}}
-          loki-external-labels: job=docker,hostname={{ inventory_hostname }}      
-  {% endif %}
+      driver: loki
+      options:
+        loki-url: https://{{loki_username}}:{{loki_password}}@{{loki_url}}
+        loki-external-labels: job=docker,hostname={{ inventory_hostname }}      
+{% endif %}
 
   mongo:
-  restart: unless-stopped
-  {% if browsertrix_loki is defined %}
+    restart: unless-stopped
+{% if browsertrix_loki is defined %}
     logging:
-        driver: loki
-        options:
-          loki-url: https://{{loki_username}}:{{loki_password}}@{{loki_url}}
-          loki-external-labels: job=docker,hostname={{ inventory_hostname }}      
-  {% endif %}
+      driver: loki
+      options:
+        loki-url: https://{{loki_username}}:{{loki_password}}@{{loki_url}}
+        loki-external-labels: job=docker,hostname={{ inventory_hostname }}      
+{% endif %}
 
   minio:
-  restart: unless-stopped
-  {% if browsertrix_loki is defined %}
+    restart: unless-stopped
+    ports:
+      - 9001:9001
+{% if browsertrix_loki is defined %}
     logging:
-        driver: loki
-        options:
-          loki-url: https://{{loki_username}}:{{loki_password}}@{{loki_url}}
-          loki-external-labels: job=docker,hostname={{ inventory_hostname }}      
-  {% endif %}
+      driver: loki
+      options:
+        loki-url: https://{{loki_username}}:{{loki_password}}@{{loki_url}}
+        loki-external-labels: job=docker,hostname={{ inventory_hostname }}      
+{% endif %}
 
   authsign:
-  restart: unless-stopped
-  {% if browsertrix_loki is defined %}
+    restart: unless-stopped
+{% if browsertrix_loki is defined %}
     logging:
-        driver: loki
-        options:
-          loki-url: https://{{loki_username}}:{{loki_password}}@{{loki_url}}
-          loki-external-labels: job=docker,hostname={{ inventory_hostname }}
-  {% endif %}
+      driver: loki
+      options:
+        loki-url: https://{{loki_username}}:{{loki_password}}@{{loki_url}}
+        loki-external-labels: job=docker,hostname={{ inventory_hostname }}
+{% endif %}
