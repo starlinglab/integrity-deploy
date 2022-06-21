@@ -1,54 +1,53 @@
-version: '3.5'
+version: '3.8'
 
 services:
   backend:
+  restart: unless-stopped
+  {% if browsertrix_loki is defined %}
     logging:
         driver: loki
         options:
           loki-url: https://{{loki_username}}:{{loki_password}}@{{loki_url}}
           loki-external-labels: job=docker,hostname={{ inventory_hostname }}  
+  {% endif %}
 
 
   frontend:
+  restart: unless-stopped
+  {% if browsertrix_loki is defined %}
     logging:
         driver: loki
         options:
           loki-url: https://{{loki_username}}:{{loki_password}}@{{loki_url}}
           loki-external-labels: job=docker,hostname={{ inventory_hostname }}      
-
-  redis:
-    logging:
-        driver: loki
-        options:
-          loki-url: https://{{loki_username}}:{{loki_password}}@{{loki_url}}
-          loki-external-labels: job=docker,hostname={{ inventory_hostname }}      
+  {% endif %}
 
   mongo:
+  restart: unless-stopped
+  {% if browsertrix_loki is defined %}
     logging:
         driver: loki
         options:
           loki-url: https://{{loki_username}}:{{loki_password}}@{{loki_url}}
           loki-external-labels: job=docker,hostname={{ inventory_hostname }}      
+  {% endif %}
 
   minio:
+  restart: unless-stopped
+  {% if browsertrix_loki is defined %}
     logging:
         driver: loki
         options:
           loki-url: https://{{loki_username}}:{{loki_password}}@{{loki_url}}
           loki-external-labels: job=docker,hostname={{ inventory_hostname }}      
-   
-  init_minio_bucket:
-    logging:
-        driver: loki
-        options:
-          loki-url: https://{{loki_username}}:{{loki_password}}@{{loki_url}}
-          loki-external-labels: job=docker,hostname={{ inventory_hostname }}      
+  {% endif %}
 
   authsign:
+  restart: unless-stopped
+  {% if browsertrix_loki is defined %}
     logging:
         driver: loki
         options:
           loki-url: https://{{loki_username}}:{{loki_password}}@{{loki_url}}
-          loki-external-labels: job=docker,hostname={{ inventory_hostname }}  
-    image: webrecorder/authsign:0.4.0
-    
+          loki-external-labels: job=docker,hostname={{ inventory_hostname }}
+  {% endif %}

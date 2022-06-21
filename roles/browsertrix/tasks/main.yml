@@ -27,30 +27,11 @@
     group: root
     mode: '0644'
   tags: config
-    
-- name: Move Browsertrix Authsign from port 80 to 81 not to conflict with Nginx
-  lineinfile:
-    path: /root/browsertrix/docker-compose.yml
-    regex: 80:80
-    line: "      - 81:80"
 
-- name: Expose Browsertrix Authsign port 8080 Browsertrix
-  lineinfile:
-    path: /root/browsertrix/docker-compose.yml
-    line: "      - 127.0.0.1:8080:8080"
-    regex: "127.0.0.1:8080:8080"
-    insertafter: "      - 81:80"
- 
 - name: Create Browsertrix data folder
   file:
     path: /mnt/browsertrix
     state: directory
-
-- name: Bind Browsertrix storage volume to created folder
-  lineinfile:
-    path: /root/browsertrix/docker-compose.yml
-    regex: btrix-minio-data:/data
-    line: "      - /mnt/browsertrix:/data"      
 
 ### Enable LOKI Logger Driver and settings
 - name: Install LOKI Driver
@@ -58,11 +39,17 @@
   when: browsertrix_loki is defined
   ignore_errors: true
 
+- name: Copy over AuthSign yaml
+  copy:
+    src: /root/browsertrix/configs/docker-compose.signing.yml
+    dest: /root/browsertrix/docker-compose.signing.yml
+    remote: true
+
+
 - name: Enable Docker-Compose Overrides for Logging
   ansible.builtin.template:
     src: docker-compose.override.yml.j2
     dest: /root/browsertrix/docker-compose.override.yml
-  when: browsertrix_loki is defined
 
 ### Prepeare browstrix contrib folder ##
 - name: Create Browsertrix contrib folder
@@ -79,14 +66,13 @@
     mode: 0555
   when: browsertrix_profile_file is defined
 
-- name: Stop Browsertrix
-  command: docker-compose down
-  args:
-    chdir: /root/browsertrix
-  tags: config
-
 - name: Start Browsertrix
-  command: docker-compose up -d
+  command: |
+    docker stack deploy \
+    -c /root/browsertrix/docker-compose.yml \
+    -c /root/browsertrix/configs/docker-compose.swarm.yml \
+    -c /root/browsertrix/configs/docker-compose.signing.yml \
+    -c /root/browsertrix/docker-compose.overrides.yml btrix
   args:
     chdir: /root/browsertrix
   tags: config
@@ -123,4 +109,3 @@
   command: "./createAccount.py {{ browsertrix_user_email }} {{ browsertrix_user_password }} MasterArchive"
   args:
     chdir: /root/browsertrix-contrib
-
