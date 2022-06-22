@@ -5,7 +5,7 @@
 bucket=$1
 file=$2
 
-host=127.0.0.1:9001
+host=127.0.0.1:9000
 s3_key=ADMIN
 s3_secret={{ browsertrix_minio_password }}
 
