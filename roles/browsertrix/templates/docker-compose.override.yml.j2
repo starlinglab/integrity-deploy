@@ -35,7 +35,7 @@ services:
   minio:
     restart: unless-stopped
     ports:
-      - 9001:9001
+      - 9000:9000
 {% if browsertrix_loki is defined %}
     logging:
       driver: loki
