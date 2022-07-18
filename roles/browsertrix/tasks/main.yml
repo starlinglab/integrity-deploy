@@ -129,10 +129,11 @@
     owner: root
     mode: 0755
 
-- name: Upload profile for Minio
-  command: ./uploadFile.sh btrix-data profile.tar.gz
-  args:
-    chdir: /root/browsertrix-contrib
+# Delete
+#- name: Upload profile for Minio
+#  command: ./uploadFile.sh btrix-data profile.tar.gz
+#  args:
+#    chdir: /root/browsertrix-contrib
 
 # Crete accounts and   archives
 - name: Create master account
