@@ -60,6 +60,16 @@
 - name: Copy over Browsertrix profile
   copy:
     src: "{{browsertrix_profile_file}}"
+    dest: /var/www/html/profile.tar.gz
+    group: www-data
+    owner: www-data
+    mode: 0555
+  when: browsertrix_profile_file is defined
+
+# Old
+- name: Copy over Browsertrix profile
+  copy:
+    src: "{{browsertrix_profile_file}}"
     dest: /root/browsertrix-contrib/profile.tar.gz
     group: root
     owner: root

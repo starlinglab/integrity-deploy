@@ -108,9 +108,8 @@ all:
                 "/":
                   proxy_location: http://127.0.0.1:9871
                   proxy_websocket: True
-                "/minio/":
-                  proxy_location: http://127.0.0.1:9000/
-                  proxy_set_header_host: "minio:9000"
+                "/profile/":
+                  local_path: /var/www/html
                 "/sign":
                   proxy_location: http://127.0.0.1:8080/sign
                 "/verify":
@@ -133,9 +132,8 @@ all:
                 "/":
                   proxy_location: http://127.0.0.1:9871
                   proxy_websocket: True
-                "/minio/":
-                  proxy_location: http://127.0.0.1:9000/
-                  proxy_set_header_host: "minio:9000"
+                "/profile/":
+                  local_path: /var/www/html
                 "/sign":
                   proxy_location: http://127.0.0.1:8080/sign
                 "/verify":
