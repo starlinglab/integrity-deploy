@@ -57,10 +57,19 @@
     path: /root/Browsertrix-contrib
     state: directory
 
+- name: Create Browsertrix contrib folder
+  file:
+    path: /var/www/html/profile
+    state: directory
+    group: www-data
+    owner: www-data
+    mode: 0777
+  when: browsertrix_profile_file is defined
+
 - name: Copy over Browsertrix profile
   copy:
     src: "{{browsertrix_profile_file}}"
-    dest: /var/www/html/profile.tar.gz
+    dest: /var/www/html/profile/profile.tar.gz
     group: www-data
     owner: www-data
     mode: 0555
