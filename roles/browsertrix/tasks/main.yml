@@ -46,7 +46,7 @@
     remote_src: true
 
 
-- name: Enable Docker-Compose Overrides
+- name: Copy docker overrides
   ansible.builtin.template:
     src: docker-compose.override.yml.j2
     dest: /root/browsertrix/docker-compose.override.yml
@@ -57,7 +57,7 @@
     path: /root/Browsertrix-contrib
     state: directory
 
-- name: Create Browsertrix contrib folder
+- name: Create profile folder
   file:
     path: /var/www/html/profile
     state: directory
@@ -75,15 +75,23 @@
     mode: 0555
   when: browsertrix_profile_file is defined
 
-# Old
-- name: Copy over Browsertrix profile
-  copy:
-    src: "{{browsertrix_profile_file}}"
-    dest: /root/browsertrix-contrib/profile.tar.gz
+- name: Copy startBrowsertrix.sh 
+- name: Template uploadFile for Browsertrix to install profile
+  ansible.builtin.copy:
+    src: startBrowsertrix.sh
+    dest: /root/browsertrix-contrib/startBrowsertrix.sh
     group: root
     owner: root
-    mode: 0555
-  when: browsertrix_profile_file is defined
+    mode: 0770
+    
+- name: Copy stopBrowsertrix.sh 
+- name: Template uploadFile for Browsertrix to install profile
+  ansible.builtin.copy:
+    src: stopBrowsertrix.sh
+    dest: /root/browsertrix-contrib/stopBrowsertrix.sh
+    group: root
+    owner: root
+    mode: 0770
 
 #- name: Stop Browsertrix
 #  command: docker stack rm btrix
@@ -96,12 +104,13 @@
 
 - name: Start Browsertrix
   shell: |
-    source configs/config.env ; \
-    docker stack deploy \
-    -c /root/browsertrix/docker-compose.yml \
-    -c /root/browsertrix/configs/docker-compose.swarm.yml \
-    -c /root/browsertrix/configs/docker-compose.signing.yml \
-    -c /root/browsertrix/docker-compose.override.yml btrix
+    /root/browsertrix-contrib/startBrowsertrix.sh
+#    source configs/config.env ; \
+#    docker stack deploy \
+#    -c /root/browsertrix/docker-compose.yml \
+#    -c /root/browsertrix/configs/docker-compose.swarm.yml \
+#    -c /root/browsertrix/configs/docker-compose.signing.yml \
+#    -c /root/browsertrix/docker-compose.override.yml btrix
   args:
     chdir: /root/browsertrix
   tags: config
@@ -121,15 +130,6 @@
   args:
     chdir: /root/browsertrix
 
-# Upload the profile used by Browsertrix crawls
-- name: Template uploadFile for Browsertrix to install profile
-  ansible.builtin.template:
-    src: uploadFile.sh
-    dest: /root/browsertrix-contrib/uploadFile.sh
-    group: root
-    owner: root
-    mode: 0755
-
 - name: Template createAccount for browsertrix
   copy:
     src: createAccount.py
@@ -137,12 +137,6 @@
     group: root
     owner: root
     mode: 0755
-
-# Delete
-#- name: Upload profile for Minio
-#  command: ./uploadFile.sh btrix-data profile.tar.gz
-#  args:
-#    chdir: /root/browsertrix-contrib
 
 # Crete accounts and   archives
 - name: Create master account
