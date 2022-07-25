@@ -76,7 +76,6 @@
   when: browsertrix_profile_file is defined
 
 - name: Copy startBrowsertrix.sh 
-- name: Template uploadFile for Browsertrix to install profile
   ansible.builtin.copy:
     src: startBrowsertrix.sh
     dest: /root/browsertrix-contrib/startBrowsertrix.sh
@@ -85,7 +84,6 @@
     mode: 0770
     
 - name: Copy stopBrowsertrix.sh 
-- name: Template uploadFile for Browsertrix to install profile
   ansible.builtin.copy:
     src: stopBrowsertrix.sh
     dest: /root/browsertrix-contrib/stopBrowsertrix.sh
