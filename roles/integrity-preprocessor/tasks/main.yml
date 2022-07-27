@@ -34,7 +34,7 @@
     state: directory
     owner: root
     group: root
-    mode: 0770
+    mode: '0770'
 
 # PreProcessor
 - name: Create Pre-Processor ID Config
