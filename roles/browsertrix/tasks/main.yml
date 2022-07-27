@@ -39,17 +39,16 @@
   when: browsertrix_loki is defined
   ignore_errors: true
 
-- name: Copy over AuthSign yaml
-  copy:
-    src: /root/browsertrix/configs/docker-compose.signing.yml
-    dest: /root/browsertrix/docker-compose.signing.yml
-    remote_src: true
-
+#- name: Copy over AuthSign yaml
+#  copy:
+#    src: /root/browsertrix/configs/docker-compose.signing.yml
+#    dest: /root/browsertrix/docker-compose.signing.yml
+#    remote_src: true
 
 - name: Copy docker overrides
   ansible.builtin.template:
-    src: docker-compose.override.yml.j2
-    dest: /root/browsertrix/docker-compose.override.yml
+    src: docker-compose.starling.yml.j2
+    dest: /root/browsertrix/docker-compose.starling.yml
 
 ### Prepeare browstrix contrib folder ##
 - name: Create Browsertrix contrib folder

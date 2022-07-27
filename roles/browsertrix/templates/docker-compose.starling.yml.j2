@@ -53,3 +53,5 @@ services:
         loki-url: https://{{loki_username}}:{{loki_password}}@{{loki_url}}
         loki-external-labels: job=docker,hostname={{ inventory_hostname }}
 {% endif %}
+    ports:
+      - 127.0.0.1:8080:8080
