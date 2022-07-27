@@ -7,7 +7,7 @@
     - sshkey_update
     - hypha.common.provision_ssh_keys
     - hypha.common.harden_ssh
-    - hypha.common.common
+    - hypha.common.setup
     - hypha.common.unattended_upgrades
     - geerlingguy.docker # Docker before Firewall
     - hypha.common.firewall
@@ -54,7 +54,7 @@
     - sshkey_update
     - hypha.common.provision_ssh_keys
     - hypha.common.harden_ssh
-    - hypha.common.common
+    - hypha.common.setup
     - hypha.common.unattended_upgrades
     - geerlingguy.docker # Docker before Firewall
     - hypha.common.firewall
