@@ -25,6 +25,12 @@
     src: config.json.j2
     dest: '/root/telegram_archive_bot_{{ telegram_bot.key }}/telegram_archive_bot/config.json'
 
+### Enable LOKI Logger Driver and settings
+- name: Enable Docker-Compose Overrides for Logging
+  ansible.builtin.template:
+    src: docker-compose.override.yml.j2
+    dest: /root/telegram_archive_bot_{{ telegram_bot.key }}/telegram_archive_bot/docker-compose.override.yaml
+
 - name: Map Data Dir
   lineinfile:
     path: /root/telegram_archive_bot_{{ telegram_bot.key }}/telegram_archive_bot/docker-compose.yml
@@ -52,6 +58,6 @@
       chdir: /root/telegram_archive_bot_{{ telegram_bot.key }}/telegram_archive_bot
 
 - name: docker-compose up -d
-  command: docker-compose build
+  command: docker-compose up -d
   args:
       chdir: /root/telegram_archive_bot_{{ telegram_bot.key }}/telegram_archive_bot

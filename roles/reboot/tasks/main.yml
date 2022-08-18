@@ -1,4 +1,4 @@
 ---
 
-- name: Rebooting the machine
+- name: Rebooting and wait for the host
   reboot:

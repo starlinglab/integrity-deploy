@@ -2,7 +2,6 @@
 all:
   vars:
 
-    deploymode: stg
     # Sensible defaults   
     ansible_user: sysadmin 
     ansible_python_interpreter: /usr/bin/python3
@@ -20,8 +19,12 @@ all:
     nfs_shared_path: integrity_store
 
     # Server that monitoring configs will be updated on
-    monitor_server: monitor.prod.starlinglab.org
-    firewall_ipv6: false
+    monitor_server: "monitor.prod.starlinglab.org"
+
+    # Loki Data
+    loki_url: "{{monitor_server}}:443/loki/api/v1/push"
+    loki_username: loki
+    loki_password: "{{secret_loki_password}}"
 
     # E-mail credentials
     outbound_email_login: starlinglaborg@gmail.com
@@ -37,78 +40,114 @@ all:
     # Keys to add to all servers
     ssh_user_keys:
       - name: yurko
-        key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCtv4I2W8TlVsWKKHwASF78cGrn06BJi9dGQQQksW0Ke9ED/KJG2pvG4GXnh57/AOuJtUaS3gXBEj/knE3t/qtvO2cUg1EufnkItzNLdY1B0Hwm98I8O7JdhE+3c/SUIU4Miioj/IlKl8fRxDqx03FTVBdd6Q7kKF79LcobTqo7Pd6i7vnp46U6bBm01tDdRB+g+lok9x+B8umRqqjAGcboucwZ5NrzmLjz/p1wg+5Gva2zcyzBp1aQk7JPhsbElTLfhUP7hJbJ6rFWnebgK8z/vbyofeZljXb6LttttMGoWKg6QAdn61mRwEGff1FUPVLiEVnQ5IY+f97NlQ36c81b yurko@tomesh"
+        key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCtv4I2W8TlVsWKKHwASF78cGrn06BJi9dGQQQksW0Ke9ED/KJG2pvG4GXnh57/AOuJtUaS3gXBEj/knE3t/qtvO2cUg1EufnkItzNLdY1B0Hwm98I8O7JdhE+3c/SUIU4Miioj/IlKl8fRxDqx03FTVBdd6Q7kKF79LcobTqo7Pd6i7vnp46U6bBm01tDdRB+g+lok9x+B8umRqqjAGcboucwZ5NrzmLjz/p1wg+5Gva2zcyzBp1aQk7JPhsbElTLfhUP7hJbJ6rFWnebgK8z/vbyofeZljXb6LttttMGoWKg6QAdn61mRwEGff1FUPVLiEVnQ5IY+f97NlQ36c81b yurko@starling"
       - name: ben
-        key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMLiPavTvnbFRc6JvkGVinFoAk93k88KTg1u3zZQxMyW benedict@Benedicts-MacBook-Air.local"
+        key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMLiPavTvnbFRc6JvkGVinFoAk93k88KTg1u3zZQxMyW benedict@starling"
       - name: cole
         key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDa7CV1MuEEWiO21CcrakO5h/2W8SgXGqN9xUj7tmT/9i4+IYoCFw4eARe9ZMUUuAa/jBThKK9oAylMEc5u6faWUVUNY5z46KeNEH482z+kcprSEYEY0w9lWyA5c93BIRcvH3KYZkfwCe4U5i6cxD3RAHJNTuHKdeUfT4hCWEyJMKNPsW5ggILJe/9Iq7XVy1ukXmV+ta0u9AKH/fWW4OA6RADzD7eFNZtooZoU1VAcRgpaLhzVFp+0kyhBIciiajZ4r217TMA+DEQ9QGVIxrQJJGm6v0UYLOPuv3NAnGrjHFE7+gGXKVQljx2N/eoyKmF7lWaqDBg3uvic3FCSBeunC5rggeFTtfZ37/J9Lk+rwWwk3HgfzLc7eefYG2lPoX3ftjeD41E4EcobH8A2J1dOgcD7SiOwCZc8dGtWMjC02SaSufWnl8swphd+PNdO/JeWLbGmnVW3AfiaDrVHLXviP2NRfwEKtbH4oB9d/aaryREgi3fLm6MsRm8c+GSWUOc= cole@hypha"
+      - name: basilesimon
+        key: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFiERM3s7o882wuqwgMALsRgmZlvtjq4KFjK7AqAqWQP basile@starling
       - name: marc
-        key: "AAAAB3NzaC1yc2EAAAADAQABAAABgQC+nGZtKogla1KwwH7JxadD7T/FCrQz5crrm+VdmyG0aCyM0qS3KDcirBHqXCNOUcYaeiUfdca53/9DH1N6QITKroR2Bw+uvmcuZkdNe8saKt3j9nLiqLjh7jh8vqrcYdQ2RvDNtvECtdvD3Vxd4+YbUEQ+NjSZkVjY+aGrz2WnPV+DnyUfMJZ9NE/4HbSmlS7ZvQLfD4bVtzFLE1YTSjSfC3K370Hys5UWpEg21EsVhM4XcLmHP/LZPyXHtv6hTs3xX+pKQltKe7H12lPFP1LUK96Sxs37iIkiUzampuFQK4eB6EKhQqm1O7iuuJgX6PdlSO43zi/xtHe+k1Pd9uBeARkB8XHLMsxTmWXLHl4iqW8xgZQGkltb95u6WVVQeZMK8XlN5CxVSQtweo48rmGSuXpIa7lYLc2wCM1wB/ioAJDFemNHMylLFDy4bFPCFqEnWSY5Ey2qjoIxqhpwAvwGwNeJsd3f60QPfRKAUL4qyMZ2JopcmH+oOVCK5jt2fYM= mlopez@curro"
+        key: "ssh-ed25519 AAAAB3NzaC1yc2EAAAADAQABAAABgQC+nGZtKogla1KwwH7JxadD7T/FCrQz5crrm+VdmyG0aCyM0qS3KDcirBHqXCNOUcYaeiUfdca53/9DH1N6QITKroR2Bw+uvmcuZkdNe8saKt3j9nLiqLjh7jh8vqrcYdQ2RvDNtvECtdvD3Vxd4+YbUEQ+NjSZkVjY+aGrz2WnPV+DnyUfMJZ9NE/4HbSmlS7ZvQLfD4bVtzFLE1YTSjSfC3K370Hys5UWpEg21EsVhM4XcLmHP/LZPyXHtv6hTs3xX+pKQltKe7H12lPFP1LUK96Sxs37iIkiUzampuFQK4eB6EKhQqm1O7iuuJgX6PdlSO43zi/xtHe+k1Pd9uBeARkB8XHLMsxTmWXLHl4iqW8xgZQGkltb95u6WVVQeZMK8XlN5CxVSQtweo48rmGSuXpIa7lYLc2wCM1wB/ioAJDFemNHMylLFDy4bFPCFqEnWSY5Ey2qjoIxqhpwAvwGwNeJsd3f60QPfRKAUL4qyMZ2JopcmH+oOVCK5jt2fYM= mlopez@curro"
 
     ipfs_swarm_key: "{{ secret_ipfs_swarm_key }}"
 
   children:
 
     browsertrix:
+      vars:
+        monitor_job: "staging"
+        integrity_preprocessor_browsertrix: True
+        browsertrix_internal_password: "{{ secret_browsertrix }}"
+        browsertrix_minio_password: "{{ secret_browsertrix }}"
+        browsertrix_admin_email: infra@starlinglab.org
+        browsertrix_admin_password: "{{ secret_browsertrix_admin_password }}"
+        browsertrix_user_email: "tools@starlinglab.org"
+        browsertrix_user_password: "{{ secret_browsertrix_user_password }}"
+        browsertrix_email_login: "{{ outbound_email_login }}"
+        browsertrix_email_password: "{{ outbound_email_password }}"
+        authsign_token: "{{ secret_authsign_token }}"
+        letsencrypt_email: infra@starlinglab.org
+        ssh_additional_user_keys:
+          - name: ikreymer
+            key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCTuNVyhX92vfAVIohaMvz9iJ97JoM+8Outk6wEI30mgx5ZkapfkZX8NkTEREnEhFEKuY30jDzP6bW6jLvUhM015tyw2bsa/exmN3IFHfNOnUWMyJzWNpfcA5+TsKu/5NaorXcEIvPuiAledEEHzvIrKWvrxUD8O9PtOiDdtJfpPJ7N/k0QC9FfELfScEf07pRgu/4Fohq+veq+WGw0Kb5LrZO96e/ZKIU5ySlUj+nHKISFDfEcD3bL/P96c9uoaCIVqCaRJdhfFj2zQiVmqQteu7XecGF6nUqTLD9isr4bYraE15E/IFP3nurk2w8fUS6kwQwGKcUPF4aYeOHLIyKC+NspT45rYqUw5YGFInCFkdEDzRNofmmUbBFAgQAfG+sPdrgwcLsg8662R6u+ifkEm/4Gtu3WAArDuJALhgzKbtBtGBF4tH7RwNr55kcVY63z2zzlUBwFN7r51OztKo/XLMfIxLvn405E/9LS6tDxcAHgByLnlPrY9UUITfExD4ZFFAFNCprfINDwjGuBcF8ljWZIT91jyISgzq/rz/gpMUc2Cw6ZdZjjjP43KBy25OZ09nzRt5GL2AqIZjrPSo4yedhYUPCpdn+3WpSVb+XTOK94dSUZYqZyDY5f6MgeIKgzpWUUPYX6Vp/Rw1lN+sImM7dLwRCeEN3pDhuFSCaMXQ== ikreymer@gmail.com
+        nfs_client_mount:
+          "main":
+            source: "10.55.0.1:/mnt/{{ nfs_shared_path }}"
+            target: "/mnt/{{ nfs_shared_path }}"
+        firewall_ports:
+          - "ssh":
+            port: 22
+          - "ssl":
+            port: 80
+          - "http":
+            port: 443
+          - "nodeexporter":
+            port: 9100
+            source: "{{ monitor_server }}"
+            sourceIPv6: "{{ monitor_server }}"
+          - "nfs":
+            port: 2049
+            source: "10.55.0.0/24"
+            sourceIPv6: "2607:5300:203:9c8c:ffff::/64"
+        cadvisor_exporter_port: 9110
+        firewall_docker_interface: eth0
+        firewall_docker_ports:
+          - "cAdvisor":
+            port: "{{ cadvisor_exporter_port }}"
+            protocol: tcp
+            source: "{{ monitor_server }}"
       hosts:
-        browsertrix.stg.starlinglab.org:
-          monitor_job: "staging"
-          integrity_preprocessor_browsertrix: True
-          browsertrix_internal_password: "{{ secret_browsertrix }}"
-          browsertrix_minio_password: "{{ secret_browsertrix }}"
-          browsertrix_admin_email: infra@starlinglab.org
-          browsertrix_admin_password: "{{ secret_browsertrix_admin_password }}"
-          browsertrix_user_email: "tools@starlinglab.org"
-          browsertrix_user_password: "{{ secret_browsertrix_user_password }}"
-          browsertrix_email_login: "{{ outbound_email_login }}"
-          browsertrix_email_password: "{{ outbound_email_password }}"
-          browsertrix_auth_domain: authsign.stg.starlinglab.org
+        org1.browsertrix.stg.starlinglab.org:
+          browsertrix_auth_domain: org1.authsign.stg.starlinglab.org
           browsertrix_profile_file: "stg_profile.tar.gz"
-          authsign_token: "{{ secret_authsign_token }}"
-          letsencrypt_email: infra@starlinglab.org
-          ssh_additional_user_keys:
-            - name: ikreymer
-              key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCTuNVyhX92vfAVIohaMvz9iJ97JoM+8Outk6wEI30mgx5ZkapfkZX8NkTEREnEhFEKuY30jDzP6bW6jLvUhM015tyw2bsa/exmN3IFHfNOnUWMyJzWNpfcA5+TsKu/5NaorXcEIvPuiAledEEHzvIrKWvrxUD8O9PtOiDdtJfpPJ7N/k0QC9FfELfScEf07pRgu/4Fohq+veq+WGw0Kb5LrZO96e/ZKIU5ySlUj+nHKISFDfEcD3bL/P96c9uoaCIVqCaRJdhfFj2zQiVmqQteu7XecGF6nUqTLD9isr4bYraE15E/IFP3nurk2w8fUS6kwQwGKcUPF4aYeOHLIyKC+NspT45rYqUw5YGFInCFkdEDzRNofmmUbBFAgQAfG+sPdrgwcLsg8662R6u+ifkEm/4Gtu3WAArDuJALhgzKbtBtGBF4tH7RwNr55kcVY63z2zzlUBwFN7r51OztKo/XLMfIxLvn405E/9LS6tDxcAHgByLnlPrY9UUITfExD4ZFFAFNCprfINDwjGuBcF8ljWZIT91jyISgzq/rz/gpMUc2Cw6ZdZjjjP43KBy25OZ09nzRt5GL2AqIZjrPSo4yedhYUPCpdn+3WpSVb+XTOK94dSUZYqZyDY5f6MgeIKgzpWUUPYX6Vp/Rw1lN+sImM7dLwRCeEN3pDhuFSCaMXQ== ikreymer@gmail.com
+          browsertrix_integrity_collections: "stg_preprocessor-browsertrix-collections-all.json"
+          browsertrix_loki: True
           nginx_sites:
-            "browsertrix.stg.starlinglab.org":
+            "org1.browsertrix.stg.starlinglab.org":
               ssl_provider: letsencrypt
-              web_hostname: browsertrix.stg.starlinglab.org
+              web_hostname: org1.browsertrix.stg.starlinglab.org
               locations:
                 "/":
                   proxy_location: http://127.0.0.1:9871
                   proxy_websocket: True
                 "/minio/":
                   proxy_location: http://127.0.0.1:9000/
+                  proxy_set_header_host: "minio:9000"
                 "/sign":
                   proxy_location: http://127.0.0.1:8080/sign
                 "/verify":
                   proxy_location: http://127.0.0.1:8080/verify
-            "authsign.stg.starlinglab.org":
-              web_hostname: "authsign.stg.starlinglab.org"
+            "org1.authsign.stg.starlinglab.org":
+              web_hostname: "org1.authsign.stg.starlinglab.org"
               locations:
                 "/":
                   proxy_location: http://127.0.0.1:81
-          firewall_ports:
-            - "ssh":
-              port: 22
-            - "ssl":
-              port: 80
-            - "http":
-              port: 443
-            - "nodeexporter":
-              port: 9100
-              source: "{{ monitor_server }}"
-          nfs_client_mount:
-            "main":
-              source: "10.55.0.1:/mnt/{{ nfs_shared_path }}"
-              target: "/mnt/{{ nfs_shared_path }}"
-          cadvisor_exporter_port: 9110
-          firewall_docker_interface: eth0
-          firewall_docker_ports:
-            - "cAdvisor":
-              port: "{{ cadvisor_exporter_port }}"
-              protocol: tcp
-              source: "{{ monitor_server }}"
+        org2.browsertrix.stg.starlinglab.org:
+          browsertrix_auth_domain: org2.authsign.stg.starlinglab.org
+          browsertrix_profile_file: "stg_profile.tar.gz"
+          browsertrix_integrity_collections: "stg_preprocessor-browsertrix-collections-all.json"
+          browsertrix_loki: True
+          nginx_sites:
+            "org2.browsertrix.stg.starlinglab.org":
+              ssl_provider: letsencrypt
+              web_hostname: org2.browsertrix.stg.starlinglab.org
+              locations:
+                "/":
+                  proxy_location: http://127.0.0.1:9871
+                  proxy_websocket: True
+                "/minio/":
+                  proxy_location: http://127.0.0.1:9000/
+                  proxy_set_header_host: "minio:9000"
+                "/sign":
+                  proxy_location: http://127.0.0.1:8080/sign
+                "/verify":
+                  proxy_location: http://127.0.0.1:8080/verify
+            "org2.authsign.stg.starlinglab.org":
+              web_hostname: "org2.authsign.stg.starlinglab.org"
+              locations:
+                "/":
+                  proxy_location: http://127.0.0.1:81
     bot:
       vars:
         firewall_ports:
@@ -121,9 +160,11 @@ all:
           - "nodeexporter":
             port: 9100
             source: "{{ monitor_server }}"
+            sourceIPv6: "{{ monitor_server }}"
           - "nfs":
             port: 2049
             source: "10.55.0.0/24"
+            sourceIPv6: "2607:5300:203:9c8c:ffff::/64"
           - "ipfs":
             port: 4001
           - "ipfs-cluser":
@@ -138,7 +179,10 @@ all:
       hosts:
         bot.stg.starlinglab.org:
           monitor_job: "staging"
+          chatbot_loki: true
           integrity_preprocessor_chatbot: True
+          integrity_preprocessor_chatbot_config: stg_preprocessor-chatbot.json
+          integrity_preprocessor_chatbot_signal_user_config: stg_preprocessor-chatbot-signal-users.json
           signal_bot:
             "main":
               signal_phone_number: "16474788566"
@@ -163,7 +207,6 @@ all:
             "main":
               source: "10.55.0.1:/mnt/{{ nfs_shared_path }}"
               target: "/mnt/{{ nfs_shared_path }}"
-          integrity_recorder_file: bot
     integrity:
       hosts:
         integrity.stg.starlinglab.org:
@@ -178,9 +221,11 @@ all:
             - "nodeexporter":
               port: 9100
               source: "{{ monitor_server }}"
+              sourceIPv6: "{{ monitor_server }}"
             - "nfs":
               port: 2049
               source: "10.55.0.0/24"
+              sourceIPv6: "2607:5300:203:9c8c:ffff::/64"
           nginx_sites:
             "integrity.stg.starlinglab.org":
               ssl_provider: letsencrypt
@@ -188,9 +233,21 @@ all:
               locations:
                 "/":
                   proxy_location: "http://127.0.0.1:8080"
+                "/auth-test-1/":
+                  proxy_location: http://127.0.0.1:8881/
+            "auth-test-1.starlinglab.org":
+              web_hostname: auth-test-1.starlinglab.org
+              locations:
+                "/":
+                  proxy_location: http://127.0.0.1:81
+          auth_sign:
+            "auth-test-1.starlinglab.org":
+               port: 81
+               apiport: 8881
           ipfs_user: starling
           ipfs_gateway_port: 8081
           ipfs_service: true
+          integrity_cai_signing_key_file: "stg_cai_key"
           integrity_jwt_secret: "{{ secret_integrity_jwt }}"
           integrity_clain_tool_path: "/home/starling/claim_tool"
           integrity_data_path: "/mnt/{{ nfs_shared_path }}/starling"
@@ -199,13 +256,16 @@ all:
             - "/mnt/{{ nfs_shared_path }} 10.55.0.0/24(rw,all_squash,anonuid=1001,anongid=1001)"
           browsertrix_username: "tools@starlinglab.org"
           browsertrix_password: "{{ secret_integrity_browsertrix_password }}"
-          numbers_api_key: "{{ secret_numbers_api }}"
           numbers_api_network: "testnet"
-          authsign_token: "{{ secret_authsign_token }}"     
-          authsign_access_url: "https://browsertrix.stg.starlinglab.org"
+          iscn_mnemonic: "{{ secret_iscn_mnemonic_stg }}"
           numbers_api_url: "https://node.numbersprotocol.io/version-test/api/1.1/wf"
-          integrity_recorder_file: integrity
-          integrity_backend_config: "integrity.config.stg.json"
+          numbers_api_secret: "{{secret_numbers_api_stg}}"
+          authsign_token: "{{ secret_authsign_token }}"
+          authsign_access_url: "https://browsertrix.stg.starlinglab.org"
+          integrity_backend_config: "stg_integrity.config.json"
+          integrity_preprocessor_folder: True
+          integrity_preprocessor_folder_config: "stg_preprocessor-folder.json"
+          dropbox_loki: true
 
     ipfs:
       vars:
@@ -219,13 +279,14 @@ all:
           - "nodeexporter":
             port: 9100
             source: "{{ monitor_server }}"
+            sourceIPv6: "{{ monitor_server }}"
         ipfs_swarm_key: "{{ secret_ipfs_swarm_key }}"
         monitor_job: "staging"
         ipfs_user: ipfs
       hosts:
         ipfs1.stg.starlinglab.org:
-          ipfs_ip: "{{ lookup('dig', ipfs1.stg.starlinglab.org) }}"
+          ipfs_ip: "{{ lookup('dig', 'ipfs1.stg.starlinglab.org./A') }}"
         ipfs2.stg.starlinglab.org:
-          ipfs_ip: "{{ lookup('dig', ipfs2.stg.starlinglab.org) }}"
+          ipfs_ip: "{{ lookup('dig', 'ipfs2.stg.starlinglab.org./A') }}"
         ipfs3.stg.starlinglab.org:
-          ipfs_ip: "{{ lookup('dig', ipfs3.stg.starlinglab.org) }}"
+          ipfs_ip: "{{ lookup('dig', 'ipfs3.stg.starlinglab.org./A') }}"

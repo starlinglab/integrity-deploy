@@ -7,24 +7,37 @@
 - name: Create dropbox data folder
   file:
     recurse: true
-    path: /mnt/store/dropbox
-    owner: 1002
-    group: 1002
+    path: /mnt/integrity_store/store/dropbox
+    owner: "{{ dropbox_uid }}"
+    group: "{{ dropbox_gid }}"
     state: directory
+    mode: '0664'
 
-- name: Download Docker-DropBox
+- name: Add the sysadmin to GID group
+  ansible.builtin.user:
+    name: sysadmin
+    groups: "{{ dropbox_gid }}"
+    append: yes
+
+- name: Clone docker-dropbox repo
   git:
     repo: https://github.com/starlinglab/dropbox-docker
     dest: /root/dropbox
     force: yes
 
-- name: Template config for DropBox
+- name: Copy config for dropbox
   ansible.builtin.template:
     src: docker-compose.yaml.j2
     dest: /root/dropbox/docker-compose.yaml
     owner: root
     group: root
-    mode: '0644'
+    mode: '0664'
+
+### Enable LOKI Logger Driver and settings
+- name: Install LOKI Driver
+  shell: "docker plugin install grafana/loki-docker-driver:latest --alias loki --grant-all-permissions"
+  when: dropbox_loki is defined
+  ignore_errors: true
 
 - name: docker-compose build
   command: docker-compose up -d

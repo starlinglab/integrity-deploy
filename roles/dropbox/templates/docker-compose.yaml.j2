@@ -6,4 +6,10 @@ services:
     build: "."
     container_name: dropbox
     volumes:
-      - /mnt/store/dropbox:/home/dropbox-user
+      - /mnt/integrity_store/store/dropbox:/home/dropbox-user
+
+    logging:
+        driver: loki
+        options:
+          loki-url: https://{{loki_username}}:{{loki_password}}@{{loki_url}}
+          loki-external-labels: job=docker,hostname={{ inventory_hostname }}  

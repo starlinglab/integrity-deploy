@@ -21,6 +21,14 @@
     src: config.env.j2
     dest: '/root/slack_archive_bot_{{ slack_bot.key }}/config.env'
 
+### Enable LOKI Logger Driver and settings
+
+- name: Enable Docker-Compose Overrides for Logging
+  ansible.builtin.template:
+    src: docker-compose.override.yml.j2
+    dest: /root/slack_archive_bot_{{ slack_bot.key }}/docker-compose.override.yaml
+  when: chatbot_loki
+
 - name: Map slack port
   lineinfile:
     path: /root/slack_archive_bot_{{ slack_bot.key }}/docker-compose.yaml
@@ -39,7 +47,6 @@
     path: /root/slack_archive_bot_{{ slack_bot.key }}/docker-compose.yaml
     regex: "      - ./store:/store"
     line:  "      - /mnt/store/slack_archive_bot_{{ slack_bot.key }}:/store"
-
 
 - name: docker-compose build
   command: docker-compose build

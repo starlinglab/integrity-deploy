@@ -1,0 +1,14 @@
+[Unit]
+Description=ISCN Server
+After=network.target
+
+[Service]
+Environment="MNEMONIC_SEED_WORD={{ iscn_mnemonic }}"
+User=starling
+Restart=always
+Type=simple
+WorkingDirectory=/home/starling/iscn/sample/server
+ExecStart=node src/index.js
+
+[Install]
+WantedBy=multi-user.target

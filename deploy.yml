@@ -5,9 +5,10 @@
   gather_facts: true
   roles:
     - sshkey_update
-    - provision_ssh_keys
+    - hypha.common.provision_ssh_keys
     - hypha.common.harden_ssh
     - hypha.common.common
+    - hypha.common.unattended_upgrades
     - geerlingguy.docker # Docker before Firewall
     - hypha.common.firewall
     - hypha.common.node_exporter
@@ -17,8 +18,10 @@
     - hypha.common.nodejs
     - nfs
     - dropbox
+    - authsign
     - integrity-backend
     - integrity-preprocessor
+    - promtail
     - ipfs
     - ipfs_cluster
     - pass
@@ -27,17 +30,20 @@
   become: true
   gather_facts: true
   roles:    
-    - provision_ssh_keys
+    - hypha.common.provision_ssh_keys
     - hypha.common.harden_ssh
     - hypha.common.common
+    - hypha.common.unattended_upgrades
     - hypha.common.node_exporter
     - hypha.common.prometheus_exporter_addnode
     - hypha.common.nginx
     - hypha.common.ssl
     - geerlingguy.docker
+    - hypha.common.firewall
     - browsertrix
     - integrity-preprocessor
     - hypha.common.prometheus_exporter_docker
+    - promtail
     - nfs
     - pass
   
@@ -46,9 +52,10 @@
   gather_facts: true
   roles:
     - sshkey_update
-    - provision_ssh_keys
+    - hypha.common.provision_ssh_keys
     - hypha.common.harden_ssh
     - hypha.common.common
+    - hypha.common.unattended_upgrades
     - geerlingguy.docker # Docker before Firewall
     - hypha.common.firewall
     - hypha.common.node_exporter
@@ -60,5 +67,6 @@
     - signal_bot
     - integrity-preprocessor
     - hypha.common.prometheus_exporter_docker
+    - promtail
     - nfs
     - pass

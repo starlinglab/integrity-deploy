@@ -1,0 +1,30 @@
+---
+- name: Create authsign deployment folder
+  file:
+    path: /root/authsign
+    state: directory
+
+- name: Create authsign instance deployment folder
+  file:
+    path: "/root/authsign/{{ auth_sign.key }}"
+    state: directory
+
+- name: Create authsign instance data folder
+  file:
+    path: "/root/authsign/{{ auth_sign.key }}/data"
+    state: directory
+
+- name: Copy over instance docker template
+  template:
+    src: docker-compose.yml.j2
+    dest: "/root/authsign/{{ auth_sign.key }}/docker-compose.yml"
+
+- name: Copy over instance signage config
+  template:
+    src: signing.yaml.j2
+    dest: "/root/authsign/{{ auth_sign.key }}/signing.yaml"
+
+- name: Start docker-compose up
+  command: docker-compose up -d
+  args:
+      chdir: /root/authsign/{{ auth_sign.key }}/

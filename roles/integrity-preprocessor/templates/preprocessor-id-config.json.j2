@@ -1,0 +1,69 @@
+{
+{% if browsertrix_internal_password is defined %}
+    "browsertrix":{
+       "type": "browsertrix",
+       "path":"/root/browsertrix",
+       "dockercompose":true,
+       "git":true
+    },
+{% endif %}
+
+{% if slack_bot is defined %}
+{% for bot in slack_bot %}
+    "slack_archive_bot_{{ bot }}":{
+       "type": "slack_bot",
+       "path":"/root/slack_archive_bot_{{ bot }}",
+       "dockercompose":true,
+       "git":true
+    },
+{% endfor %}
+{% endif %}
+
+{% if telegram_bot is defined %}
+{% for bot in telegram_bot %}
+    "telegram_archive_bot_{{ bot }}":{
+       "type": "telegram_bot",
+       "path":"/root/telegram_archive_bot_{{ bot }}/telegram_archive_bot",
+       "dockercompose":true,
+       "git":true
+    },
+{% endfor %}
+{% endif %}
+
+{% if signal_bot is defined %}
+{% for bot in signal_bot %}
+    "signal_bot_{{ bot }}":{
+       "type": "signal_bot",
+       "path":"/root/signal_bot_{{ bot }}",
+       "dockercompose":true,
+       "git":true
+    },
+    "signal_bot_{{ bot }}_signald":{
+       "type": "slack_bot",
+       "path":"/root/signal_bot_{{ bot }}/signald",
+       "dockercompose":false,
+       "git":true
+    },
+{% endfor %}
+{% endif %}
+
+
+{% if integrity_preprocessor_browsertrix or integrity_preprocessor_chatbot or integrity_preprocessor_folder or integrity_jwt_secret is defined %}
+    "integrity-preprocessor":{
+       "type": "integrity",
+       "path":"/root/integrity-preprocessor/",
+       "dockercompose":false,
+       "git":true
+    }
+{% endif %}
+
+{% if integrity_jwt_secret is defined %}
+    ,
+    "integrity-backend":{
+       "type": "integrity",
+       "path":"/home/starling/integrity-backend/",
+       "dockercompose":false,
+       "git":true
+    }
+{% endif %}
+} 

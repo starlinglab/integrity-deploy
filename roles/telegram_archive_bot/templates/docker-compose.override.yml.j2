@@ -1,0 +1,7 @@
+services:
+  archive:
+    logging:
+        driver: loki
+        options:
+          loki-url: https://{{loki_username}}:{{loki_password}}@{{loki_url}}
+          loki-external-labels: job=docker,hostname={{ inventory_hostname }}  

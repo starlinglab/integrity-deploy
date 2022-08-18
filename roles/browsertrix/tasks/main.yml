@@ -4,60 +4,73 @@
     name:
       - git
 
-- name: Clone Broswerix
+- name: Clone Browsertrix repo
   git:
     repo: https://github.com/webrecorder/browsertrix-cloud.git
     dest: /root/browsertrix
     force: yes
     
-- name: Template config for browsertrix
+- name: Config for Browsertrix
   ansible.builtin.template:
     src: config.env.j2
     dest: /root/browsertrix/configs/config.env
     owner: root
     group: root
     mode: '0644'
+  tags: config
 
-- name: Template config for browserix
+- name: Config for Browsertrix AuthSign
   ansible.builtin.template:
     src: signing.yaml.j2
     dest: /root/browsertrix/configs/signing.yaml
     owner: root
     group: root
     mode: '0644'
+  tags: config
     
-- name: Move browsetrix from port 80
+- name: Move Browsertrix Authsign from port 80 to 81 not to conflict with Nginx
   lineinfile:
     path: /root/browsertrix/docker-compose.yml
     regex: 80:80
     line: "      - 81:80"
 
-- name: Move browsetrix from port 80
+- name: Expose Browsertrix Authsign port 8080 Browsertrix
   lineinfile:
     path: /root/browsertrix/docker-compose.yml
     line: "      - 127.0.0.1:8080:8080"
     regex: "127.0.0.1:8080:8080"
     insertafter: "      - 81:80"
  
-
-- name: Create browsertrix data folder
+- name: Create Browsertrix data folder
   file:
     path: /mnt/browsertrix
     state: directory
 
-- name: Move browsertrix storage to different folder
+- name: Bind Browsertrix storage volume to created folder
   lineinfile:
     path: /root/browsertrix/docker-compose.yml
     regex: btrix-minio-data:/data
     line: "      - /mnt/browsertrix:/data"      
 
+### Enable LOKI Logger Driver and settings
+- name: Install LOKI Driver
+  shell: "docker plugin install grafana/loki-docker-driver:latest --alias loki --grant-all-permissions"
+  when: browsertrix_loki is defined
+  ignore_errors: true
+
+- name: Enable Docker-Compose Overrides for Logging
+  ansible.builtin.template:
+    src: docker-compose.override.yml.j2
+    dest: /root/browsertrix/docker-compose.override.yml
+  when: browsertrix_loki is defined
+
 ### Prepeare browstrix contrib folder ##
-- name: Create browsertrix contrib folder
+- name: Create Browsertrix contrib folder
   file:
-    path: /root/browsertrix-contrib
+    path: /root/Browsertrix-contrib
     state: directory
 
-- name: Copy over profile
+- name: Copy over Browsertrix profile
   copy:
     src: "{{browsertrix_profile_file}}"
     dest: /root/browsertrix-contrib/profile.tar.gz
@@ -66,7 +79,25 @@
     mode: 0555
   when: browsertrix_profile_file is defined
 
-- name: Template uploadFile for browsertrix for profile
+- name: Stop Browsertrix
+  command: docker-compose down
+  args:
+    chdir: /root/browsertrix
+  tags: config
+
+- name: Start Browsertrix
+  command: docker-compose up -d
+  args:
+    chdir: /root/browsertrix
+  tags: config
+
+- name: Download latest Browsertrix crawler
+  command: docker pull webrecorder/browsertrix-crawler:latest
+  args:
+    chdir: /root/browsertrix
+
+# Upload the profile used by Browsertrix crawls
+- name: Template uploadFile for Browsertrix to install profile
   ansible.builtin.template:
     src: uploadFile.sh
     dest: /root/browsertrix-contrib/uploadFile.sh
@@ -75,32 +106,21 @@
     mode: 0755
 
 - name: Template createAccount for browsertrix
-  ansible.builtin.template:
-    src: createAccount.py.j2
+  copy:
+    src: createAccount.py
     dest: /root/browsertrix-contrib/createAccount.py
     group: root
     owner: root
     mode: 0755
 
-- name: docker-compose build
-  command: docker-compose up -d
-  args:
-    chdir: /root/browsertrix
-
-- name: Upload profile
+- name: Upload profile for Minio
   command: ./uploadFile.sh test-bucket profile.tar.gz
   args:
     chdir: /root/browsertrix-contrib
 
+# Crete accounts and archives
 - name: Create master account
-  command: ./createAccount.py
+  command: "./createAccount.py {{ browsertrix_user_email }} {{ browsertrix_user_password }} MasterArchive"
   args:
     chdir: /root/browsertrix-contrib
-  register: account_creation
 
-- name: Set AID Value
-  set_fact:
-    browsertrix_integrity_aid = {{ account_creation.stdout }}
-  when: 
-    - account_creation is defined
-    - account_creation != ""

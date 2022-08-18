@@ -1,4 +1,10 @@
 ---
+### Enable LOKI Logger Driver and settings
+- name: Install LOKI Driver
+  shell: "docker plugin install grafana/loki-docker-driver:latest --alias loki --grant-all-permissions"
+  when: chatbot_loki is defined
+  ignore_errors: true
+
 - include_tasks: signalbot.yml
   loop: "{{ signal_bot | dict2items  }}"
   loop_control:
