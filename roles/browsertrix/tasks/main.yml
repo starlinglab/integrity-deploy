@@ -69,7 +69,7 @@
 ### Prepeare browstrix contrib folder ##
 - name: Create Browsertrix contrib folder
   file:
-    path: /root/Browsertrix-contrib
+    path: /root/browsertrix-contrib
     state: directory
 
 - name: Copy over Browsertrix profile
