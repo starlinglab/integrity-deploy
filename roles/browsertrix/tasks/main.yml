@@ -8,6 +8,8 @@
   git:
     repo: https://github.com/webrecorder/browsertrix-cloud.git
     dest: /root/browsertrix
+    version: "{{browsertrix_version}}"
+
     force: yes
     
 - name: Config for Browsertrix
