@@ -48,7 +48,7 @@ all:
       - name: basilesimon
         key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFiERM3s7o882wuqwgMALsRgmZlvtjq4KFjK7AqAqWQP basile@starling"
       - name: marc
-        key: "AAAAB3NzaC1yc2EAAAADAQABAAABgQC+nGZtKogla1KwwH7JxadD7T/FCrQz5crrm+VdmyG0aCyM0qS3KDcirBHqXCNOUcYaeiUfdca53/9DH1N6QITKroR2Bw+uvmcuZkdNe8saKt3j9nLiqLjh7jh8vqrcYdQ2RvDNtvECtdvD3Vxd4+YbUEQ+NjSZkVjY+aGrz2WnPV+DnyUfMJZ9NE/4HbSmlS7ZvQLfD4bVtzFLE1YTSjSfC3K370Hys5UWpEg21EsVhM4XcLmHP/LZPyXHtv6hTs3xX+pKQltKe7H12lPFP1LUK96Sxs37iIkiUzampuFQK4eB6EKhQqm1O7iuuJgX6PdlSO43zi/xtHe+k1Pd9uBeARkB8XHLMsxTmWXLHl4iqW8xgZQGkltb95u6WVVQeZMK8XlN5CxVSQtweo48rmGSuXpIa7lYLc2wCM1wB/ioAJDFemNHMylLFDy4bFPCFqEnWSY5Ey2qjoIxqhpwAvwGwNeJsd3f60QPfRKAUL4qyMZ2JopcmH+oOVCK5jt2fYM= mlopez@curro"
+        key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC+nGZtKogla1KwwH7JxadD7T/FCrQz5crrm+VdmyG0aCyM0qS3KDcirBHqXCNOUcYaeiUfdca53/9DH1N6QITKroR2Bw+uvmcuZkdNe8saKt3j9nLiqLjh7jh8vqrcYdQ2RvDNtvECtdvD3Vxd4+YbUEQ+NjSZkVjY+aGrz2WnPV+DnyUfMJZ9NE/4HbSmlS7ZvQLfD4bVtzFLE1YTSjSfC3K370Hys5UWpEg21EsVhM4XcLmHP/LZPyXHtv6hTs3xX+pKQltKe7H12lPFP1LUK96Sxs37iIkiUzampuFQK4eB6EKhQqm1O7iuuJgX6PdlSO43zi/xtHe+k1Pd9uBeARkB8XHLMsxTmWXLHl4iqW8xgZQGkltb95u6WVVQeZMK8XlN5CxVSQtweo48rmGSuXpIa7lYLc2wCM1wB/ioAJDFemNHMylLFDy4bFPCFqEnWSY5Ey2qjoIxqhpwAvwGwNeJsd3f60QPfRKAUL4qyMZ2JopcmH+oOVCK5jt2fYM= mlopez@curro"
     ipfs_swarm_key: "{{ secret_ipfs_swarm_key }}"
 
   children:
