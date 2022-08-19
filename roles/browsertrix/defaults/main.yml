@@ -1,4 +1,4 @@
-browsertrix_version: sha256:cdefb8d06e98cf0e73083d120bab0b07e0def125
+browsertrix_version: cdefb8d06e98cf0e73083d120bab0b07e0def125
 browsertrix_docker:
   frontend: sha256:4f9dafb95e558b0ae63ef2a7dd4b8089742d47029382f4406c942ec10bb32c45
   backend: sha256:418abebfb3129696dbfa2e6584113a340af5516b5d9758f1c91167a86a42c727

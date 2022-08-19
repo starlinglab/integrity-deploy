@@ -2,7 +2,8 @@ version: '3.5'
 
 services:
   backend:
-    image: webrecorder/browsertrix-backend@{{browsertrix_docker["backend"]}}
+    image: webrecorder/browsertrix-backend:latest
+    #@{{browsertrix_docker["backend"]}}
     logging:
         driver: loki
         options:
@@ -11,7 +12,8 @@ services:
 
 
   frontend:
-    image: webrecorder/browsertrix-frontend@{{browsertrix_docker["frontend"]}}
+    image: webrecorder/browsertrix-frontend:latest
+    #@{{browsertrix_docker["frontend"]}}
     logging:
         driver: loki
         options:
