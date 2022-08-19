@@ -19,7 +19,7 @@ services:
           loki-external-labels: job=docker,hostname={{ inventory_hostname }}      
 
   redis:
-    image: redis@{{browsertrix_docker["frontend"]}}
+    image: redis@{{browsertrix_docker["redis"]}}
     logging:
         driver: loki
         options:
@@ -27,7 +27,7 @@ services:
           loki-external-labels: job=docker,hostname={{ inventory_hostname }}      
 
   mongo:
-    image: mongo@{{browsertrix_docker["frontend"]}}
+    image: mongo@{{browsertrix_docker["mongo"]}}
     logging:
         driver: loki
         options:
