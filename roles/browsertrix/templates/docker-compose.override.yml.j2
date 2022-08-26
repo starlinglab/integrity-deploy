@@ -53,11 +53,10 @@ services:
           loki-external-labels: job=docker,hostname={{ inventory_hostname }}      
 
   authsign:
-    image: webrecorder/authsign:0.4.0
+    image: webrecorder/authsign:0.5.0
     logging:
         driver: loki
         options:
           loki-url: https://{{loki_username}}:{{loki_password}}@{{loki_url}}
           loki-external-labels: job=docker,hostname={{ inventory_hostname }}  
-    image: webrecorder/authsign:0.4.0
     
