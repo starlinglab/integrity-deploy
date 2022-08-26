@@ -71,7 +71,7 @@
 ### Enable LOKI Logger Driver and settings
 - name: Install LOKI Driver
   shell: "docker plugin install grafana/loki-docker-driver:latest --alias loki --grant-all-permissions"
-  when: dropbox_loki is defined
+  when: rclone_loki is defined
   ignore_errors: true
 
 - name: docker-compose build
