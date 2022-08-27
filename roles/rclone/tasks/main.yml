@@ -11,7 +11,7 @@
     owner: "{{ rclone_uid }}"
     group: "{{ rclone_gid }}"
     state: directory
-    mode: '0660'
+    mode: '0770'
 
 - name: Create rclone sync folder
   file:
@@ -20,7 +20,7 @@
     owner: "{{ rclone_uid }}"
     group: "{{ rclone_gid }}"
     state: directory
-    mode: '0660'
+    mode: '0770'
 
 - name: Create rclone shared input folder
   file:
@@ -29,7 +29,7 @@
     owner: "{{ rclone_uid }}"
     group: "{{ rclone_gid }}"
     state: directory
-    mode: '0660'
+    mode: '0770'
 
 - name: Create rclone shared input folder
   file:
@@ -38,7 +38,16 @@
     owner: "{{ rclone_uid }}"
     group: "{{ rclone_gid }}"
     state: directory
-    mode: '0660'
+    mode: '0770'
+
+- name: Mount mount_rclone_output
+  ansible.posix.mount:
+    path: "{{ mount_rclone_output.target }}"
+    src: "{{ mount_rclone_output.src }}"
+    fstype: none
+    opts: defaults,bind
+    state: mounted
+  when: mount_rclone_output.label is not defined
 
 - name: Add the sysadmin to GID group
   ansible.builtin.user:
