@@ -62,7 +62,7 @@
 
 - name: Copy config for rclone
   ansible.builtin.template:
-    src: rclone.conf.j2
+    src: rclone.conf
     dest: /mnt/integrity_store/store/rclone/config/rclone.conf
     owner: root
     group: root
