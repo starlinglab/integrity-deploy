@@ -27,6 +27,11 @@
     path: /mnt/store/signal_bot_{{ signal_bot.key }}
     state: directory
 
+- name: Create signal bot account directory
+  file:
+    path: /mnt/store/signal_bot_{{ signal_bot.key }}/account
+    state: directory
+
 - name: Install signald account
   unarchive:
     src: "{{ signal_bot.value.signal_account_file }}"
@@ -43,7 +48,12 @@
 
 - name: Create signal bot directory
   file:
-    path: /mnt/store/signal_bot_{{ signal_bot.key }}/archive
+    path: /mnt/store/signal_bot_{{ signal_bot.key }}/data/archive
+    state: directory
+
+- name: Create signal bot directory
+  file:
+    path: /mnt/store/signal_bot_{{ signal_bot.key }}/data/error
     state: directory
 
 - name: Configure signal_bot
