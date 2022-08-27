@@ -15,9 +15,18 @@
     force: yes
     version: dev
 
-- name: Install specified python requirements
+- name: Install pip3
   pip:
-    requirements: /root/integrity-preprocessor/requirements.txt
+    name:
+      - python-dotenv
+      - watchdog
+      - python-magic
+      - netifaces
+      - warcio
+
+#- name: Install specified python requirements
+#  pip:
+#    requirements: /root/integrity-preprocessor/requirements.txt
 
 - name: Create starling config folder
   file:
