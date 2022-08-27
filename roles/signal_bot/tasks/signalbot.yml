@@ -26,11 +26,15 @@
   file:
     path: /mnt/store/signal_bot_{{ signal_bot.key }}
     state: directory
+    owner: 1337
+    group: 1337
 
 - name: Create signal bot account directory
   file:
     path: /mnt/store/signal_bot_{{ signal_bot.key }}/account
     state: directory
+    owner: 1337
+    group: 1337
 
 - name: Install signald account
   unarchive:
@@ -45,16 +49,22 @@
   file:
     path: /mnt/store/signal_bot_{{ signal_bot.key }}/data
     state: directory
+    owner: 1337
+    group: 1337
 
 - name: Create signal bot directory
   file:
     path: /mnt/store/signal_bot_{{ signal_bot.key }}/data/archive
     state: directory
+    owner: 1337
+    group: 1337
 
 - name: Create signal bot directory
   file:
     path: /mnt/store/signal_bot_{{ signal_bot.key }}/data/error
     state: directory
+    owner: 1337
+    group: 1337
 
 - name: Configure signal_bot
   template:
