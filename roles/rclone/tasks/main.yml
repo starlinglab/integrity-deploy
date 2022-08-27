@@ -49,7 +49,7 @@
 - name: Clone rclone-docker repo
   git:
     repo: https://github.com/starlinglab/rclone-docker
-    dest: /root/rclone.tmp
+    dest: /root/rclone
     force: yes
 
 - name: Copy config for rclone
