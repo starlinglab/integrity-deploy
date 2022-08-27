@@ -33,7 +33,6 @@
     owner: starling
     group: starling
     mode: 0770
-    gid: "{{ starling_gid }}"
 
 - name: Create integrity data folder
   file:
