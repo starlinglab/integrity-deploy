@@ -96,7 +96,7 @@
     regex: "{{ item }}"
     line: "{{ item }}"
   with_items: "{{ ipfs_bootstrap }}"
-  when: ipfs_swarm_key is defined
+  when: ipfs_swarm_key is defined and ipfs_bootstrap is defined
 
 - name: Install service file
   template:
