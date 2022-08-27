@@ -61,7 +61,7 @@
     mode: '0664'
 
 - name: Copy config for rclone
-  ansible.builtin.template:
+  ansible.builtin.copy:
     src: rclone.conf
     dest: /mnt/integrity_store/store/rclone/config/rclone.conf
     owner: root
