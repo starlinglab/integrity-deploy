@@ -249,7 +249,10 @@ all:
           integrity_backend_config: "prod_integrity.config.json"
           integrity_preprocessor_folder: True
           integrity_preprocessor_folder_config: "prod_preprocessor-folder.json"
-          dropbox_loki: true
+          rclone_loki: true
+          mount_rclone_output:
+            src: /mnt/integrity_store/starling/shared/
+            target: /mnt/integrity_store/store/rclone/sync/shared-output/
 
     ipfs:
       hosts:
