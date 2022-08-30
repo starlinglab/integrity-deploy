@@ -70,13 +70,13 @@
     group: root
     mode: '0664'
 
-- name: Copy config for rclone
-  ansible.builtin.copy:
-    src: rclone.conf
-    dest: /mnt/integrity_store/store/rclone/config/rclone.conf
-    owner: root
-    group: root
-    mode: '0664'
+#- name: Copy config for rclone
+#  ansible.builtin.copy:
+#    src: rclone.conf
+#    dest: /mnt/integrity_store/store/rclone/config/rclone.conf
+#    owner: root
+#    group: root
+#    mode: '0664'
 
 ### Enable LOKI Logger Driver and settings
 - name: Install LOKI Driver
