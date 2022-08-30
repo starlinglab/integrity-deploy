@@ -250,6 +250,7 @@ all:
           integrity_preprocessor_folder: True
           integrity_preprocessor_folder_config: "prod_preprocessor-folder.json"
           rclone_loki: true
+          rclone_remote_path: /integrity-prod-starling-org
           mount_rclone_output:
             src: /mnt/integrity_store/starling/shared/
             target: /mnt/integrity_store/store/rclone/sync/shared-output/
