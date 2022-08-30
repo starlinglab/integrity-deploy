@@ -3,8 +3,8 @@ version: "2"
 services:
   rclone:
     environment:
-      - DROPBOX_PATH_INPUT={{ rclone_remote_path }}/shared
-      - DROPBOX_PATH_OUTPUT={{ rclone_remote_path }}/shared-output
+      - DROPBOX_PATH_INPUT={{ rclone_remote_path }}/shared-input
+      - DROPBOX_PATH_OUTPUT={{ rclone_remote_path }}/shared
     restart: unless-stopped
     build: "."
     container_name: rclone
