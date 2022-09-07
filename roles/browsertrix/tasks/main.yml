@@ -94,7 +94,7 @@
   tags: config
 
 - name: Download latest Browsertrix crawler
-  command: docker pull webrecorder/browsertrix-crawler:latest
+  command: docker pull webrecorder/browsertrix-crawler:{{browsertrix_docker['crawler']}}
   args:
     chdir: /root/browsertrix
 

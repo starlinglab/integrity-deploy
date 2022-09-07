@@ -6,3 +6,5 @@ browsertrix_docker:
   minio: sha256:41bf8061b19f1f82a657101035bdd8f42f649aa3dc1d01a64347ccc9047d00eb
   redis: sha256:787ec57975cc3db5cf6ad7072d68ca1cb960b068c69ab8b17fe73db443e912b7
   init_minio_bucket: sha256:ddfd075c156452e3fe7f768c645870bd1ddc8b0301f651029e6a1dfbe077b9f7
+  crawler: 0.7.0-beta.3
+  authsign: 0.5.0

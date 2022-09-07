@@ -53,7 +53,7 @@ services:
           loki-external-labels: job=docker,hostname={{ inventory_hostname }}      
 
   authsign:
-    image: webrecorder/authsign:0.5.0
+    image: webrecorder/authsign:{{browsertrix_docker["authsign"]}}
     logging:
         driver: loki
         options:
