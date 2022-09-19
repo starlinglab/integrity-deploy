@@ -123,7 +123,7 @@ all:
         star.browsertrix.prod.starlinglab.org:
           browsertrix_auth_domain: authsign.starlinglab.org
           browsertrix_profile_file: "profile.tar.gz"
-          browsertrix_integrity_collections: "prod_preprocessor-browsertrix-collections-stars.json"
+          browsertrix_integrity_collections: "prod_preprocessor-browsertrix-collections-star.json"
           browsertrix_loki: True
           nginx_sites:
             "star.browsertrix.prod.starlinglab.org":
