@@ -1,16 +1,15 @@
 # Secret files in group_vars/all/inventory_secret.yml
 all:
   vars:
-
-    # Sensible defaults   
-    ansible_user: sysadmin 
+    # Sensible defaults
+    ansible_user: sysadmin
     ansible_python_interpreter: /usr/bin/python3
 
     # Prevent debian from using predictable network - reboot required
     common_predictable_network: false
 
     # Personal git hub token for starling bot to download private github repos
-    github_token: "{{ secret_github_token }}" # Starling 
+    github_token: "{{ secret_github_token }}" # Starling
 
     # Lets Encrypt email address
     letsencrypt_email: infra@starlinglab.org
@@ -52,7 +51,6 @@ all:
     ipfs_swarm_key: "{{ secret_ipfs_swarm_key }}"
 
   children:
-
     browsertrix:
       vars:
         monitor_job: "staging"
@@ -63,7 +61,7 @@ all:
         browsertrix_admin_password: "{{ secret_browsertrix_admin_password }}"
         browsertrix_user_email: "tools@starlinglab.org"
         browsertrix_user_password: "{{ secret_browsertrix_user_password }}"
-#        browsertrix_email_login: "{{ outbound_email_login }}"
+        #        browsertrix_email_login: "{{ outbound_email_login }}"
         browsertrix_email_password: "{{ outbound_email_password }}"
         authsign_token: "{{ secret_authsign_token }}"
         letsencrypt_email: infra@starlinglab.org
@@ -99,7 +97,7 @@ all:
       hosts:
         org1.browsertrix.stg.starlinglab.org:
           browsertrix_auth_domain: org1.authsign.stg.starlinglab.org
-          browsertrix_profile_file: "stg_profile.tar.gz"
+          browsertrix_profile_file: "profile.tar.gz"
           browsertrix_integrity_collections: "stg_preprocessor-browsertrix-collections-all.json"
           browsertrix_loki: True
           nginx_sites:
@@ -111,7 +109,7 @@ all:
                   proxy_location: http://127.0.0.1:9871
                   proxy_websocket: True
                 "/profile/":
-                  local_location  : /var/www/html
+                  local_location: /var/www/html
                 "/sign":
                   proxy_location: http://127.0.0.1:8080/sign
                 "/verify":
@@ -123,7 +121,7 @@ all:
                   proxy_location: http://127.0.0.1:81
         org2.browsertrix.stg.starlinglab.org:
           browsertrix_auth_domain: org2.authsign.stg.starlinglab.org
-          browsertrix_profile_file: "stg_profile.tar.gz"
+          browsertrix_profile_file: "profile.tar.gz"
           browsertrix_integrity_collections: "stg_preprocessor-browsertrix-collections-all.json"
           browsertrix_loki: True
           nginx_sites:
@@ -239,8 +237,8 @@ all:
                   proxy_location: http://127.0.0.1:81
           auth_sign:
             "auth-test-1.starlinglab.org":
-               port: 81
-               apiport: 8881
+              port: 81
+              apiport: 8881
           ipfs_user: starling
           ipfs_gateway_port: 8081
           ipfs_service: true
