@@ -1,16 +1,15 @@
 # Secret files in group_vars/all/inventory_secret.yml
 all:
   vars:
-
-    # Sensible defaults   
-    ansible_user: sysadmin 
+    # Sensible defaults
+    ansible_user: sysadmin
     ansible_python_interpreter: /usr/bin/python3
 
     # Prevent debian from using predictable network - reboot required
     common_predictable_network: false
 
     # Personal git hub token for starling bot to download private github repos
-    github_token: "{{ secret_github_token }}" # Starling 
+    github_token: "{{ secret_github_token }}" # Starling
 
     # Lets Encrypt email address
     letsencrypt_email: infra@starlinglab.org
@@ -48,11 +47,10 @@ all:
       - name: basilesimon
         key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFiERM3s7o882wuqwgMALsRgmZlvtjq4KFjK7AqAqWQP basile@starling"
       - name: marc
-        key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC+nGZtKogla1KwwH7JxadD7T/FCrQz5crrm+VdmyG0aCyM0qS3KDcirBHqXCNOUcYaeiUfdca53/9DH1N6QITKroR2Bw+uvmcuZkdNe8saKt3j9nLiqLjh7jh8vqrcYdQ2RvDNtvECtdvD3Vxd4+YbUEQ+NjSZkVjY+aGrz2WnPV+DnyUfMJZ9NE/4HbSmlS7ZvQLfD4bVtzFLE1YTSjSfC3K370Hys5UWpEg21EsVhM4XcLmHP/LZPyXHtv6hTs3xX+pKQltKe7H12lPFP1LUK96Sxs37iIkiUzampuFQK4eB6EKhQqm1O7iuuJgX6PdlSO43zi/xtHe+k1Pd9uBeARkB8XHLMsxTmWXLHl4iqW8xgZQGkltb95u6WVVQeZMK8XlN5CxVSQtweo48rmGSuXpIa7lYLc2wCM1wB/ioAJDFemNHMylLFDy4bFPCFqEnWSY5Ey2qjoIxqhpwAvwGwNeJsd3f60QPfRKAUL4qyMZ2JopcmH+oOVCK5jt2fYM= mlopez@curro"
+        key: "AAAAB3NzaC1yc2EAAAADAQABAAABgQC+nGZtKogla1KwwH7JxadD7T/FCrQz5crrm+VdmyG0aCyM0qS3KDcirBHqXCNOUcYaeiUfdca53/9DH1N6QITKroR2Bw+uvmcuZkdNe8saKt3j9nLiqLjh7jh8vqrcYdQ2RvDNtvECtdvD3Vxd4+YbUEQ+NjSZkVjY+aGrz2WnPV+DnyUfMJZ9NE/4HbSmlS7ZvQLfD4bVtzFLE1YTSjSfC3K370Hys5UWpEg21EsVhM4XcLmHP/LZPyXHtv6hTs3xX+pKQltKe7H12lPFP1LUK96Sxs37iIkiUzampuFQK4eB6EKhQqm1O7iuuJgX6PdlSO43zi/xtHe+k1Pd9uBeARkB8XHLMsxTmWXLHl4iqW8xgZQGkltb95u6WVVQeZMK8XlN5CxVSQtweo48rmGSuXpIa7lYLc2wCM1wB/ioAJDFemNHMylLFDy4bFPCFqEnWSY5Ey2qjoIxqhpwAvwGwNeJsd3f60QPfRKAUL4qyMZ2JopcmH+oOVCK5jt2fYM= mlopez@curro"
     ipfs_swarm_key: "{{ secret_ipfs_swarm_key }}"
 
   children:
-
     browsertrix:
       vars:
         monitor_job: "production"
@@ -63,7 +61,7 @@ all:
         browsertrix_admin_password: "{{ secret_browsertrix_admin_password }}"
         browsertrix_user_email: "tools@starlinglab.org"
         browsertrix_user_password: "{{ secret_browsertrix_user_password }}"
-#        browsertrix_email_login: "{{ outbound_email_login }}"
+        #        browsertrix_email_login: "{{ outbound_email_login }}"
         browsertrix_email_password: "{{ outbound_email_password }}"
         authsign_token: "{{ secret_authsign_token }}"
         letsencrypt_email: infra@starlinglab.org
@@ -99,7 +97,7 @@ all:
       hosts:
         hala.browsertrix.prod.starlinglab.org:
           browsertrix_auth_domain: authsign.halasystems.com
-          browsertrix_profile_file: "prod_profile.tar.gz"
+          browsertrix_profile_file: "profile.tar.gz"
           browsertrix_integrity_collections: "prod_preprocessor-browsertrix-collections-hala.json"
           browsertrix_loki: True
           nginx_sites:
@@ -124,7 +122,7 @@ all:
                   proxy_location: http://127.0.0.1:81
         star.browsertrix.prod.starlinglab.org:
           browsertrix_auth_domain: authsign.starlinglab.org
-          browsertrix_profile_file: "prod_profile.tar.gz"
+          browsertrix_profile_file: "profile.tar.gz"
           browsertrix_integrity_collections: "prod_preprocessor-browsertrix-collections-stars.json"
           browsertrix_loki: True
           nginx_sites:
@@ -179,7 +177,7 @@ all:
         bot.prod.starlinglab.org:
           monitor_job: "production"
           chatbot_loki: true
-          integrity_preprocessor_chatbot: True 
+          integrity_preprocessor_chatbot: True
           integrity_preprocessor_chatbot_config: "prod_preprocessor-chatbot.json"
           integrity_preprocessor_chatbot_signal_user_config: prod_preprocessor-chatbot-signal-users.json
           signal_bot:
@@ -245,7 +243,7 @@ all:
           iscn_mnemonic: "{{ secret_iscn_mnemonic_prod }}"
           numbers_api_url: "https://node.numbersprotocol.io/api/1.1/wf"
           numbers_api_secret: "{{secret_numbers_api_prod}}"
-          authsign_token: "{{ secret_authsign_token }}"     
+          authsign_token: "{{ secret_authsign_token }}"
           authsign_access_url: "https://browsertrix.prod.starlinglab.org"
           integrity_backend_config: "prod_integrity.config.json"
           integrity_preprocessor_folder: True
