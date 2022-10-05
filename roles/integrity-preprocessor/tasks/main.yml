@@ -28,7 +28,15 @@
       - python-magic
       - netifaces
       - warcio
+      - wacz
       - aiohttp
+      - aiohttp-jwt
+      - pycryptodome
+      - exifread
+      - authsign
+      - eth-account
+
+
 
 
 - name: Create starling config folder
