@@ -6,8 +6,8 @@ After=network.target
 User=root
 Restart=always
 Type=simple
-WorkingDirectory=/root/integrity-preprocessor/http
-ExecStart=python3 main.py
+WorkingDirectory=/root/integrity-preprocessor
+ExecStart=python3 http/main.py
 
 [Install]
 WantedBy=multi-user.target
