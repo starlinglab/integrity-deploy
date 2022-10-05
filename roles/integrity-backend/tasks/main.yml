@@ -24,7 +24,8 @@
     createhome: yes
     groups: starling
     shell: /bin/bash
-    uid: "{{ starling_uid }}"
+    user: "{{ starling_uid }}"
+    group: "{{ starling_gid }}"
 
 - name: Create starling config folder
   file:
@@ -32,8 +33,8 @@
     state: directory
     owner: starling
     group: starling
-    mode: 0770
-    gid: "{{ starling_gid }}"
+    mode: "0770"
+    
 
 - name: Create integrity data folder
   file:

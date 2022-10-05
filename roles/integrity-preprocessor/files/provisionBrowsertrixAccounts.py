@@ -18,6 +18,10 @@ master_user=os.environ.get("BROWSERTRIX_USERNAME")
 master_password=os.environ.get("BROWSERTRIX_PASSWORD")
 config_dir =  os.environ.get("CONFIG_FILE")
 
+cli = "docker ps  | grep  mongo | awk '{print $11}'"
+mongo_container = subprocess.check_output(cli, shell=True, text=True).split("\n")[0]
+
+
 base_url = "/mnt/integrity_store/starling/internal"
 with open("/root/.integrity/preprocessor-browsertrix-collections.json","r") as f:
     data = json.load(f)
@@ -74,14 +78,14 @@ def invite_user(email,password,aid):
 def get_users():
     cli = f"mongo --eval \"db.users.find()\" -u {mongo_user} -p {mongo_password} browsertrixcloud"
 
-    cli = f"docker exec -it browsertrix-mongo-1 sh -c \"echo 'use browsertrixcloud\\ndb.users.find()' | mongo -u {mongo_user} -p {mongo_password} --quiet\""
+    cli = f"docker exec -it {mongo_container} sh -c \"echo 'use browsertrixcloud\\ndb.users.find()' | mongo -u {mongo_user} -p {mongo_password} --quiet\""
     r=subprocess.check_output(cli, shell=True, text=True)
     r = r.replace("ObjectId(","")
     r = r.replace("UUID(","")
     r = r.replace("ISODate(","")
     r = r.replace(")","")
     r2=r.split("\n")
-    r2.pop(0)  
+    r2.pop(0)
     r3=",".join(r2)
     r3 = "[" + r3 + "{} ]"
 
@@ -100,6 +104,8 @@ archives = response.json()
 
 for item_data in data:
     archive_name = item_data["orgID"] + "-" +  item_data["collectionID"]
+    if "suffix" in item_data:
+      archive_name = archive_name + "-" + item_data['suffix']
     aid = ""
     for a in archives['archives']:
         if a['name'] == archive_name:

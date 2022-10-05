@@ -15,9 +15,18 @@
     force: yes
     version: dev
 
-- name: Install specified python requirements
+#- name: Install specified python requirements
+#  pip:
+#    requirements: /root/integrity-preprocessor/requirements.txt
+
+- name: Install pip3
   pip:
-    requirements: /root/integrity-preprocessor/requirements.txt
+    name:
+      - python-dotenv
+      - watchdog
+      - python-magic
+      - netifaces
+      - warcio
 
 - name: Create starling config folder
   file:
@@ -25,7 +34,7 @@
     state: directory
     owner: root
     group: root
-    mode: 0770
+    mode: '0770'
 
 # PreProcessor
 - name: Create Pre-Processor ID Config
