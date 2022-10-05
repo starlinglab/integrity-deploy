@@ -112,6 +112,9 @@ all:
                   local_location: /var/www/html
                 "/sign":
                   proxy_location: http://127.0.0.1:8080/sign
+                "/minio/":
+                  proxy_location: http://127.0.0.1:9000/
+                  proxy_set_header_host: "minio:9000"
                 "/verify":
                   proxy_location: http://127.0.0.1:8080/verify
             "org1.authsign.stg.starlinglab.org":
@@ -136,6 +139,9 @@ all:
                   local_location: /var/www/html
                 "/sign":
                   proxy_location: http://127.0.0.1:8080/sign
+                "/minio/":
+                  proxy_location: http://127.0.0.1:9000/
+                  proxy_set_header_host: "minio:9000"
                 "/verify":
                   proxy_location: http://127.0.0.1:8080/verify
             "org2.authsign.stg.starlinglab.org":
@@ -258,6 +264,8 @@ all:
           authsign_token: "{{ secret_authsign_token }}"
           authsign_access_url: "https://browsertrix.stg.starlinglab.org"
           integrity_backend_config: "stg_integrity.config.json"
+          integrity_preprocessor_http: True
+          integrity_preprocessor_http_secret: "{{secret_preprocessor_http_secret}}"
           integrity_preprocessor_folder: True
           integrity_preprocessor_folder_config: "stg_preprocessor-folder.json"
           dropbox_loki: true
