@@ -247,6 +247,12 @@ all:
               locations:
                 "/":
                   proxy_location: "http://127.0.0.1:8079"
+            "api-test.integrity.stg.starlinglab.org":
+              web_hostname: "api.integrity.stg.starlinglab.org"
+              ssl_provider: letsencrypt
+              locations:
+                "/":
+                  proxy_location: "http://127.0.0.1:8078"
           auth_sign:
             "auth-test-1.starlinglab.org":
               port: 81
