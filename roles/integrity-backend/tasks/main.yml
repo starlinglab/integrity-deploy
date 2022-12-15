@@ -15,6 +15,7 @@
 - name: Create starling group
   group:
     name: starling
+    gid: "{{ starling_gid }}"
 
 - name: Create starling user
   user:
@@ -24,8 +25,7 @@
     createhome: yes
     groups: starling
     shell: /bin/bash
-    user: "{{ starling_uid }}"
-    group: "{{ starling_gid }}"
+    uid: "{{ starling_uid }}"
 
 - name: Create starling config folder
   file:
