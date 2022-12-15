@@ -5,9 +5,9 @@ This ansible repo deploy the  Starling Integrity services on virtual machines cr
 ## Environment setup
 
 Place secret file in `group_vars/all/inventory_secrest.yml`
-Place otehr required files in `files`
+Place other required files in `files`
 
-For re-deploymet you may need to remove old SSH Keys fomr your known hosts
+For re-deploymet you may need to remove old SSH Keys from your known hosts
 
 For Example: `ssh-keygen -f "/home/sysadmin/.ssh/known_hosts" -R "org2.browsertrix.stg.starlinglab.org"`
 
