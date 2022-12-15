@@ -46,6 +46,7 @@ all:
         key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDa7CV1MuEEWiO21CcrakO5h/2W8SgXGqN9xUj7tmT/9i4+IYoCFw4eARe9ZMUUuAa/jBThKK9oAylMEc5u6faWUVUNY5z46KeNEH482z+kcprSEYEY0w9lWyA5c93BIRcvH3KYZkfwCe4U5i6cxD3RAHJNTuHKdeUfT4hCWEyJMKNPsW5ggILJe/9Iq7XVy1ukXmV+ta0u9AKH/fWW4OA6RADzD7eFNZtooZoU1VAcRgpaLhzVFp+0kyhBIciiajZ4r217TMA+DEQ9QGVIxrQJJGm6v0UYLOPuv3NAnGrjHFE7+gGXKVQljx2N/eoyKmF7lWaqDBg3uvic3FCSBeunC5rggeFTtfZ37/J9Lk+rwWwk3HgfzLc7eefYG2lPoX3ftjeD41E4EcobH8A2J1dOgcD7SiOwCZc8dGtWMjC02SaSufWnl8swphd+PNdO/JeWLbGmnVW3AfiaDrVHLXviP2NRfwEKtbH4oB9d/aaryREgi3fLm6MsRm8c+GSWUOc= cole@hypha"
       - name: basilesimon
         key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFiERM3s7o882wuqwgMALsRgmZlvtjq4KFjK7AqAqWQP basile@starling"
+
     ipfs_swarm_key: "{{ secret_ipfs_swarm_key }}"
 
   children:
@@ -351,9 +352,9 @@ all:
           dropbox_loki: false
         ssh_additional_user_keys:
           - name: katelynsills
-            key: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBTtuJzovYtSjmICh6LqhnLwKUyJAUjdSmOO+BRayEdL katelynsills@gmail.com
+            key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBTtuJzovYtSjmICh6LqhnLwKUyJAUjdSmOO+BRayEdL katelynsills@gmail.com"
           - name: tripledoublev
-            key: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIP//M97cGGSi9zIL32XjjydmhDAaemHPbL3UI2WS+3h+ vincentcharlebois@gmail.com
+            key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIP//M97cGGSi9zIL32XjjydmhDAaemHPbL3UI2WS+3h+ vincentcharlebois@gmail.com"
 
     ipfs:
       vars:
