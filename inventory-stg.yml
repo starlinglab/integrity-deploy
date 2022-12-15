@@ -282,7 +282,11 @@ all:
           dropbox_loki: true
           integrity_backend_repo_branch: dev
           integrity_preprocessor_repo_branch: dev
-
+          ssh_additional_user_keys:
+            - name: katelynsills
+              key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBTtuJzovYtSjmICh6LqhnLwKUyJAUjdSmOO+BRayEdL katelynsills@gmail.com"
+            - name: tripledoublev
+              key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIP//M97cGGSi9zIL32XjjydmhDAaemHPbL3UI2WS+3h+ vincentcharlebois@gmail.com"
 
         integrity-dev.stg.starlinglab.org:
           monitor_job: "dev"
@@ -350,12 +354,6 @@ all:
           integrity_preprocessor_folder: True
           integrity_preprocessor_folder_config: "stg_preprocessor-folder.json"
           dropbox_loki: false
-        ssh_additional_user_keys:
-          - name: katelynsills
-            key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBTtuJzovYtSjmICh6LqhnLwKUyJAUjdSmOO+BRayEdL katelynsills@gmail.com"
-          - name: tripledoublev
-            key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIP//M97cGGSi9zIL32XjjydmhDAaemHPbL3UI2WS+3h+ vincentcharlebois@gmail.com"
-
     ipfs:
       vars:
         firewall_ports:
