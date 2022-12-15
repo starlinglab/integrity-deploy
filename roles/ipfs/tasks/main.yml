@@ -83,7 +83,7 @@
   ansible.builtin.shell: /usr/bin/su - {{ ipfs_user }} -c '/opt/ipfs/ipfs bootstrap add {{ item }}'
   args:
     chdir: /opt/ipfs
-  when: ipfs_swarm_key is defined
+  when: ipfs_swarm_key is defined and ipfs_bootstrap is defined
   with_items: "{{ ipfs_bootstrap }}"
 
 - name: test
