@@ -2,6 +2,8 @@ version: '3.5'
 
 services:
   backend:
+    image: webrecorder/browsertrix-backend:latest
+    #@{{browsertrix_docker["backend"]}}
     logging:
         driver: loki
         options:
@@ -10,6 +12,8 @@ services:
 
 
   frontend:
+    image: webrecorder/browsertrix-frontend:latest
+    #@{{browsertrix_docker["frontend"]}}
     logging:
         driver: loki
         options:
@@ -17,6 +21,7 @@ services:
           loki-external-labels: job=docker,hostname={{ inventory_hostname }}      
 
   redis:
+    image: redis@{{browsertrix_docker["redis"]}}
     logging:
         driver: loki
         options:
@@ -24,6 +29,7 @@ services:
           loki-external-labels: job=docker,hostname={{ inventory_hostname }}      
 
   mongo:
+    image: mongo@{{browsertrix_docker["mongo"]}}
     logging:
         driver: loki
         options:
@@ -31,6 +37,7 @@ services:
           loki-external-labels: job=docker,hostname={{ inventory_hostname }}      
 
   minio:
+    image: minio/minio@{{browsertrix_docker["minio"]}}
     logging:
         driver: loki
         options:
@@ -38,6 +45,7 @@ services:
           loki-external-labels: job=docker,hostname={{ inventory_hostname }}      
    
   init_minio_bucket:
+    image: minio/mc@{{browsertrix_docker["init_minio_bucket"]}}
     logging:
         driver: loki
         options:
@@ -45,10 +53,10 @@ services:
           loki-external-labels: job=docker,hostname={{ inventory_hostname }}      
 
   authsign:
+    image: webrecorder/authsign:{{browsertrix_docker["authsign"]}}
     logging:
         driver: loki
         options:
           loki-url: https://{{loki_username}}:{{loki_password}}@{{loki_url}}
           loki-external-labels: job=docker,hostname={{ inventory_hostname }}  
-    image: webrecorder/authsign:0.4.0
     

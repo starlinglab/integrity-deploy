@@ -1,0 +1,142 @@
+---
+- name: Install git
+  apt:
+    name:
+      - git
+
+- name: Clone Browsertrix repo
+  git:
+    repo: https://github.com/webrecorder/browsertrix-cloud.git
+    dest: /root/browsertrix
+    force: yes
+    
+- name: Config for Browsertrix
+  ansible.builtin.template:
+    src: config.env.j2
+    dest: /root/browsertrix/configs/config.env
+    owner: root
+    group: root
+    mode: '0644'
+  tags: config
+
+- name: Config for Browsertrix AuthSign
+  ansible.builtin.template:
+    src: signing.yaml.j2
+    dest: /root/browsertrix/configs/signing.yaml
+    owner: root
+    group: root
+    mode: '0644'
+  tags: config
+
+- name: Create Browsertrix data folder
+  file:
+    path: /mnt/browsertrix
+    state: directory
+
+### Enable LOKI Logger Driver and settings
+- name: Install LOKI Driver
+  shell: "docker plugin install grafana/loki-docker-driver:latest --alias loki --grant-all-permissions"
+  when: browsertrix_loki is defined
+  ignore_errors: true
+
+#- name: Copy over AuthSign yaml
+#  copy:
+#    src: /root/browsertrix/configs/docker-compose.signing.yml
+#    dest: /root/browsertrix/docker-compose.signing.yml
+#    remote_src: true
+
+- name: Copy docker overrides
+  ansible.builtin.template:
+    src: docker-compose.starling.yml.j2
+    dest: /root/browsertrix/docker-compose.starling.yml
+
+### Prepeare browstrix contrib folder ##
+- name: Create Browsertrix contrib folder
+  file:
+    path: /root/browsertrix-contrib
+    state: directory
+
+- name: Create profile folder
+  file:
+    path: /var/www/html/profile
+    state: directory
+    group: www-data
+    owner: www-data
+    mode: 0777
+  when: browsertrix_profile_file is defined
+
+- name: Copy over Browsertrix profile
+  copy:
+    src: "{{browsertrix_profile_file}}"
+    dest: /var/www/html/profile/profile.tar.gz
+    group: www-data
+    owner: www-data
+    mode: 0555
+  when: browsertrix_profile_file is defined
+
+- name: Copy startBrowsertrix.sh 
+  ansible.builtin.copy:
+    src: startBrowsertrix.sh
+    dest: /root/browsertrix-contrib/startBrowsertrix.sh
+    group: root
+    owner: root
+    mode: 0770
+    
+- name: Copy stopBrowsertrix.sh 
+  ansible.builtin.copy:
+    src: stopBrowsertrix.sh
+    dest: /root/browsertrix-contrib/stopBrowsertrix.sh
+    group: root
+    owner: root
+    mode: 0770
+
+#- name: Stop Browsertrix
+#  command: docker stack rm btrix
+
+#- name: Wait for port 9871 to become open on the host, don't start checking for 10 seconds
+#  wait_for:
+#    port: 9871
+#    delay: 10
+#    state: stopped
+
+- name: Start Browsertrix
+  shell: |
+    /root/browsertrix-contrib/startBrowsertrix.sh
+#    source configs/config.env ; \
+#    docker stack deploy \
+#    -c /root/browsertrix/docker-compose.yml \
+#    -c /root/browsertrix/configs/docker-compose.swarm.yml \
+#    -c /root/browsertrix/configs/docker-compose.signing.yml \
+#    -c /root/browsertrix/docker-compose.override.yml btrix
+  args:
+    chdir: /root/browsertrix
+  tags: config
+
+- name: Wait for port 9871 to become open on the host, don't start checking for 5 seconds
+  wait_for:
+    port: 9871
+    delay: 5
+
+- name: Wait for port 9000 to become open on the host, don't start checking for 1 seconds
+  wait_for:
+    port: 9000
+    delay: 1
+
+- name: Download latest Browsertrix crawler
+  command: docker pull webrecorder/browsertrix-crawler:latest
+  args:
+    chdir: /root/browsertrix
+
+- name: Template createAccount for browsertrix
+  copy:
+    src: createAccount.py
+    dest: /root/browsertrix-contrib/createAccount.py
+    group: root
+    owner: root
+    mode: 0755
+
+# Crete accounts and   archives
+- name: Create master account
+  command: "./createAccount.py {{ browsertrix_user_email }} {{ browsertrix_user_password }} MasterArchive"
+  args:
+    chdir: /root/browsertrix-contrib

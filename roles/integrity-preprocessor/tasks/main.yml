@@ -15,6 +15,11 @@
     force: yes
     version: dev
 
+# Breaks the OS
+#- name: Install specified python requirements
+#  pip:
+#    requirements: /root/integrity-preprocessor/requirements.txt
+
 - name: Install pip3
   pip:
     name:
@@ -23,10 +28,13 @@
       - python-magic
       - netifaces
       - warcio
-
-#- name: Install specified python requirements
-#  pip:
-#    requirements: /root/integrity-preprocessor/requirements.txt
+      - wacz
+      - aiohttp
+      - aiohttp-jwt
+      - pycryptodome
+      - exifread
+      - authsign
+      - eth-account
 
 - name: Create starling config folder
   file:
@@ -34,7 +42,7 @@
     state: directory
     owner: root
     group: root
-    mode: 0770
+    mode: '0770'
 
 # PreProcessor
 - name: Create Pre-Processor ID Config
@@ -126,6 +134,19 @@
     dest: /root/.integrity/preprocessor-browsertrix.json
     force: no
   when: integrity_preprocessor_browsertrix == True
+  #PreProcessor HTTP
+- name: Install folder service
+  copy:
+    src: integrity-preprocessor-http.service
+    dest: /etc/systemd/system/integrity-preprocessor-http.service
+  when: integrity_preprocessor_http  == True
+
+- name: Copy folder .env
+  template:
+    src: "integrity-preprocessor-http.env"
+    dest: /root/integrity-preprocessor/http/.env
+  when: integrity_preprocessor_http == True
+  tags: config
 
   #PreProcessor Folder
 - name: Install folder service
@@ -133,7 +154,7 @@
     src: integrity-preprocessor-folder.service
     dest: /etc/systemd/system/integrity-preprocessor-folder.service
   when: integrity_preprocessor_folder == True
-
+  
 - name: Copy folder .env
   copy:
     src: "integrity-preprocessor-folder.env"
@@ -141,7 +162,7 @@
   when: integrity_preprocessor_folder == True
   tags: config
 
-- name: Copy folder .env
+- name: Copy folder preprocessor-folder
   copy:
     src: "{{ integrity_preprocessor_folder_config }}"
     dest: /root/.integrity/preprocessor-folder.json
@@ -177,4 +198,21 @@
     enabled: true
     name: integrity-preprocessor-browsertrix
   when: integrity_preprocessor_browsertrix == true
+  tags: config
+
+- name: Start folder preprocessor
+  ansible.builtin.systemd:
+    state: restarted
+    enabled: true
+    name: integrity-preprocessor-folder
+  when: integrity_preprocessor_folder == true
+  tags: config
+
+
+- name: Start http preprocessor
+  ansible.builtin.systemd:
+    state: restarted
+    enabled: true
+    name: integrity-preprocessor-http
+  when: integrity_preprocessor_http == true
   tags: config

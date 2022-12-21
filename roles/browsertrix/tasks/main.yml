@@ -8,6 +8,8 @@
   git:
     repo: https://github.com/webrecorder/browsertrix-cloud.git
     dest: /root/browsertrix
+    version: "{{browsertrix_version}}"
+
     force: yes
     
 - name: Config for Browsertrix
@@ -67,7 +69,7 @@
 ### Prepeare browstrix contrib folder ##
 - name: Create Browsertrix contrib folder
   file:
-    path: /root/Browsertrix-contrib
+    path: /root/browsertrix-contrib
     state: directory
 
 - name: Copy over Browsertrix profile
@@ -92,7 +94,7 @@
   tags: config
 
 - name: Download latest Browsertrix crawler
-  command: docker pull webrecorder/browsertrix-crawler:latest
+  command: docker pull webrecorder/browsertrix-crawler:{{browsertrix_docker['crawler']}}
   args:
     chdir: /root/browsertrix
 
