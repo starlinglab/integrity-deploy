@@ -62,7 +62,7 @@ all:
         browsertrix_user_email: "tools@starlinglab.org"
         browsertrix_user_password: "{{ secret_browsertrix_user_password }}"
         #        browsertrix_email_login: "{{ outbound_email_login }}"
-        browsertrix_email_password: "{{ outbound_email_password }}"
+        #browsertrix_email_password: "{{ outbound_email_password }}"
         authsign_token: "{{ secret_authsign_token }}"
         letsencrypt_email: infra@starlinglab.org
         ssh_additional_user_keys:

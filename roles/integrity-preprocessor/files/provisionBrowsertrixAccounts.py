@@ -78,18 +78,10 @@ def invite_user(email,password,aid):
 def get_users():
     cli = f"mongo --eval \"db.users.find()\" -u {mongo_user} -p {mongo_password} browsertrixcloud"
 
-    cli = f"docker exec -it {mongo_container} sh -c \"echo 'use browsertrixcloud\\ndb.users.find()' | mongo -u {mongo_user} -p {mongo_password} --quiet\""
+    #cli = f"docker exec -it {mongo_container} sh -c \"echo 'use browsertrixcloud\\ndb.users.find()' | mongo -u  -p {mongo_password} --quiet\""
+    cli = f"docker exec -it {mongo_container} sh -c \"mongosh -u {mongo_user} -p {mongo_password} --eval 'use browsertrixcloud' --eval 'EJSON.stringify(db.users.find().toArray())' --quiet  > /tmp/tmp && cat /tmp/tmp \""
     r=subprocess.check_output(cli, shell=True, text=True)
-    r = r.replace("ObjectId(","")
-    r = r.replace("UUID(","")
-    r = r.replace("ISODate(","")
-    r = r.replace(")","")
-    r2=r.split("\n")
-    r2.pop(0)
-    r3=",".join(r2)
-    r3 = "[" + r3 + "{} ]"
-
-    a=json.loads(r3)
+    a=json.loads(r)
     return a
 
 
