@@ -9,7 +9,7 @@
     repo: https://github.com/webrecorder/browsertrix-cloud.git
     dest: /root/browsertrix
     version: "{{browsertrix_version}}"
-
+    version: cdefb8d06e98cf0e73083d120bab0b07e0def125
     force: yes
     
 - name: Config for Browsertrix
@@ -19,7 +19,7 @@
     owner: root
     group: root
     mode: '0644'
-  tags: config
+  tags: config  
 
 - name: Config for Browsertrix AuthSign
   ansible.builtin.template:
@@ -29,12 +29,21 @@
     group: root
     mode: '0644'
   tags: config
+  when: authsign_docker == True
     
 - name: Move Browsertrix Authsign from port 80 to 81 not to conflict with Nginx
   lineinfile:
     path: /root/browsertrix/docker-compose.yml
     regex: 80:80
     line: "      - 81:80"
+  when: authsign_docker == True
+
+- name: Upgrade mongo line
+  lineinfile:
+    path: /root/browsertrix/docker-compose.yml
+    regex: "   command: ['-c', 'mc mb local/test-bucket; mc policy set public local/test-bucket' ]"
+    line: "    command: ['-c', 'mc mb local/test-bucket; mc policy set public local/test-bucket' ]"
+
 
 - name: Expose Browsertrix Authsign port 8080 Browsertrix
   lineinfile:
@@ -83,6 +92,12 @@
 
 - name: Stop Browsertrix
   command: docker-compose down
+  args:
+    chdir: /root/browsertrix
+  tags: config
+
+- name: Build Stop Browsertrix
+  command: docker-compose build
   args:
     chdir: /root/browsertrix
   tags: config

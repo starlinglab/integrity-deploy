@@ -112,12 +112,12 @@
   when: integrity_preprocessor_browsertrix == True
   tags: config
 
-- name: Copy config
-  copy:
-    src: "{{ browsertrix_integrity_collections }}"
-    dest: /root/.integrity/preprocessor-browsertrix-collections.json
-  when: browsertrix_integrity_collections is defined
-  tags: config
+#- name: Copy config
+#  copy:
+#    src: "{{ browsertrix_integrity_collections }}"
+#    dest: /root/.integrity/preprocessor-browsertrix-collections.json
+#  when: browsertrix_integrity_collections is defined
+#  tags: config
 
 - name: Install Archive Provisioning
   copy:
