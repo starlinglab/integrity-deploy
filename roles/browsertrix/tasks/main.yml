@@ -9,9 +9,8 @@
     repo: https://github.com/webrecorder/browsertrix-cloud.git
     dest: /root/browsertrix
     version: "{{browsertrix_version}}"
-    version: cdefb8d06e98cf0e73083d120bab0b07e0def125
     force: yes
-    
+
 - name: Config for Browsertrix
   ansible.builtin.template:
     src: config.env.j2
@@ -19,7 +18,7 @@
     owner: root
     group: root
     mode: '0644'
-  tags: config  
+  tags: config
 
 - name: Config for Browsertrix AuthSign
   ansible.builtin.template:
@@ -30,7 +29,7 @@
     mode: '0644'
   tags: config
   when: authsign_docker == True
-    
+
 - name: Move Browsertrix Authsign from port 80 to 81 not to conflict with Nginx
   lineinfile:
     path: /root/browsertrix/docker-compose.yml
@@ -44,14 +43,14 @@
     regex: "   command: ['-c', 'mc mb local/test-bucket; mc policy set public local/test-bucket' ]"
     line: "    command: ['-c', 'mc mb local/test-bucket; mc policy set public local/test-bucket' ]"
 
-
 - name: Expose Browsertrix Authsign port 8080 Browsertrix
   lineinfile:
     path: /root/browsertrix/docker-compose.yml
     line: "      - 127.0.0.1:8080:8080"
     regex: "127.0.0.1:8080:8080"
     insertafter: "      - 81:80"
- 
+  when: authsign_docker == True
+
 - name: Create Browsertrix data folder
   file:
     path: /mnt/browsertrix
@@ -61,7 +60,7 @@
   lineinfile:
     path: /root/browsertrix/docker-compose.yml
     regex: btrix-minio-data:/data
-    line: "      - /mnt/browsertrix:/data"      
+    line: "      - /mnt/browsertrix:/data"
 
 ### Enable LOKI Logger Driver and settings
 - name: Install LOKI Driver
@@ -96,7 +95,7 @@
     chdir: /root/browsertrix
   tags: config
 
-- name: Build Stop Browsertrix
+- name: Build Browsertrix
   command: docker-compose build
   args:
     chdir: /root/browsertrix
@@ -107,9 +106,10 @@
   args:
     chdir: /root/browsertrix
   tags: config
+  ignore_errors: yes
 
 - name: Download latest Browsertrix crawler
-  command: docker pull webrecorder/browsertrix-crawler:{{browsertrix_docker['crawler']}}
+  command: docker pull webrecorder/browsertrix-crawler:latest
   args:
     chdir: /root/browsertrix
 
