@@ -6,6 +6,7 @@
       - python3-pip
       - python3
       - gnupg
+      - exempi
     state: present
 
 - name: Clone preprocessor
@@ -30,6 +31,7 @@
       - exifread
       - authsign
       - eth-account
+      - python-xmp-toolkit
 - name: Create starling config folder
   file:
     path: /root/.integrity/
