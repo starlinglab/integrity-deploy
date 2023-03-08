@@ -40,7 +40,7 @@
 - name: Upgrade mongo line
   lineinfile:
     path: /root/browsertrix/docker-compose.yml
-    regex: "   command: ['-c', 'mc mb local/test-bucket; mc policy set public local/test-bucket' ]"
+    regex: "policy set public local/test-bucket"
     line: "    command: ['-c', 'mc mb local/test-bucket; mc policy set public local/test-bucket' ]"
 
 - name: Expose Browsertrix Authsign port 8080 Browsertrix
