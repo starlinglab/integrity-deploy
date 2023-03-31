@@ -113,8 +113,9 @@ all:
       hosts:
         integrity.stg.starlinglab.org:
           integrity_preprocessor_browsertrix: True
-          browsertrix_admin_email: admin@example.com
-          browsertrix_admin_password: "{{ secret_browsertrix_admin_password }}"
+          browsertrix_user_email: admin@example.com
+          browsertrix_user_password: "{{ secret_browsertrix_admin_password }}"
+          browsertrix_integrity_collections: "prod_preprocessor-browsertrix-collections-hala.json"
           monitor_job: "staging"
           firewall_ports:
             - "ssh":
@@ -160,7 +161,7 @@ all:
           auth_sign:
             "auth-test-1.starlinglab.org":
               port: 81
-              apiport: 8881           
+              apiport: 8881
           ipfs_user: starling
           ipfs_gateway_port: 8081
           ipfs_service: true
@@ -234,7 +235,7 @@ all:
           auth_sign:
             "auth-test-2.starlinglab.org":
               port: 81
-              apiport: 8881           
+              apiport: 8881
           ipfs_user: starling
           ipfs_gateway_port: 8081
           ipfs_service: true
