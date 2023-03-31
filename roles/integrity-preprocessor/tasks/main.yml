@@ -30,6 +30,7 @@
       - exifread
       - authsign
       - eth-account
+
 - name: Create starling config folder
   file:
     path: /root/.integrity/
