@@ -31,7 +31,9 @@
       - exifread
       - authsign
       - eth-account
+      - rclone
       - python-xmp-toolkit
+      
 - name: Create starling config folder
   file:
     path: /root/.integrity/

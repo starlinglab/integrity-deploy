@@ -1,0 +1,18 @@
+---
+version: "2"
+services:
+  rclone:
+    environment:
+      - DROPBOX_PATH_INPUT={{ rclone_remote_path }}/shared-input
+      - DROPBOX_PATH_OUTPUT={{ rclone_remote_path }}/shared
+    restart: unless-stopped
+    build: "."
+    container_name: rclone
+    volumes:
+      - /mnt/integrity_store/store/rclone:/data
+
+    logging:
+        driver: loki
+        options:
+          loki-url: https://{{loki_username}}:{{loki_password}}@{{loki_url}}
+          loki-external-labels: job=docker,hostname={{ inventory_hostname }}  

@@ -17,10 +17,10 @@
     - hypha.common.ssl
     - hypha.common.nodejs
     - nfs
-    - dropbox
     - authsign
     - integrity-backend
     - integrity-preprocessor
+    - rclone
     - promtail
     - ipfs
     - ipfs_cluster

@@ -34,7 +34,6 @@
     owner: starling
     group: starling
     mode: "0770"
-    
 
 - name: Create integrity data folder
   file:
