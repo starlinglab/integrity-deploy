@@ -50,104 +50,6 @@ all:
     ipfs_swarm_key: "{{ secret_ipfs_swarm_key }}"
 
   children:
-    browsertrix:
-      vars:
-        monitor_job: "staging"
-        integrity_preprocessor_browsertrix: True
-        browsertrix_internal_password: "{{ secret_browsertrix }}"
-        browsertrix_minio_password: "{{ secret_browsertrix }}"
-        browsertrix_admin_email: infra@starlinglab.org
-        browsertrix_admin_password: "{{ secret_browsertrix_admin_password }}"
-        browsertrix_user_email: "tools@starlinglab.org"
-        browsertrix_user_password: "{{ secret_browsertrix_user_password }}"
-        #        browsertrix_email_login: "{{ outbound_email_login }}"
-        browsertrix_email_password: "{{ outbound_email_password }}"
-        authsign_token: "{{ secret_authsign_token }}"
-        letsencrypt_email: infra@starlinglab.org
-        ssh_additional_user_keys:
-          - name: ikreymer
-            key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCTuNVyhX92vfAVIohaMvz9iJ97JoM+8Outk6wEI30mgx5ZkapfkZX8NkTEREnEhFEKuY30jDzP6bW6jLvUhM015tyw2bsa/exmN3IFHfNOnUWMyJzWNpfcA5+TsKu/5NaorXcEIvPuiAledEEHzvIrKWvrxUD8O9PtOiDdtJfpPJ7N/k0QC9FfELfScEf07pRgu/4Fohq+veq+WGw0Kb5LrZO96e/ZKIU5ySlUj+nHKISFDfEcD3bL/P96c9uoaCIVqCaRJdhfFj2zQiVmqQteu7XecGF6nUqTLD9isr4bYraE15E/IFP3nurk2w8fUS6kwQwGKcUPF4aYeOHLIyKC+NspT45rYqUw5YGFInCFkdEDzRNofmmUbBFAgQAfG+sPdrgwcLsg8662R6u+ifkEm/4Gtu3WAArDuJALhgzKbtBtGBF4tH7RwNr55kcVY63z2zzlUBwFN7r51OztKo/XLMfIxLvn405E/9LS6tDxcAHgByLnlPrY9UUITfExD4ZFFAFNCprfINDwjGuBcF8ljWZIT91jyISgzq/rz/gpMUc2Cw6ZdZjjjP43KBy25OZ09nzRt5GL2AqIZjrPSo4yedhYUPCpdn+3WpSVb+XTOK94dSUZYqZyDY5f6MgeIKgzpWUUPYX6Vp/Rw1lN+sImM7dLwRCeEN3pDhuFSCaMXQ== ikreymer@gmail.com
-        nfs_client_mount:
-          "main":
-            source: "10.55.0.1:/mnt/{{ nfs_shared_path }}"
-            target: "/mnt/{{ nfs_shared_path }}"
-        firewall_ports:
-          - "ssh":
-            port: 22
-          - "ssl":
-            port: 80
-          - "http":
-            port: 443
-          - "nodeexporter":
-            port: 9100
-            source: "{{ monitor_server }}"
-            sourceIPv6: "{{ monitor_server }}"
-          - "nfs":
-            port: 2049
-            source: "10.55.0.0/24"
-            sourceIPv6: "2607:5300:203:9c8c:ffff::/64"
-        cadvisor_exporter_port: 9110
-        firewall_docker_interface: eth0
-        firewall_docker_ports:
-          - "cAdvisor":
-            port: "{{ cadvisor_exporter_port }}"
-            protocol: tcp
-            source: "{{ monitor_server }}"
-      hosts:
-        org1.browsertrix.stg.starlinglab.org:
-          browsertrix_auth_domain: org1.authsign.stg.starlinglab.org
-          browsertrix_profile_file: "profile.tar.gz"
-          browsertrix_integrity_collections: "stg_preprocessor-browsertrix-collections-all.json"
-          browsertrix_loki: True
-          nginx_sites:
-            "org1.browsertrix.stg.starlinglab.org":
-              ssl_provider: letsencrypt
-              web_hostname: org1.browsertrix.stg.starlinglab.org
-              locations:
-                "/":
-                  proxy_location: http://127.0.0.1:9871
-                  proxy_websocket: True
-                "/profile/":
-                  local_location: /var/www/html
-                "/sign":
-                  proxy_location: http://127.0.0.1:8080/sign
-                "/minio/":
-                  proxy_location: http://127.0.0.1:9000/
-                  proxy_set_header_host: "minio:9000"
-                "/verify":
-                  proxy_location: http://127.0.0.1:8080/verify
-            "org1.authsign.stg.starlinglab.org":
-              web_hostname: "org1.authsign.stg.starlinglab.org"
-              locations:
-                "/":
-                  proxy_location: http://127.0.0.1:81
-        org2.browsertrix.stg.starlinglab.org:
-          browsertrix_auth_domain: org2.authsign.stg.starlinglab.org
-          browsertrix_profile_file: "profile.tar.gz"
-          browsertrix_integrity_collections: "stg_preprocessor-browsertrix-collections-all.json"
-          browsertrix_loki: True
-          nginx_sites:
-            "org2.browsertrix.stg.starlinglab.org":
-              ssl_provider: letsencrypt
-              web_hostname: org2.browsertrix.stg.starlinglab.org
-              locations:
-                "/":
-                  proxy_location: http://127.0.0.1:9871
-                  proxy_websocket: True
-                "/profile/":
-                  local_location: /var/www/html
-                "/sign":
-                  proxy_location: http://127.0.0.1:8080/sign
-                "/minio/":
-                  proxy_location: http://127.0.0.1:9000/
-                  proxy_set_header_host: "minio:9000"
-                "/verify":
-                  proxy_location: http://127.0.0.1:8080/verify
-            "org2.authsign.stg.starlinglab.org":
-              web_hostname: "org2.authsign.stg.starlinglab.org"
-              locations:
-                "/":
-                  proxy_location: http://127.0.0.1:81
     bot:
       vars:
         firewall_ports:
@@ -210,6 +112,10 @@ all:
     integrity:
       hosts:
         integrity.stg.starlinglab.org:
+          integrity_preprocessor_browsertrix: True
+          browsertrix_user_email: admin@example.com
+          browsertrix_user_password: "{{ secret_browsertrix_admin_password }}"
+          browsertrix_integrity_collections: "prod_preprocessor-browsertrix-collections-hala.json"
           monitor_job: "staging"
           firewall_ports:
             - "ssh":
@@ -255,7 +161,7 @@ all:
           auth_sign:
             "auth-test-1.starlinglab.org":
               port: 81
-              apiport: 8881           
+              apiport: 8881
           ipfs_user: starling
           ipfs_gateway_port: 8081
           ipfs_service: true
@@ -329,7 +235,7 @@ all:
           auth_sign:
             "auth-test-2.starlinglab.org":
               port: 81
-              apiport: 8881           
+              apiport: 8881
           ipfs_user: starling
           ipfs_gateway_port: 8081
           ipfs_service: true

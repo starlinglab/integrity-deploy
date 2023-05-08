@@ -1,125 +1,117 @@
-#!/usr/bin/python3
-import json
 import requests
 import sys
 import subprocess
-import dotenv
+import json
 import os
+import dotenv
 
 dotenv.load_dotenv("/root/browsertrix/configs/config.env")
 admin_user=os.environ.get("SUPERUSER_EMAIL")
 admin_password=os.environ.get("SUPERUSER_PASSWORD")
 
-mongo_user = os.environ.get("MONGO_INITDB_ROOT_USERNAME")
-mongo_password=os.environ.get("MONGO_INITDB_ROOT_PASSWORD")
-
-dotenv.load_dotenv("/root/integrity-preprocessor/browsertrix/.env")
-master_user=os.environ.get("BROWSERTRIX_USERNAME")
-master_password=os.environ.get("BROWSERTRIX_PASSWORD")
-config_dir =  os.environ.get("CONFIG_FILE")
-
-cli = "docker ps  | grep  mongo | awk '{print $11}'"
-mongo_container = subprocess.check_output(cli, shell=True, text=True).split("\n")[0]
-
-
+config_path="/root/.integrity/"
 base_url = "/mnt/integrity_store/starling/internal"
-with open("/root/.integrity/preprocessor-browsertrix-collections.json","r") as f:
-    data = json.load(f)
 
-result = {
-    "collections": {
-    }
-}
+#def get_users():
+#    cli = "kubectl exec -it local-mongo-0 -- /usr/bin/mongosh -u root -p example --eval 'use browsertrixcloud' --eval 'EJSON.stringify(db.users.find().toArray(),null,2, { relaxed: false })' --quiet"
+#    r=subprocess.check_output(cli, shell=True, text=True)
+#    y=r.split("\n")
+#    y[0]="["
+#    r="\n".join(y)
+#    a=json.loads(r)
+#    return a
 
-def get_token(username,password):
-    URL = "http://127.0.0.1:9871/api/auth/jwt/login"
-    auth = {"username": username, "password": password}
+def get_token(email,password,server):
+    # AUTH 
+    auth = {"username": email, "password": password}
+    URL = f"https://{server}/api/auth/jwt/login"
+    access_token = ""
     resp = requests.post(URL, data=auth)
     response_json = resp.json()
-    if "access_token" in response_json:
-        access_token = response_json["access_token"]
-        headers = {"Authorization": "Bearer " + access_token}
-        return headers
-def create_account(email,password,archive_name):
-    URL = "http://127.0.0.1:9871/api/auth/register"
-    body = {
+    if "access_token" not in response_json:
+        raise Exception("Access Token Failed")
+    access_token = response_json["access_token"]
+    
+    return {"Authorization": "Bearer " + access_token}
+
+
+def get_me(header,server):
+    URL=f"https://{server}/api/users/me"
+    r = requests.get(URL, headers=header)
+    return r.json()
+
+def change_password(header,userid,password,server):
+    URL=f"https://{server}/api/users/{userid}"
+    d= {"password": password}
+    r = requests.patch(URL, headers=header, json=d)
+    return r.json()  
+def create_org(header,org_name,server):
+    URL=f"https://{server}/api/orgs/create"
+    d= {"name": org_name}
+    r = requests.post(URL, headers=header, json=d)
+    return r.json()
+def get_org(header,org_name,server):
+    URL=f"https://{server}/api/orgs"
+    d= {"name": org_name}
+    r = requests.get(URL, headers=header)
+    res= r.json()
+    for o in res["items"]:
+        if o["name"]==org_name:
+            return o
+def create_user(header,email,name,oid,server):
+    URL=f"https://{server}/api/orgs/{oid}/add-user"
+    d= {
         "email": email,
-        "password": password,
-        "name": archive_name,
-        "newArchive": True,
-        "newArchiveName": archive_name
-    }
-    response = requests.post(URL, json=body)
+        "role": 100,
+        "password": "test123",
+        "name": name
+        }
+    r = requests.post(URL, headers=header, json=d)
+    return r.json()  
+def invite_user_to_org(header,email,oid,server):
+    URL=f"https://{server}/api/orgs/{oid}/invite"
+    d= {
+        "email": email,
+        "role": 100
+        }
+    r = requests.post(URL, headers=header, json=d)
+    return r.json()
+def get_invites(header,oid,server):
+    URL=f"https://{server}/api/orgs/{oid}/invites"
+    r = requests.get(URL, headers=header)
+    return r.json()
 
-    headers =  get_token(email,password)
-    # get AID
-    URL = "http://127.0.0.1:9871/api/archives"
-    r = requests.get(URL, headers=headers)
-    res = r.json()
-    aid = res["archives"][0]["id"]
-    return aid
+### Change super user password
+email="admin@example.com"
+password="testing123"
+header=get_token(email,password)
 
-def invite_user(email,password,aid):
-    headers =  get_token(email,password)
-    d={ "email": "tools@starlinglab.org", "role":40 }
-    URL = f"http://127.0.0.1:9871/api/archives/{aid}/invite/"
-    r = requests.post(URL, headers=headers, json=d)
-    res = r.json()
-    # Process Invite
-    ID = get_users()
-    for a in ID:
-        if "id" in a:
-            if a['email'] == "tools@starlinglab.org":
-                for token in a['invites']:
-                    URL = f"http://127.0.0.1:9871/api/archives/invite-accept/{token}"
-                    r = requests.post(URL, headers=master_token)
-    return aid
+##password="PASSW0RD!"
+#me=get_me(header)
+#change_password(header,me['id'],"testing123")
 
-def get_users():
-    cli = f"mongo --eval \"db.users.find()\" -u {mongo_user} -p {mongo_password} browsertrixcloud"
+## Create Strling Org
+#print(create_org(header,"Starling Lab"))
 
-    cli = f"docker exec -it {mongo_container} sh -c \"echo 'use browsertrixcloud\\ndb.users.find()' | mongo -u {mongo_user} -p {mongo_password} --quiet\""
-    r=subprocess.check_output(cli, shell=True, text=True)
-    r = r.replace("ObjectId(","")
-    r = r.replace("UUID(","")
-    r = r.replace("ISODate(","")
-    r = r.replace(")","")
-    r2=r.split("\n")
-    r2.pop(0)
-    r3=",".join(r2)
-    r3 = "[" + r3 + "{} ]"
+data = {}
 
-    a=json.loads(r3)
-    return a
+with open(f"{config_path}preprocessor-browsertrix-collections.json","r") as f:
+    data = json.load(f)
 
-
-
-admin_token=get_token(admin_user,admin_password)
-master_token=get_token(master_user,master_password)
-
-
-URL = "http://127.0.0.1:9871/api/archives"
-response = requests.get(URL,headers=admin_token)
-archives = response.json()
-
+result = { "collections": {}}
 for item_data in data:
-    archive_name = item_data["orgID"] + "-" +  item_data["collectionID"]
+    server = item_data["server"]
+    archive_name = item_data["orgID"] + "_" +  item_data["collectionID"]
     if "suffix" in item_data:
-      archive_name = archive_name + "-" + item_data['suffix']
+      archive_name = archive_name + "_" + item_data['suffix']
     aid = ""
-    for a in archives['archives']:
-        if a['name'] == archive_name:
-            aid = a['id']
-            break
-    u="tools+" + archive_name + "@starlinglab.org"
-    p = master_password
-    # Archive does not exist, create it
-    if (aid == ""):
+    org = get_org(header,archive_name,server)
+    if org is None:
         print (f"Creating {archive_name}")
-        aid = create_account(u,p,archive_name)
-        invite_user(u,p,aid)
-
-    print(archive_name)
+        res = create_org(header, archive_name,server)
+#        invite_user_to_org(header,"integrity@starlinglab.org",org["id"])
+        org = get_org(header,archive_name,server)
+    print(org["id"])
     author = None
     if "author" in item_data:
       author = item_data['author']
@@ -128,8 +120,12 @@ for item_data in data:
     result["collections"][aid] =    {
             "collectionID": col,
             "target_path": f"{base_url}/{org}/{col}/",
-            "author": author
+            "author": author,
+            "server": server
         }
-
-f = open(config_dir, 'w')
-json.dump(result,f,indent=2)
+    
+#    print(get_invites(header,org["id"]))
+    #print(archive_name)
+#f = open(config_dir, 'w')
+#json.dump(result,f,indent=2)
+#config_dir =  os.environ.get("CONFIG_FILE")

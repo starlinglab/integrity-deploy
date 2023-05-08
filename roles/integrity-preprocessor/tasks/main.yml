@@ -6,6 +6,7 @@
       - python3-pip
       - python3
       - gnupg
+      - exempi
     state: present
 
 - name: Clone preprocessor
@@ -14,11 +15,6 @@
     dest: /root/integrity-preprocessor
     force: yes
     version: dev
-
-# Breaks the OS
-#- name: Install specified python requirements
-#  pip:
-#    requirements: /root/integrity-preprocessor/requirements.txt
 
 - name: Install pip3
   pip:
@@ -35,7 +31,9 @@
       - exifread
       - authsign
       - eth-account
-
+      - rclone
+      - python-xmp-toolkit
+      
 - name: Create starling config folder
   file:
     path: /root/.integrity/
@@ -123,10 +121,10 @@
     mode: '0700'
   when: browsertrix_integrity_collections is defined
 
-- name: Provision collections
-  shell: "/root/browsertrix-contrib/provisionBrowsertrixAccounts.py"
-  when: browsertrix_integrity_collections is defined
-  tags: config
+#- name: Provision collections
+#  shell: "/root/browsertrix-contrib/provisionBrowsertrixAccounts.py"
+#  when: browsertrix_integrity_collections is defined
+#  tags: config
 
 - name: Copy config (placeholder)
   copy:
@@ -154,7 +152,7 @@
     src: integrity-preprocessor-folder.service
     dest: /etc/systemd/system/integrity-preprocessor-folder.service
   when: integrity_preprocessor_folder == True
-  
+
 - name: Copy folder .env
   copy:
     src: "integrity-preprocessor-folder.env"
