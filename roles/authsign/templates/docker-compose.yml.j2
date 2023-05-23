@@ -2,7 +2,7 @@ version: '3.5'
 
 services:
   authsign:
-    image: webrecorder/authsign:0.3.1
+    image: webrecorder/authsign:0.5.0
     volumes:
       - ./data:/data
       - ./signing.yaml:/app-config/signing.yaml
@@ -12,4 +12,4 @@ services:
       - {{ auth_sign.value.port }}:80
       - 127.0.0.1:{{ auth_sign.value.apiport }}:8080
 volumes:
-  btrix-sign-data:
+  {{auth_sign.key}}:

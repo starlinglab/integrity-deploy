@@ -48,13 +48,16 @@
     src: "preprocessor-id-config.json.j2"
     dest: /root/.integrity/preprocessor-id-config.json
   tags: config
+- name: Copy Credentials
+  template:
+    src: browsertrix_credentials.json.j2
+    dest: "/root/integrity-preprocessor/browsertrix/browsertrix_credentials.json"
 
 - name: Copy .env
   template:
     src: "env.recorder-id.j2"
     dest: /root/integrity-preprocessor/lib/integrity_recorder_id/.env
   tags: config
-
 - name: Generate Initial PreProcesor config
   shell: "python3 /root/integrity-preprocessor/update_recorder_id.py"
 
