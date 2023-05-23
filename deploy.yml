@@ -22,8 +22,6 @@
     - integrity-preprocessor
     - rclone
     - promtail
-    - ipfs
-    - ipfs_cluster
     - pass
 
 - hosts: browsertrix
