@@ -75,11 +75,9 @@ all:
               locations:
                 "/":
                   proxy_location: "http://127.0.0.1:8080"
-                "/auth-test-1/":
-                  proxy_location: http://127.0.0.1:8881/
             "api.integrity.dev.starlinglab.org":
               web_hostname: "api.integrity.dev.starlinglab.org"
-              ssl_provider: letsencrypt
+              ssl_provider: letsencrypt              
               locations:
                 "/":
                   proxy_location: "http://127.0.0.1:8079"
@@ -88,8 +86,9 @@ all:
 
             "authsign.dev.starlinglab.org":
               web_hostname: "authsign.dev.starlinglab.org"
+              ssl_redirect: False
+              ssl_provider: False
               locations:
-                ssl_redirect: False
                 "/":
                   proxy_location: http://127.0.0.1:81
           auth_sign:
