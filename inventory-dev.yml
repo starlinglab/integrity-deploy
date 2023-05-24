@@ -1,3 +1,4 @@
+# Secret files in group_vars/all/inventory_secret.yml
 all:
   vars:
     # Sensible defaults
@@ -52,10 +53,8 @@ all:
     integrity:
       hosts:
         integrity.dev.starlinglab.org:
+          # Browsertrix Preprocessor
           integrity_preprocessor_browsertrix: True
-          browsertrix_user_email: admin@example.com
-          browsertrix_user_password: "{{ secret_browsertrix_admin_password }}"
-          browsertrix_integrity_collections: "prod_preprocessor-browsertrix-collections-hala.json"
           monitor_job: "staging"
           firewall_ports:
             - "ssh":
@@ -83,7 +82,6 @@ all:
                   proxy_location: "http://127.0.0.1:8079"
                 "/authsign/":
                   proxy_location: http://127.0.0.1:8881/
-
             "authsign.dev.starlinglab.org":
               web_hostname: "authsign.dev.starlinglab.org"
               ssl_redirect: False
@@ -107,11 +105,8 @@ all:
           browsertrix_password: "{{ secret_integrity_browsertrix_password }}"
           numbers_api_network: "testnet"
           iscn_mnemonic: "{{ secret_iscn_mnemonic_stg }}"
-          numbers_api_url: "https://node.numbersprotocol.io/version-test/api/1.1/wf/nit_create_asset"
           numbers_api_secret: "{{secret_numbers_api_stg}}"
           authsign_token: "{{ secret_authsign_token }}"
-          authsign_access_url: "https://browsertrix.stg.starlinglab.org"
-          integrity_backend_config: "stg_integrity.config.json"
           integrity_preprocessor_http: True
           integrity_preprocessor_http_secret: "{{secret_preprocessor_http_secret}}"
           integrity_preprocessor_folder: True
