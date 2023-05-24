@@ -1,10 +1,7 @@
-# Integrity-deploy
+# integrity-deploy
 
 This ansible repo deploy the Starling Integrity services on virtual machines created by the integrity-deploy-vm repo.
 
-## Environment setup# Integrity-deploy
-
-This ansible repo deploy the Starling Integrity services on virtual machines created by the integrity-deploy-vm repo.
 
 ## Environment setup
 
@@ -32,7 +29,7 @@ Some services require manual steps to initiate due to the way 3rd party applicat
 
 Dropbox sync can be  done via the RCLONE dropbox
 
-# RCLONE
+### RCLONE
 
 - Port forward 53682 over ssh (Ie `ssh user@server -L 53682:127.0.0.1:53682`)
 - run `rclone config create dropbox dropbox`
@@ -164,7 +161,7 @@ Dropbox sync can be  done via the RCLONE dropbox
 `source:` `"10.55.0.1:/mnt/{{ nfs_shared_path }}"` Target of the mount  
 `target:` `"/mnt/{{ nfs_shared_path }}"` Where to mount it  
 
-# Requiremnets
+# Requirements
 `sudo apt install python3-dnspython`  
 
 Ansible collections:  
