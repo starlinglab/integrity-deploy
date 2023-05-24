@@ -83,14 +83,20 @@ all:
               locations:
                 "/":
                   proxy_location: "http://127.0.0.1:8079"
-            "aauthsign.dev.starlinglab.org":
+                "/authsign/":
+                  proxy_location: http://127.0.0.1:8881/
+
+            "authsign.dev.starlinglab.org":
               web_hostname: "authsign.dev.starlinglab.org"
               locations:
+                ssl_redirect: False
                 "/":
                   proxy_location: http://127.0.0.1:81
           auth_sign:
             "authsign.dev.starlinglab.org":
               port: 81
+              apiport: 8881
+              token: "{{ secret_authsign_token }}"
           integrity_cai_signing_key_file: "stg_cai_key"
           integrity_jwt_secret: "{{ secret_integrity_jwt }}"
           integrity_clain_tool_path: "/home/starling/claim_tool"

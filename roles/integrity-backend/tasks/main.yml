@@ -128,17 +128,6 @@
   tags: config
   when: integrity_cai_signing_key_file is defined
 
-- name: Copy backend-integrity config file
-  copy:
-    src: "{{integrity_backend_config}}"
-    dest: /home/starling/.integrity/backend-config.json
-    owner: starling
-    group: starling
-    mode: 0666
-    force: true
-  tags: config
-  when: integrity_backend_config is defined
-
 - name: Copy backend-integrity config splaceholder file
   copy:
     src: /home/starling/integrity-backend/config.example.json
