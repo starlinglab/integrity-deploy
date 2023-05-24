@@ -1,16 +1,15 @@
 # Secret files in group_vars/all/inventory_secret.yml
 all:
   vars:
-
-    # Sensible defaults   
-    ansible_user: sysadmin 
+    # Sensible defaults
+    ansible_user: sysadmin
     ansible_python_interpreter: /usr/bin/python3
 
     # Prevent debian from using predictable network - reboot required
     common_predictable_network: false
 
     # Personal git hub token for starling bot to download private github repos
-    github_token: "{{ secret_github_token }}" # Starling 
+    github_token: "{{ secret_github_token }}" # Starling
 
     # Lets Encrypt email address
     letsencrypt_email: infra@starlinglab.org
@@ -45,8 +44,8 @@ all:
         key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMLiPavTvnbFRc6JvkGVinFoAk93k88KTg1u3zZQxMyW benedict@starling"
       - name: cole
         key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDa7CV1MuEEWiO21CcrakO5h/2W8SgXGqN9xUj7tmT/9i4+IYoCFw4eARe9ZMUUuAa/jBThKK9oAylMEc5u6faWUVUNY5z46KeNEH482z+kcprSEYEY0w9lWyA5c93BIRcvH3KYZkfwCe4U5i6cxD3RAHJNTuHKdeUfT4hCWEyJMKNPsW5ggILJe/9Iq7XVy1ukXmV+ta0u9AKH/fWW4OA6RADzD7eFNZtooZoU1VAcRgpaLhzVFp+0kyhBIciiajZ4r217TMA+DEQ9QGVIxrQJJGm6v0UYLOPuv3NAnGrjHFE7+gGXKVQljx2N/eoyKmF7lWaqDBg3uvic3FCSBeunC5rggeFTtfZ37/J9Lk+rwWwk3HgfzLc7eefYG2lPoX3ftjeD41E4EcobH8A2J1dOgcD7SiOwCZc8dGtWMjC02SaSufWnl8swphd+PNdO/JeWLbGmnVW3AfiaDrVHLXviP2NRfwEKtbH4oB9d/aaryREgi3fLm6MsRm8c+GSWUOc= cole@hypha"
-      - name: marc
-        key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC+nGZtKogla1KwwH7JxadD7T/FCrQz5crrm+VdmyG0aCyM0qS3KDcirBHqXCNOUcYaeiUfdca53/9DH1N6QITKroR2Bw+uvmcuZkdNe8saKt3j9nLiqLjh7jh8vqrcYdQ2RvDNtvECtdvD3Vxd4+YbUEQ+NjSZkVjY+aGrz2WnPV+DnyUfMJZ9NE/4HbSmlS7ZvQLfD4bVtzFLE1YTSjSfC3K370Hys5UWpEg21EsVhM4XcLmHP/LZPyXHtv6hTs3xX+pKQltKe7H12lPFP1LUK96Sxs37iIkiUzampuFQK4eB6EKhQqm1O7iuuJgX6PdlSO43zi/xtHe+k1Pd9uBeARkB8XHLMsxTmWXLHl4iqW8xgZQGkltb95u6WVVQeZMK8XlN5CxVSQtweo48rmGSuXpIa7lYLc2wCM1wB/ioAJDFemNHMylLFDy4bFPCFqEnWSY5Ey2qjoIxqhpwAvwGwNeJsd3f60QPfRKAUL4qyMZ2JopcmH+oOVCK5jt2fYM= mlopez@curro"
+      - name: basilesimon
+        key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFiERM3s7o882wuqwgMALsRgmZlvtjq4KFjK7AqAqWQP basile@starling"
 
     ipfs_swarm_key: "{{ secret_ipfs_swarm_key }}"
 
@@ -146,6 +145,71 @@ all:
               locations:
                 "/":
                   proxy_location: http://127.0.0.1:81
+        star2.browsertrix.prod.starlinglab.org:
+          browsertrix_auth_domain: authsign.starlinglab.org
+          browsertrix_profile_file: "prod_profile.tar.gz"
+          browsertrix_integrity_collections: "prod_preprocessor-browsertrix-collections-stars.json"
+          browsertrix_loki: True
+          authsign_docker: False
+          nginx_sites:
+            "star2.browsertrix.prod.starlinglab.org":
+              ssl_provider: letsencrypt
+              web_hostname: star2.browsertrix.prod.starlinglab.org
+              locations:
+                "/":
+                  proxy_location: http://127.0.0.1:9871
+                  proxy_websocket: True
+                "/minio/":
+                  proxy_location: http://127.0.0.1:9000/
+                  proxy_set_header_host: "minio:9000"
+                "/sign":
+                  proxy_location: http://127.0.0.1:8080/sign
+                "/verify":
+                  proxy_location: http://127.0.0.1:8080/verify
+        star3.browsertrix.prod.starlinglab.org:
+          browsertrix_auth_domain: authsign.starlinglab.org
+          browsertrix_profile_file: "prod_profile.tar.gz"
+          browsertrix_integrity_collections: "prod_preprocessor-browsertrix-collections-stars.json"
+          browsertrix_loki: True
+          authsign_docker: False
+          nginx_sites:
+            "star2.browsertrix.prod.starlinglab.org":
+              ssl_provider: letsencrypt
+              web_hostname: star3.browsertrix.prod.starlinglab.org
+              locations:
+                "/":
+                  proxy_location: http://127.0.0.1:9871
+                  proxy_websocket: True
+                "/minio/":
+                  proxy_location: http://127.0.0.1:9000/
+                  proxy_set_header_host: "minio:9000"
+                "/sign":
+                  proxy_location: http://127.0.0.1:8080/sign
+                "/verify":
+                  proxy_location: http://127.0.0.1:8080/verify
+        star4.browsertrix.prod.starlinglab.org:
+          browsertrix_auth_domain: authsign.starlinglab.org
+          browsertrix_profile_file: "prod_profile.tar.gz"
+          browsertrix_integrity_collections: "prod_preprocessor-browsertrix-collections-stars.json"
+          browsertrix_loki: True
+          authsign_docker: False
+          nginx_sites:
+            "star4.browsertrix.prod.starlinglab.org":
+              ssl_provider: letsencrypt
+              web_hostname: star4.browsertrix.prod.starlinglab.org
+              locations:
+                "/":
+                  proxy_location: http://127.0.0.1:9871
+                  proxy_websocket: True
+                "/minio/":
+                  proxy_location: http://127.0.0.1:9000/
+                  proxy_set_header_host: "minio:9000"
+                "/sign":
+                  proxy_location: http://127.0.0.1:8080/sign
+                "/verify":
+                  proxy_location: http://127.0.0.1:8080/verify
+
+
     bot:
       vars:
         firewall_ports:
@@ -178,7 +242,7 @@ all:
         bot.prod.starlinglab.org:
           monitor_job: "production"
           chatbot_loki: true
-          integrity_preprocessor_chatbot: True 
+          integrity_preprocessor_chatbot: True
           integrity_preprocessor_chatbot_config: "prod_preprocessor-chatbot.json"
           integrity_preprocessor_chatbot_signal_user_config: prod_preprocessor-chatbot-signal-users.json
           signal_bot:
@@ -244,12 +308,16 @@ all:
           iscn_mnemonic: "{{ secret_iscn_mnemonic_prod }}"
           numbers_api_url: "https://node.numbersprotocol.io/api/1.1/wf"
           numbers_api_secret: "{{secret_numbers_api_prod}}"
-          authsign_token: "{{ secret_authsign_token }}"     
+          authsign_token: "{{ secret_authsign_token }}"
           authsign_access_url: "https://browsertrix.prod.starlinglab.org"
           integrity_backend_config: "prod_integrity.config.json"
           integrity_preprocessor_folder: True
           integrity_preprocessor_folder_config: "prod_preprocessor-folder.json"
-          dropbox_loki: true
+          rclone_loki: true
+          rclone_remote_path: /integrity-prod-starling-org
+          mount_rclone_output:
+            src: /mnt/integrity_store/starling/shared/
+            target: /mnt/integrity_store/store/rclone/sync/shared-output/
 
     ipfs:
       hosts:

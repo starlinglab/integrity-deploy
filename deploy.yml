@@ -7,7 +7,7 @@
     - sshkey_update
     - hypha.common.provision_ssh_keys
     - hypha.common.harden_ssh
-    - hypha.common.common
+    - hypha.common.setup
     - hypha.common.unattended_upgrades
     - geerlingguy.docker # Docker before Firewall
     - hypha.common.firewall
@@ -17,13 +17,11 @@
     - hypha.common.ssl
     - hypha.common.nodejs
     - nfs
-    - dropbox
     - authsign
     - integrity-backend
     - integrity-preprocessor
+    - rclone
     - promtail
-    - ipfs
-    - ipfs_cluster
     - pass
 
 - hosts: browsertrix
@@ -32,7 +30,7 @@
   roles:    
     - hypha.common.provision_ssh_keys
     - hypha.common.harden_ssh
-    - hypha.common.common
+    - hypha.common.setup
     - hypha.common.unattended_upgrades
     - hypha.common.node_exporter
     - hypha.common.prometheus_exporter_addnode
@@ -54,7 +52,7 @@
     - sshkey_update
     - hypha.common.provision_ssh_keys
     - hypha.common.harden_ssh
-    - hypha.common.common
+    - hypha.common.setup
     - hypha.common.unattended_upgrades
     - geerlingguy.docker # Docker before Firewall
     - hypha.common.firewall

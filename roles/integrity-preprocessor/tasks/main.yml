@@ -6,6 +6,7 @@
       - python3-pip
       - python3
       - gnupg
+      - exempi
     state: present
 
 - name: Clone preprocessor
@@ -15,17 +16,31 @@
     force: yes
     version: dev
 
-- name: Install specified python requirements
+- name: Install pip3
   pip:
-    requirements: /root/integrity-preprocessor/requirements.txt
-
+    name:
+      - python-dotenv
+      - watchdog
+      - python-magic
+      - netifaces
+      - warcio
+      - wacz
+      - aiohttp
+      - aiohttp-jwt
+      - pycryptodome
+      - exifread
+      - authsign
+      - eth-account
+      - rclone
+      - python-xmp-toolkit
+      
 - name: Create starling config folder
   file:
     path: /root/.integrity/
     state: directory
     owner: root
     group: root
-    mode: 0770
+    mode: '0770'
 
 # PreProcessor
 - name: Create Pre-Processor ID Config
@@ -33,13 +48,16 @@
     src: "preprocessor-id-config.json.j2"
     dest: /root/.integrity/preprocessor-id-config.json
   tags: config
+- name: Copy Credentials
+  template:
+    src: browsertrix_credentials.json.j2
+    dest: "/root/integrity-preprocessor/browsertrix/browsertrix_credentials.json"
 
 - name: Copy .env
   template:
     src: "env.recorder-id.j2"
     dest: /root/integrity-preprocessor/lib/integrity_recorder_id/.env
   tags: config
-
 - name: Generate Initial PreProcesor config
   shell: "python3 /root/integrity-preprocessor/update_recorder_id.py"
 
@@ -106,10 +124,10 @@
     mode: '0700'
   when: browsertrix_integrity_collections is defined
 
-- name: Provision collections
-  shell: "/root/browsertrix-contrib/provisionBrowsertrixAccounts.py"
-  when: browsertrix_integrity_collections is defined
-  tags: config
+#- name: Provision collections
+#  shell: "/root/browsertrix-contrib/provisionBrowsertrixAccounts.py"
+#  when: browsertrix_integrity_collections is defined
+#  tags: config
 
 - name: Copy config (placeholder)
   copy:
@@ -117,6 +135,19 @@
     dest: /root/.integrity/preprocessor-browsertrix.json
     force: no
   when: integrity_preprocessor_browsertrix == True
+  #PreProcessor HTTP
+- name: Install folder service
+  copy:
+    src: integrity-preprocessor-http.service
+    dest: /etc/systemd/system/integrity-preprocessor-http.service
+  when: integrity_preprocessor_http  == True
+
+- name: Copy folder .env
+  template:
+    src: "integrity-preprocessor-http.env"
+    dest: /root/integrity-preprocessor/http/.env
+  when: integrity_preprocessor_http == True
+  tags: config
 
   #PreProcessor Folder
 - name: Install folder service
@@ -132,7 +163,7 @@
   when: integrity_preprocessor_folder == True
   tags: config
 
-- name: Copy folder .env
+- name: Copy folder preprocessor-folder
   copy:
     src: "{{ integrity_preprocessor_folder_config }}"
     dest: /root/.integrity/preprocessor-folder.json
@@ -168,4 +199,21 @@
     enabled: true
     name: integrity-preprocessor-browsertrix
   when: integrity_preprocessor_browsertrix == true
+  tags: config
+
+- name: Start folder preprocessor
+  ansible.builtin.systemd:
+    state: restarted
+    enabled: true
+    name: integrity-preprocessor-folder
+  when: integrity_preprocessor_folder == true
+  tags: config
+
+
+- name: Start http preprocessor
+  ansible.builtin.systemd:
+    state: restarted
+    enabled: true
+    name: integrity-preprocessor-http
+  when: integrity_preprocessor_http == true
   tags: config

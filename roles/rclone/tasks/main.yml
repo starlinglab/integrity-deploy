@@ -1,0 +1,90 @@
+---
+- name: Install git
+  apt:
+    name:
+      - git
+      - rclone
+
+- name: Create rclone config folder
+  file:
+    recurse: true
+    path: /mnt/integrity_store/store/rclone/config
+    owner: "{{ rclone_uid }}"
+    group: "{{ rclone_gid }}"
+    state: directory
+    mode: '0770'
+
+- name: Create rclone sync folder
+  file:
+    recurse: true
+    path: /mnt/integrity_store/store/rclone/sync
+    owner: "{{ rclone_uid }}"
+    group: "{{ rclone_gid }}"
+    state: directory
+    mode: '0770'
+
+- name: Create rclone shared input folder
+  file:
+    recurse: true
+    path: /mnt/integrity_store/store/rclone/sync/shared-input
+    owner: "{{ rclone_uid }}"
+    group: "{{ rclone_gid }}"
+    state: directory
+    mode: '0770'
+
+- name: Create rclone shared input folder
+  file:
+    recurse: true
+    path: /mnt/integrity_store/store/rclone/sync/shared-output
+    owner: "{{ rclone_uid }}"
+    group: "{{ rclone_gid }}"
+    state: directory
+    mode: '0770'
+
+- name: Mount mount_rclone_output
+  ansible.posix.mount:
+    path: "{{ mount_rclone_output.target }}"
+    src: "{{ mount_rclone_output.src }}"
+    fstype: none
+    opts: defaults,bind
+    state: mounted
+  when: mount_rclone_output.label is not defined
+
+- name: Add the sysadmin to GID group
+  ansible.builtin.user:
+    name: sysadmin
+    groups: "{{ rclone_gid }}"
+    append: yes
+
+- name: Clone rclone-docker repo
+  git:
+    repo: https://github.com/starlinglab/rclone-docker
+    dest: /root/rclone
+    force: yes
+
+- name: Copy config for rclone
+  ansible.builtin.template:
+    src: docker-compose.yaml.j2
+    dest: /root/rclone/docker-compose.yaml
+    owner: root
+    group: root
+    mode: '0664'
+
+#- name: Copy config for rclone
+#  ansible.builtin.copy:
+#    src: rclone.conf
+#    dest: /mnt/integrity_store/store/rclone/config/rclone.conf
+#    owner: root
+#    group: root
+#    mode: '0664'
+
+### Enable LOKI Logger Driver and settings
+- name: Install LOKI Driver
+  shell: "docker plugin install grafana/loki-docker-driver:latest --alias loki --grant-all-permissions"
+  when: rclone_loki is defined and monitor_server is defined
+  ignore_errors: true
+
+- name: docker-compose build
+  command: docker-compose up -d
+  args:
+    chdir: /root/rclone

@@ -15,6 +15,7 @@
 - name: Create starling group
   group:
     name: starling
+    gid: "{{ starling_gid }}"
 
 - name: Create starling user
   user:
@@ -32,8 +33,7 @@
     state: directory
     owner: starling
     group: starling
-    mode: 0770
-    gid: "{{ starling_gid }}"
+    mode: "0770"
 
 - name: Create integrity data folder
   file:
@@ -79,7 +79,7 @@
     repo: https://github:{{ github_token }}@github.com/starlinglab/integrity-backend.git
     dest: /home/starling/integrity-backend
     force: yes
-    version: main
+    version: "{{integrity_backend_repo_branch}}"
 
 - name: Prepeare pipenv for integrity-backend
   ansible.builtin.shell: /usr/bin/su - starling -c 'cd /home/starling/integrity-backend/ && pipenv install'
