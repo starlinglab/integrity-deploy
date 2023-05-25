@@ -92,10 +92,12 @@
     dest: '/home/starling/integrity-backend/.env'
   tags: config
 
-- name: Update claim tool
+# We use a pre compiled 
+# The one pre compiled in the repo will not work in Debian 11
+- name: Update C2PA tool
   copy:
-    src: claim_tool
-    dest: /home/starling/claim_tool
+    src: c2patool
+    dest: /home/starling/c2patool
     group: starling
     owner: starling    
     mode: 0550

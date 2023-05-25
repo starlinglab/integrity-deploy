@@ -158,7 +158,7 @@ all:
               token: "{{ authsign_token }}"
           integrity_cai_signing_key_file: "stg_cai_key"
           integrity_jwt_secret: "{{ secret_integrity_jwt }}"
-          integrity_clain_tool_path: "/home/starling/claim_tool"
+          integrity_clain_tool_path: "/home/starling/c2patool"
           integrity_data_path: "/mnt/{{ nfs_shared_path }}/starling"
           integrity_web3_storage_api_token: "{{ secret_web3_storage_api_token}}"
           nfs_server_exports:
@@ -233,7 +233,7 @@ all:
           ipfs_service: true
           integrity_cai_signing_key_file: "stg_cai_key"
           integrity_jwt_secret: "{{ secret_integrity_jwt }}"
-          integrity_clain_tool_path: "/home/starling/claim_tool"
+          integrity_clain_tool_path: "/home/starling/c2patool"
           integrity_data_path: "/mnt/{{ nfs_shared_path }}/starling"
           integrity_web3_storage_api_token: "{{ secret_web3_storage_api_token}}"
           nfs_server_exports:
