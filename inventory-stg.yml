@@ -142,20 +142,20 @@ all:
               locations:
                 "/":
                   proxy_location: "http://127.0.0.1:8079"
-              "/authsign/":
+                "/authsign/":
                   proxy_location: http://127.0.0.1:8881/
-            "authsign.dev.starlinglab.org":
-              web_hostname: "authsign.dev.starlinglab.org"
+            "authsign.stg.starlinglab.org":
+              web_hostname: "authsign.stg.starlinglab.org"
               ssl_redirect: False
               ssl_provider: False
               locations:
                 "/":
                   proxy_location: http://127.0.0.1:81
           auth_sign:
-            "auth-test-1.starlinglab.org":
+            "authsign.stg.starlinglab.org":
               port: 81
               apiport: 8881
-              token: "{{ secret_authsign_token }}"
+              token: "{{ authsign_token }}"
           integrity_cai_signing_key_file: "stg_cai_key"
           integrity_jwt_secret: "{{ secret_integrity_jwt }}"
           integrity_clain_tool_path: "/home/starling/claim_tool"
@@ -181,6 +181,10 @@ all:
               key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBTtuJzovYtSjmICh6LqhnLwKUyJAUjdSmOO+BRayEdL katelynsills@gmail.com"
             - name: tripledoublev
               key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIP//M97cGGSi9zIL32XjjydmhDAaemHPbL3UI2WS+3h+ vincentcharlebois@gmail.com"
+          mount_rclone_output:
+            src: /mnt/integrity_store/starling/shared/
+            target: /mnt/integrity_store/store/rclone/sync/shared-output/
+          rclone_remote_path: /integrity-dev-starling-org
 
         integrity-dev.stg.starlinglab.org:
           monitor_job: "dev"
