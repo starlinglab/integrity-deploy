@@ -50,69 +50,35 @@ all:
     ipfs_swarm_key: "{{ secret_ipfs_swarm_key }}"
 
   children:
-    bot:
-      vars:
-        firewall_ports:
-          - "ssh":
-            port: 22
-          - "ssl":
-            port: 443
-          - "http":
-            port: 80
-          - "nodeexporter":
-            port: 9100
-            source: "{{ monitor_server }}"
-            sourceIPv6: "{{ monitor_server }}"
-          - "nfs":
-            port: 2049
-            source: "10.55.0.0/24"
-            sourceIPv6: "2607:5300:203:9c8c:ffff::/64"
-          - "ipfs":
-            port: 4001
-          - "ipfs-cluser":
-            port: 9096
-        cadvisor_exporter_port: 9110
-        firewall_docker_interface: eth0
-        firewall_docker_ports:
-          - "cAdvisor":
-            port: "{{ cadvisor_exporter_port }}"
-            protocol: tcp
-            source: "{{ monitor_server }}"
+    integrity:
       hosts:
-        bot.stg.starlinglab.org:
-          monitor_job: "staging"
-          chatbot_loki: true
+        integrity.stg.starlinglab.org:
+
+          integrity_preprocessor_repo_branch: dev
+          
+          # Signal Bot
           integrity_preprocessor_chatbot: True
-          integrity_preprocessor_chatbot_config: stg_preprocessor-chatbot.json
-          integrity_preprocessor_chatbot_signal_user_config: stg_preprocessor-chatbot-signal-users.json
           signal_bot:
             "main":
               signal_phone_number: "16474788566"
               signal_account_file: "stg_signal_account.zip"
-          slack_bot:
-            "workspace-0":
-              workspace: "test"
-              slack_bot_token: "{{ secret_stg_slack_bot_workspace0_token }}"
-              slack_signing_secret: "{{ secret_stg_slack_bot_workspace0_secret }}"
-              slack_port: 3000
-          telegram_bot:
-            "testbot1":
-              telegram_bot_token: "{{ secret_stg_telegram_bot_testbot1_token }}"
-          nginx_sites:
-            "archive-slack-workspace-0.stg.starlinglab.org":
-              ssl_provider: letsencrypt
-              web_hostname: archive-slack-workspace-0.stg.starlinglab.org
-              locations:
-                "/":
-                  proxy_location: "http://127.0.0.1:{{slack_bot['workspace-0'].slack_port}}"
-          nfs_client_mount:
-            "main":
-              source: "10.55.0.1:/mnt/{{ nfs_shared_path }}"
-              target: "/mnt/{{ nfs_shared_path }}"
-    integrity:
-      hosts:
-        integrity.stg.starlinglab.org:
+
+          # Browsertrix
           integrity_preprocessor_browsertrix: True
+          browsertrix_username: "tools@starlinglab.org"
+          browsertrix_password: "{{ secret_integrity_browsertrix_password }}"
+
+          # http
+          integrity_preprocessor_http: True
+          integrity_preprocessor_http_secret: "{{secret_preprocessor_http_secret}}"
+
+          # folder
+          integrity_preprocessor_folder: True
+          integrity_preprocessor_folder_config: "stg_preprocessor-folder.json"
+          dropbox_loki: true
+
+
+          # Common
           monitor_job: "staging"
           firewall_ports:
             - "ssh":
@@ -156,26 +122,21 @@ all:
               port: 81
               apiport: 8881
               token: "{{ authsign_token }}"
-          integrity_cai_signing_key_file: "stg_cai_key"
+
+          # Backend
+          integrity_backend_repo_branch: dev
           integrity_jwt_secret: "{{ secret_integrity_jwt }}"
           integrity_clain_tool_path: "/home/starling/c2patool"
           integrity_data_path: "/mnt/{{ nfs_shared_path }}/starling"
-          integrity_web3_storage_api_token: "{{ secret_web3_storage_api_token}}"
           nfs_server_exports:
             - "/mnt/{{ nfs_shared_path }} 10.55.0.0/24(rw,all_squash,anonuid=1001,anongid=1001)"
-          browsertrix_username: "tools@starlinglab.org"
-          browsertrix_password: "{{ secret_integrity_browsertrix_password }}"
           numbers_api_network: "testnet"
           iscn_mnemonic: "{{ secret_iscn_mnemonic_stg }}"
           numbers_api_secret: "{{secret_numbers_api_stg}}"
           authsign_token: "{{ secret_authsign_token }}"
-          integrity_preprocessor_http: True
-          integrity_preprocessor_http_secret: "{{secret_preprocessor_http_secret}}"
-          integrity_preprocessor_folder: True
-          integrity_preprocessor_folder_config: "stg_preprocessor-folder.json"
-          dropbox_loki: true
-          integrity_backend_repo_branch: dev
-          integrity_preprocessor_repo_branch: dev
+          
+          
+
           ssh_additional_user_keys:
             - name: katelynsills
               key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBTtuJzovYtSjmICh6LqhnLwKUyJAUjdSmOO+BRayEdL katelynsills@gmail.com"
@@ -184,74 +145,7 @@ all:
           mount_rclone_output:
             src: /mnt/integrity_store/starling/shared/
             target: /mnt/integrity_store/store/rclone/sync/shared-output/
-          rclone_remote_path: /integrity-dev-starling-org
-
-        integrity-dev.stg.starlinglab.org:
-          monitor_job: "dev"
-          monitor_server: ""
-          firewall_ports:
-            - "ssh":
-              port: 22
-            - "ssl":
-              port: 443
-            - "http":
-              port: 80
-            - "nodeexporter":
-              port: 9100
-              source: "{{ monitor_server }}"
-              sourceIPv6: "{{ monitor_server }}"
-            - "nfs":
-              port: 2049
-              source: "10.55.0.0/24"
-              sourceIPv6: "2607:5300:203:9c8c:ffff::/64"
-          nginx_sites:
-            "integrity.stg.starlinglab.org":
-              ssl_provider: letsencrypt
-              web_hostname: "integrity-dev.stg.starlinglab.org"
-              locations:
-                "/":
-                  proxy_location: "http://127.0.0.1:8080"
-                "/auth-test-1/":
-                  proxy_location: http://127.0.0.1:8881/
-            "auth-test-2.starlinglab.org":
-              web_hostname: auth-test-1.starlinglab.org
-              locations:
-                "/":
-                  proxy_location: http://127.0.0.1:81
-            "api.integrity-dev.stg.starlinglab.org":
-              web_hostname: "api.integrity-dev.stg.starlinglab.org"
-              ssl_provider: letsencrypt
-              locations:
-                "/":
-                  proxy_location: "http://127.0.0.1:8079"
-          auth_sign:
-            "auth-test-2.starlinglab.org":
-              port: 81
-              apiport: 8881
-          ipfs_user: starling
-          ipfs_gateway_port: 8081
-          ipfs_service: true
-          integrity_cai_signing_key_file: "stg_cai_key"
-          integrity_jwt_secret: "{{ secret_integrity_jwt }}"
-          integrity_clain_tool_path: "/home/starling/c2patool"
-          integrity_data_path: "/mnt/{{ nfs_shared_path }}/starling"
-          integrity_web3_storage_api_token: "{{ secret_web3_storage_api_token}}"
-          nfs_server_exports:
-            - "/mnt/{{ nfs_shared_path }} 10.99.0.0/24(rw,all_squash,anonuid=1001,anongid=1001)"
-          browsertrix_username: "tools@starlinglab.org"
-          browsertrix_password: "{{ secret_integrity_browsertrix_password }}"
-          numbers_api_network: "testnet"
-          iscn_mnemonic: "{{ secret_iscn_mnemonic_stg }}"
-          numbers_api_url: "https://node.numbersprotocol.io/api/1.1/wf/nit_create_asset"
-          numbers_api_secret: "{{secret_numbers_api_stg}}"
-          authsign_token: "{{ secret_authsign_token }}"
-          authsign_access_url: "https://browsertrix.stg.starlinglab.org"
-          integrity_backend_config: "stg_integrity.config.json"
-          integrity_preprocessor_http: True
-          integrity_preprocessor_http_secret: "{{secret_preprocessor_http_secret}}"
-          integrity_preprocessor_folder: True
-          integrity_preprocessor_folder_config: "stg_preprocessor-folder.json"
-          dropbox_loki: false
+          rclone_remote_path: /integrity-stg-starling-org
     ipfs:
       vars:
         firewall_ports:

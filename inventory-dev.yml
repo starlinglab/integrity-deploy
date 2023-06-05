@@ -94,7 +94,6 @@ all:
               port: 81
               apiport: 8881
               token: "{{ secret_authsign_token }}"
-          integrity_cai_signing_key_file: "stg_cai_key"
           integrity_jwt_secret: "{{ secret_integrity_jwt }}"
           integrity_clain_tool_path: "/home/starling/c2patool"
           integrity_data_path: "/mnt/{{ nfs_shared_path }}/starling"

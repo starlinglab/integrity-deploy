@@ -35,6 +35,14 @@
     group: starling
     mode: "0770"
 
+- name: Create starling config folder
+  file:
+    path: /home/starling/.integrity/c2pa/
+    state: directory
+    owner: starling
+    group: starling
+    mode: "0770"
+
 - name: Create integrity data folder
   file:
     path: "{{ integrity_data_path }}"
@@ -110,27 +118,7 @@
     group: starling
     mode: 0550
 
-- name: Copy Configure claim-tool private key
-  copy:
-    src: "{{ integrity_cai_signing_key_file }}.pem"
-    dest: /home/starling/.cai/temp_key.pem
-    group: starling
-    owner: starling
-    mode: 0550
-  tags: config
-  when: integrity_cai_signing_key_file is defined  
-
-- name:  Copy Configure claim-tool pub key
-  copy:
-    src: "{{ integrity_cai_signing_key_file }}.pub"
-    dest: /home/starling/.cai/temp_key.pub
-    group: starling
-    owner: starling
-    mode: 0550
-  tags: config
-  when: integrity_cai_signing_key_file is defined
-
-- name: Copy backend-integrity config splaceholder file
+- name: Copy backend-integrity config placeholder file
   copy:
     src: /home/starling/integrity-backend/config.example.json
     dest: /home/starling/.integrity/backend-config.json
