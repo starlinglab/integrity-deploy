@@ -21,7 +21,7 @@
     - integrity-backend
     - integrity-preprocessor
     - rclone
-    - promtail
+#    - promtail
     - pass
 
 - hosts: browsertrix
@@ -41,7 +41,7 @@
     - browsertrix
     - integrity-preprocessor
     - hypha.common.prometheus_exporter_docker
-    - promtail
+    #- promtail
     - nfs
     - pass
   
@@ -65,6 +65,6 @@
     - signal_bot
     - integrity-preprocessor
     - hypha.common.prometheus_exporter_docker
-    - promtail
+#    - promtail
     - nfs
     - pass

@@ -77,16 +77,16 @@
 
 - name: Copy config
   copy:
-    src: "{{ integrity_preprocessor_chatbot_config }}"
+    src: integrity-preprocessor-chatbot_config.json
     dest: /root/.integrity/preprocessor-chatbot.json
-  when: integrity_preprocessor_chatbot_config is defined
+    force: no
   tags: config
 
-- name: Copy user database
+- name: Initial User database
   copy:
-    src: "{{ integrity_preprocessor_chatbot_signal_user_config }}"
+    src: "empty.json"
     dest: /root/.integrity/preprocessor-chatbot-signal-users.json
-  when: integrity_preprocessor_chatbot_signal_user_config is defined
+    force: no
   tags: config
 
 - name: Copy config

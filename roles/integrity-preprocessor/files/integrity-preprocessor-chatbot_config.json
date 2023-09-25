@@ -1,0 +1,26 @@
+{
+    "ingestors": {
+        "signal_bot_main": {
+            "type": "signal",
+            "method": "file",
+            "processing": "proofmode",
+            "localpath": "/mnt/store/signal_bot_main/data",
+            "targetpath": "/mnt/integrity_store/starling/internal/demo-org/proofmode-photo-demo",
+            "userConfig": "/root/.integrity/preprocessor-chatbot-signal-users.json"
+        }
+    },
+    "content": {
+        "name": "Chat bot archive",
+        "mime": "application/zip",
+        "description": "Archive collected by chat bot",
+        "author": {
+            "@type": "Organization",
+            "identifier": "https://starlinglab.org",
+            "name": "Starling Lab"
+        },
+        "dateCreated": "",
+        "extras": {},
+        "private": {},
+        "timestamp": {}
+    }
+}

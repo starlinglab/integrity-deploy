@@ -35,6 +35,14 @@
     group: starling
     mode: "0770"
 
+- name: Create starling config folder
+  file:
+    path: /home/starling/.integrity/c2pa/
+    state: directory
+    owner: starling
+    group: starling
+    mode: "0770"
+
 - name: Create integrity data folder
   file:
     path: "{{ integrity_data_path }}"
@@ -92,10 +100,12 @@
     dest: '/home/starling/integrity-backend/.env'
   tags: config
 
-- name: Update claim tool
+# We use a pre compiled 
+# The one pre compiled in the repo will not work in Debian 11
+- name: Update C2PA tool
   copy:
-    src: claim_tool
-    dest: /home/starling/claim_tool
+    src: c2patool
+    dest: /home/starling/c2patool
     group: starling
     owner: starling    
     mode: 0550
@@ -108,38 +118,7 @@
     group: starling
     mode: 0550
 
-- name: Copy Configure claim-tool private key
-  copy:
-    src: "{{ integrity_cai_signing_key_file }}.pem"
-    dest: /home/starling/.cai/temp_key.pem
-    group: starling
-    owner: starling
-    mode: 0550
-  tags: config
-  when: integrity_cai_signing_key_file is defined  
-
-- name:  Copy Configure claim-tool pub key
-  copy:
-    src: "{{ integrity_cai_signing_key_file }}.pub"
-    dest: /home/starling/.cai/temp_key.pub
-    group: starling
-    owner: starling
-    mode: 0550
-  tags: config
-  when: integrity_cai_signing_key_file is defined
-
-- name: Copy backend-integrity config file
-  copy:
-    src: "{{integrity_backend_config}}"
-    dest: /home/starling/.integrity/backend-config.json
-    owner: starling
-    group: starling
-    mode: 0666
-    force: true
-  tags: config
-  when: integrity_backend_config is defined
-
-- name: Copy backend-integrity config splaceholder file
+- name: Copy backend-integrity config placeholder file
   copy:
     src: /home/starling/integrity-backend/config.example.json
     dest: /home/starling/.integrity/backend-config.json

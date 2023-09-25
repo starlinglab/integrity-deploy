@@ -7,6 +7,6 @@ signing:
   timestamping:
     - certfile: pkg://authsign.trusted/ts-chain.pem
       url: http://freetsa.org/tsr  # timeserver URL
-{% if authsign.value.token is defined %}
-  auth_token: "{{ authsign.value.token }}"
+{% if auth_sign.value.token is defined %}
+  auth_token: "{{ auth_sign.value.token }}"
 {% endif %}
