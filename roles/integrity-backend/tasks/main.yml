@@ -5,7 +5,7 @@
       - git
       - python3
       - python3-pip
-      - pipenv
+
 - name: Install pipenv python package
   pip:
     name:
