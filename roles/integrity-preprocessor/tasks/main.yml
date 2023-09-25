@@ -11,7 +11,7 @@
 
 - name: Clone preprocessor
   git:
-    repo: https://github:{{ github_token }}@github.com/starlinglab/integrity-preprocessor.git
+    repo: https://github.com/starlinglab/integrity-preprocessor.git
     dest: /root/integrity-preprocessor
     force: yes
     version: dev
